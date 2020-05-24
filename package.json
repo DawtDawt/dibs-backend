@@ -1,0 +1,19 @@
+{
+  "name": "Dibs-Backend",
+  "version": "0.0.1",
+  "description": "Backend for Reservation System Dibs",
+  "main": "index.js",
+  "repository": "https://github.com/yehmond/group1234-backend.git",
+  "author": "TJ Wu <tjwu24@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.15",
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  }
+}
