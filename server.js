@@ -96,5 +96,5 @@ app.delete("/api/customer/reservations/:reservation_id", customer.removeReservat
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log("/server.app running on port %d", PORT);
+  console.log("/server/app running on port %d", PORT);
 });
