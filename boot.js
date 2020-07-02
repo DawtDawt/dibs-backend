@@ -3,7 +3,7 @@ const schema = require("./schemas");
 require("dotenv").config();
 
 async function initUsers() {
-  for (var i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
+  for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
     const roles = [constant.OWNER, constant.CUSTOMER];
     const role = roles[i % roles.length];
@@ -23,10 +23,10 @@ async function initUsers() {
 }
 
 async function initStores() {
-  for (var i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
+  for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
-    var hours = [];
-    for (var j = 0; j < constant.DAYSINAWEEK; j++) {
+    let hours = [];
+    for (let j = 0; j < constant.DAYSINAWEEK; j++) {
       hours[j] = { isOpen: true, from: "0000", to: "2400" };
     }
     const entry = new schema.Store({
@@ -52,7 +52,7 @@ async function initStores() {
 }
 
 async function initBarbers() {
-  for (var i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
+  for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
     const date = new Date();
     const entry = new schema.Barber({
@@ -73,7 +73,7 @@ async function initBarbers() {
 async function initReviews() {
   // [TW] unique compound index not working, need to debug
   /*
-  for (var i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
+  for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
     const entry = new schema.Review({
       storeID: id,
@@ -90,7 +90,7 @@ async function initReviews() {
 }
 
 async function initReservations() {
-  for (var i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
+  for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
     const service = constant.SERVICES[i % constant.SERVICES.length];
     const from = new Date();
