@@ -33,5 +33,5 @@ module.exports = {
   OWNER,
   CUSTOMER,
   PROVINCES,
-  SERVICES,
+  SERVICES
 }

@@ -6,6 +6,9 @@ const customer = require("./query/customer");
 const init = require("./boot");
 require("dotenv").config();
 
+/* Set to true if fake data is needed */
+var populate = true;
+
 /* Init Mongoose */
 
 const mongooseOptions = {
@@ -47,10 +50,12 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 
-/* Init DB */
+/* Init Fake Data */
 
 try {
-  init.init();
+  if (populate) {
+    init.init();
+  }
 } catch (error) {
   console.error(error);
 }
