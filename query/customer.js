@@ -1,23 +1,64 @@
-function getStoreById(request, response) {
+const constant = require("../constants");
+const mongoose = require("mongoose");
+const schema = require("../schemas");
 
+function getStoreById(request, response) {
     const store_id = request.params.store_id;
-    console.log("getStoreById: store_id: " + store_id);
-    return response.status(200).send("ok");
+    
+    const storeQuery = schema.Store.findOne({
+        id: store_id
+    }).exec();
+
+    const reviewQuery = schema.Review.find({
+        storeID: store_id
+    }).exec();
+
+    let ret = {
+        store: {},
+        reviews: []
+    };
+    storeQuery.then(res => {
+        if (res === null) {
+            return Promise.reject("/query/customer/getStoreById: No stores found with given store_id");
+        }
+        ret.store = res;
+        return reviewQuery;
+    }).then(res => {
+        ret.reviews = res;
+        return response.status(200).send(ret);
+    }).catch(error => {
+        console.log(error);
+        return response.status(404);
+    });
 }
 
 function getBarberReservations(request, response) {
-
     const store_id = request.params.store_id;
     const barber_id = request.params.barber_id;
-    console.log("getBarberReservations: store_id: " + store_id);
-    console.log("getBarberReservations: barber_id: " + barber_id);
-    return response.status(200).send("ok");
+
+    const reservationQuery = schema.Reservation.find({
+        storeID: store_id,
+        barberID: barber_id
+    }).exec();
+    
+    let ret = {
+        schedule: []
+    };
+    reservationQuery.then((res) => {
+        for (let i = 0; i < res.length; i++) {
+            ret.schedule[i] = {from: res[i].from, to: res[i].to};
+        }
+        return response.status(200).send(ret);
+    }).catch(error => {
+        console.log(error);
+        return response.status(404);
+    })
 }
 
 function searchStore(request, response) {
-
-    const count = request.params.count;
+    let param = {};
     let body = {};
+    let resCount = 0;
     // Initialize local constants
     if (request.query.hasOwnProperty("store")) {
         body.store = "/" + request.query.store + "/";
@@ -29,16 +70,49 @@ function searchStore(request, response) {
         body.services = {"$all": request.query.services};
     }
     if (request.query.hasOwnProperty("rating")) {
-        body.rating = {"$gte": request.query.rating};
+        body.rating = {"$gte": Number(request.query.rating)};
     }
     if (request.query.hasOwnProperty("price")) {
-        body.price = {"$lte": request.query.price};
+        let priceArr = [];
+        for (let i = 0; i < request.query.price.length; i++) {
+            priceArr.push({price: Number(request.query.price[i])});
+        }
+        body.$or = priceArr;
     }
+    if (request.query.hasOwnProperty("startIndex")) {
+        param.skip = Number(request.query.startIndex);
+    }
+    param.limit = Number(request.params.count);
 
-    // TODO localize store object and decide on schemas
-    console.log("searchStore: count: " + count);
-    console.log("searchStore: object: " + body);
-    return response.status(200).send("ok");
+    const countQuery = schema.Store.find(body).exec();
+    const storeQuery = schema.Store.find(body, {}, param).exec();
+
+    countQuery.then(res => {
+        if (res === []) {
+            return Promise.reject("/query/customer/searchStore: No stores found with given params");
+        }
+        resCount = res.length;
+        return storeQuery;
+    }).then(res => {
+        console.log(res);
+        let ret = [];
+        for (let i = 0; i < res.length; i++) {
+            ret.push({
+                store_id: res[i].storeID, 
+                // TODO picture
+                rating: res[i].rating,
+                price: res[i].price,
+                services: res[i].services
+            })
+        }
+        return response.status(200).send({
+            count: resCount,
+            stores: ret
+        })
+    }).catch(error => {
+        console.log(error);
+        return response.status(404);
+    })
 }
 
 function getReviews(request, response) {

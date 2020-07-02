@@ -75,6 +75,11 @@ const storeSchema = new mongoose.Schema({
     website: String,
     phoneNumber: String,
     pictures: [String],
+    rating: Number,
+    services: [{
+        type: String,
+        enum: constant.SERVICES
+    }],
     hours: {
         type: [{ 
             isOpen: Boolean, 
