@@ -1,5 +1,38 @@
-const constant = require("../constants");
+const constant = require("./constants");
 const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        enum: [constant.CUSTOMER, constant.OWNER],
+        required: true
+    },
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    },
+});
 
 const storeSchema = new mongoose.Schema({
     id: {
@@ -152,11 +185,20 @@ const reservationSchema = new mongoose.Schema({
 
 function hoursLimit(val) {
     return val.length === constant.DAYSINAWEEK;
-}
+};
+
+const User = mongoose.model("User", userSchema);
+const Store = mongoose.model("Store", storeSchema);
+const Barber = mongoose.model("Barber", barberSchema);
+// [TW] unique compound index not working, need to debug
+reviewSchema.index({barberID: 1, customerID: 1}, {unique: true});
+const Review = mongoose.model("Review", reviewSchema);
+const Reservation = mongoose.model("Reservation", reservationSchema);
 
 module.exports = {
-    storeSchema,
-    barberSchema,
-    reviewSchema,
-    reservationSchema
+    User,
+    Store,
+    Barber,
+    Review,
+    Reservation,
 };
