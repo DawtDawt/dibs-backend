@@ -72,6 +72,8 @@ app.get("/api/owner/store/:store_id", owner.getStoreById);
 
 app.get("/api/owner/barber/:store_id/:barber_id", owner.getBarberReservations);
 
+app.post("/api/owner/barber", owner.registerBarber);
+
 app.post("/api/owner/store", owner.registerStore);
 
 /* Customer */
