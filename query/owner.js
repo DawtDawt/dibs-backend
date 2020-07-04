@@ -112,6 +112,18 @@ function registerStore(request, response) {
     };
     const doc = new schema.Store(entry);
     return doc.save().then(() => {
+        let body = [];
+        for (let i = 0; i < barbers.length; i++) {
+            body.push({id: barbers[i]});
+        }
+
+        const barberQuery = schema.Barber.update({
+            $or: body
+        }, {
+            $push: { storeIDs: id }
+        }).exec();
+        return barberQuery;
+    }).then(() => {
         return response.status(200).send({ store_id: id });
     }).catch(error => {
         console.log(error);

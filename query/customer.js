@@ -82,8 +82,6 @@ function searchStore(request, response) {
         param.skip = Number(request.query.startIndex);
     }
     param.limit = Number(request.params.count);
-    console.log(body);
-    console.log(param);
 
     const countQuery = schema.Store.find(body).exec();
     const storeQuery = schema.Store.find(body, {}, param).exec();
@@ -95,7 +93,6 @@ function searchStore(request, response) {
         resCount = res.length;
         return storeQuery;
     }).then(res => {
-        console.log(res);
         let ret = [];
         for (let i = 0; i < res.length; i++) {
             // TODO picture
@@ -147,13 +144,12 @@ function setReview(request, response) {
         rating: rating,
         review: review
     };
-    console.log(entry);
 
     const doc = new schema.Review(entry);
     doc.save().then(() => {
         return response.status(200).send({});
     }).catch(error => {
-        // console.log(error);
+        console.log(error);
         return response.status(500).send(error);
     });
 }
