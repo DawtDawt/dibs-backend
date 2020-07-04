@@ -127,7 +127,16 @@ const barberSchema = new mongoose.Schema({
             required: true
         }
     }],
-    schedule: [Date]
+    schedule: [{
+        from: {
+            type: Date,
+            required: true
+        },
+        to: {
+            type: Date,
+            required: true
+        }
+    }]
 });
 
 const reviewSchema = new mongoose.Schema({
