@@ -65,7 +65,7 @@ async function initBarbers() {
       picture: "examplepictureurlforgridfs20200101",
       storeIDs: [id],
       services: [{ service: "Haircut", duration: 5 }],
-      schedule: [date]
+      schedule: [{from: date, to: date}]
     });
     entry.save(function (error) {
       if (error) return console.log(error.errmsg);

@@ -81,10 +81,10 @@ const storeSchema = new mongoose.Schema({
         enum: constant.SERVICES
     }],
     hours: {
-        type: [{ 
-            isOpen: Boolean, 
+        type: [{
+            isOpen: Boolean,
             from: String,
-            to: String 
+            to: String
         }],
         validate: [hoursLimit, '{PATH} does not match the hours format'],
         required: true
@@ -109,12 +109,10 @@ const barberSchema = new mongoose.Schema({
     },
     description: String,
     picture: String,
-    storeIDs: {
-        type: [{
-            type: String,
-            unique: true
-        }]
-    },
+    storeIDs: [{
+        type: String,
+        unique: true
+    }],
     services: [{
         service: {
             type: String,
@@ -205,7 +203,7 @@ const User = mongoose.model("User", userSchema);
 const Store = mongoose.model("Store", storeSchema);
 const Barber = mongoose.model("Barber", barberSchema);
 // [TW] unique compound index not working, need to debug
-reviewSchema.index({barberID: 1, customerID: 1}, {unique: true});
+reviewSchema.index({ barberID: 1, customerID: 1 }, { unique: true });
 const Review = mongoose.model("Review", reviewSchema);
 const Reservation = mongoose.model("Reservation", reservationSchema);
 
