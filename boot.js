@@ -25,6 +25,7 @@ async function initUsers() {
 async function initStores() {
   for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
+    const price = (i%3) + 1;
     let hours = [];
     for (let j = 0; j < constant.DAYSINAWEEK; j++) {
       hours[j] = { isOpen: true, from: "0000", to: "2400" };
@@ -36,12 +37,14 @@ async function initStores() {
       city: "Vancouver",
       province: "BC",
       description: "This is a description",
-      price: 1,
+      price: price,
       lat: "49.2606",
       lon: "123.2460",
       website: "www.website.com",
       phoneNumber: "7781234567",
       pictures: ["examplepictureurlforgridfs20200101"],
+      rating: price,
+      services: "Haircut",
       hours: hours,
       barberIDs: [id]
     });
@@ -62,7 +65,7 @@ async function initBarbers() {
       picture: "examplepictureurlforgridfs20200101",
       storeIDs: [id],
       services: [{ service: "Haircut", duration: 5 }],
-      schedule: [date]
+      schedule: [{from: date, to: date}]
     });
     entry.save(function (error) {
       if (error) return console.log(error.errmsg);
@@ -112,7 +115,7 @@ async function initReservations() {
 }
 
 async function init() {
-  console.log("/boot.init: placeholder init");
+  console.log("/boot/init: placeholder init");
   await initUsers();
   await initStores();
   await initBarbers();
