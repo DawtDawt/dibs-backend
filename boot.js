@@ -1,3 +1,4 @@
+const images = require("./photosBase64");
 const constant = require("./constants");
 const schema = require("./schemas");
 require("dotenv").config();
@@ -23,7 +24,7 @@ async function initUsers() {
 async function initStores() {
   for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
-    const price = (i%3) + 1;
+    const price = (i%2) + 1;
     let hours = [];
     for (let j = 0; j < constant.DAYSINAWEEK; j++) {
       hours[j] = { isOpen: true, from: "0000", to: "2400" };
@@ -40,7 +41,7 @@ async function initStores() {
       lon: "123.2460",
       website: "www.website.com",
       phone_number: "7781234567",
-      pictures: ["examplepictureurlforgridfs20200101"],
+      pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
       rating: price,
       services: "Haircut",
       hours: hours,
@@ -59,7 +60,7 @@ async function initBarbers() {
     const entry = new schema.Barber({
       name: "BarberName",
       description: "This is a description",
-      picture: "examplepictureurlforgridfs20200101",
+      picture: images.barberPicBase64,
       store_ids: [id],
       services: [{ service: "Haircut", duration: 5 }],
       schedule: [{from: date, to: date}]
