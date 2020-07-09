@@ -67,6 +67,7 @@ function getStore(request, response) {
           for (let barber of barbers) {
             if (!barber.store_ids.includes(entry.store_id)) {
               check = false;
+              break;
             }
           }
           if (check) {
@@ -174,6 +175,7 @@ function getBarber(request, response) {
           for (let store of stores) {
             if (!store.barber_ids.includes(entry.barber_id)) {
               check = false;
+              break;
             }
           }
           if (check) {
