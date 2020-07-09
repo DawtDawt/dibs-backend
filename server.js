@@ -70,9 +70,13 @@ app.get("/api/owner/store", owner.getStore);
 
 app.post("/api/owner/store", owner.registerStore);
 
+app.delete("/api/owner/store", owner.deleteStore);
+
 app.get("/api/owner/barber", owner.getBarber);
 
 app.post("/api/owner/barber", owner.registerBarber);
+
+app.delete("/api/owner/barber", owner.deleteBarber);
 
 
 /* Customer */

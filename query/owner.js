@@ -103,6 +103,52 @@ function registerStore(request, response) {
     });
 }
 
+function deleteStore(request, response) {
+  let ret = {
+    store_ids: [],
+    barber_ids: []
+  };
+
+  const storeQuery = schema.Store.find(request.query).exec();
+
+  storeQuery
+    .then(res => {
+      if (res.length === 0) {
+        console.log("/query/owner/deleteStore: No stores found with given params");
+        return Promise.reject("/query/owner/deleteStore: No stores found with given params");
+      }
+      for (let store of res) {
+        ret.store_ids.push(store.store_id);
+      }
+      return schema.Store.deleteMany({ store_id: ret.store_ids }).exec();
+    })
+    .then(() => {
+      return schema.Review.deleteMany({ store_id: ret.store_ids }).exec();
+    })
+    .then(() => {
+      return schema.Reservation.deleteMany({ store_id: ret.store_ids }).exec();
+    })
+    .then(() => {
+      return schema.Barber.updateMany({ store_ids: { $in: ret.store_ids }}, { $pullAll: { store_ids: ret.store_ids }}).exec();
+    })
+    .then(res => {
+      return schema.Barber.find({ store_ids: [] }).exec();
+    })
+    .then(res => {
+      for (let barber of res) {
+        ret.barber_ids.push(barber.barber_id);
+      }
+      return schema.Barber.deleteMany({ store_ids: [] }).exec();
+    })
+    .then(() => {
+      return response.status(200).send(ret);
+    })
+    .catch(error => {
+      console.log(error);
+      return response.status(500).send(error);
+    });
+}
+
 function getBarber(request, response) {
   let ret = [];
 
@@ -214,9 +260,52 @@ function registerBarber(request, response) {
     });
 }
 
+function deleteBarber(request, response) {
+  let ret = {
+    barber_ids: []
+  };
+
+  if (request.query.hasOwnProperty("store_id")) {
+    request.query.store_ids = { $in: [request.query.store_id] };
+    delete request.query.store_id;
+  }
+
+  const barberQuery = schema.Barber.find(request.query).exec();
+
+  barberQuery
+    .then(res => {
+      if (res.length === 0) {
+        console.log("/query/owner/deleteBarber: No barbers found with given params");
+        return Promise.reject("/query/owner/deleteBarber: No barbers found with given params");
+      }
+      for (let barber of res) {
+        ret.barber_ids.push(barber.barber_id);
+      }
+      return schema.Barber.deleteMany({ barber_id: ret.barber_ids }).exec();
+    })
+    .then(() => {
+      return schema.Review.deleteMany({ barber_id: ret.barber_ids }).exec();
+    })
+    .then(() => {
+      return schema.Reservation.deleteMany({ barber_id: ret.barber_ids }).exec();
+    })
+    .then(() => {
+      return schema.Store.updateMany({ barber_ids: { $in: ret.barber_ids }}, { $pullAll: { barber_ids: ret.barber_ids }}).exec();
+    })
+    .then(() => {
+      return response.status(200).send(ret);
+    })
+    .catch(error => {
+      console.log(error);
+      return response.status(500).send(error);
+    });
+}
+
 module.exports = {
   getStore,
+  registerStore,
+  deleteStore,
   getBarber,
   registerBarber,
-  registerStore,
+  deleteBarber
 }
