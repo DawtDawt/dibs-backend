@@ -9,7 +9,8 @@ function getStore(request, response) {
     .then(res => {
       let promises = [];
 
-      if (res === []) {
+      if (res.length === 0) {
+        console.log("/query/owner/getStore: No stores found with given params");
         return Promise.reject("/query/owner/getStore: No stores found with given params");
       }
       for (let store of res) {
@@ -23,7 +24,7 @@ function getStore(request, response) {
       let promises = [];
 
       for (let reviews of res) {
-        if (reviews === []) {
+        if (reviews.length === 0) {
           break;
         }
 
@@ -43,7 +44,7 @@ function getStore(request, response) {
     })
     .then(res => {
       for (let reservations of res) {
-        if (reservations === []) {
+        if (reservations.length === 0) {
           break;
         }
 
@@ -96,7 +97,7 @@ function getBarber(request, response) {
     .then(res => {
       let promises = [];
 
-      if (res === []) {
+      if (res.length === 0) {
         return Promise.reject("/query/owner/getBarber: No barbers found with given params");
       }
       for (let barber of res) {
@@ -110,7 +111,7 @@ function getBarber(request, response) {
       let promises = [];
 
       for (let reviews of res) {
-        if (reviews === []) {
+        if (reviews.length === 0) {
           break;
         }
 
@@ -130,7 +131,7 @@ function getBarber(request, response) {
     })
     .then(res => {
       for (let reservations of res) {
-        if (reservations === []) {
+        if (reservations.length === 0) {
           break;
         }
 
