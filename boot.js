@@ -78,6 +78,8 @@ async function initReviews() {
       store_id: id,
       barber_id: id,
       user_id: id,
+      name: "Michael Scott",
+      date: new Date(),
       rating: 4,
       review: "This is a review"
     });
