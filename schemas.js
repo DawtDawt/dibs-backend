@@ -143,6 +143,14 @@ const reviewSchema = new mongoose.Schema({
     required: true,
     index: true
   },
+  name: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
   rating: {
     type: Number,
     min: 1,
