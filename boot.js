@@ -4,17 +4,15 @@ require("dotenv").config();
 
 async function initUsers() {
   for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
-    const id = String(i);
     const roles = [constant.OWNER, constant.CUSTOMER];
     const role = roles[i % roles.length];
     const entry = new schema.User({
-      id: id,
       password: "password",
       role: role,
-      firstName: "Michael",
-      lastName: "Scott",
+      first_name: "Michael",
+      last_name: "Scott",
       email: "michaelscottpapercompany@me.com",
-      phoneNumber: "7781234567"
+      phone_number: "7781234567"
     });
     entry.save(function (error) {
       if (error) return console.log(error.errmsg);
@@ -31,7 +29,7 @@ async function initStores() {
       hours[j] = { isOpen: true, from: "0000", to: "2400" };
     }
     const entry = new schema.Store({
-      id: id,
+      owner_id: id,
       name: "StoreName",
       address: "1234 Store Road",
       city: "Vancouver",
@@ -41,12 +39,12 @@ async function initStores() {
       lat: "49.2606",
       lon: "123.2460",
       website: "www.website.com",
-      phoneNumber: "7781234567",
+      phone_number: "7781234567",
       pictures: ["examplepictureurlforgridfs20200101"],
       rating: price,
       services: "Haircut",
       hours: hours,
-      barberIDs: [id]
+      barber_ids: [id]
     });
     entry.save(function (error) {
       if (error) return console.log(error.errmsg);
@@ -59,11 +57,10 @@ async function initBarbers() {
     const id = String(i);
     const date = new Date();
     const entry = new schema.Barber({
-      id: id,
       name: "BarberName",
       description: "This is a description",
       picture: "examplepictureurlforgridfs20200101",
-      storeIDs: [id],
+      store_ids: [id],
       services: [{ service: "Haircut", duration: 5 }],
       schedule: [{from: date, to: date}]
     });
@@ -75,13 +72,12 @@ async function initBarbers() {
 
 async function initReviews() {
   // [TW] unique compound index not working, need to debug
-  /*
   for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
     const id = String(i);
     const entry = new schema.Review({
-      storeID: id,
-      barberID: id,
-      customerID: id,
+      store_id: id,
+      barber_id: id,
+      user_id: id,
       rating: 4,
       review: "This is a review"
     });
@@ -89,7 +85,6 @@ async function initReviews() {
       if (error) return console.log(error.errmsg);
     });
   }
-  */
 }
 
 async function initReservations() {
@@ -100,10 +95,9 @@ async function initReservations() {
     const to = new Date();
     to.setDate(to.getDate() + 1);
     const entry = new schema.Reservation({
-      id: id,
-      customerID: id,
-      barberID: id,
-      storeID: id,
+      user_id: id,
+      barber_id: id,
+      store_id: id,
       service: service,
       from: from,
       to: to
