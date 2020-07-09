@@ -14,10 +14,9 @@ function getStore(request, response) {
         return Promise.reject("/query/owner/getStore: No stores found with given params");
       }
       for (let store of res) {
-        ret.push({ store_id: store.store_id, store: store, reviews: [], reservations: [] });
+        ret.push({ store_id: store.store_id, store: store, reviews: [], reservations: [], barbers: [] });
         promises.push(schema.Review.find({ store_id: store.store_id }).exec());
       }
-
       return Promise.all(promises);
     })
     .then(res => {
@@ -27,7 +26,6 @@ function getStore(request, response) {
         if (reviews.length === 0) {
           break;
         }
-
         for (let entry of ret) {
           if (entry.store_id === reviews[0].store_id) {
             entry.reviews = reviews;
@@ -35,19 +33,18 @@ function getStore(request, response) {
           }
         }
       }
-
       for (let entry of ret) {
         promises.push(schema.Reservation.find({ store_id: entry.store_id }).exec());
       }
-
       return Promise.all(promises);
     })
     .then(res => {
+      let promises = [];
+
       for (let reservations of res) {
         if (reservations.length === 0) {
           break;
         }
-
         for (let entry of ret) {
           if (entry.store_id === reservations[0].store_id) {
             entry.reservations = reservations;
@@ -55,7 +52,29 @@ function getStore(request, response) {
           }
         }
       }
-
+      for (let entry of ret) {
+        promises.push(schema.Barber.find({ store_ids: { $in: [entry.store_id] } }));
+      }
+      return Promise.all(promises);
+    })
+    .then(res => {
+      for (let barbers of res) {
+        if (barbers.length === 0) {
+          break;
+        }
+        for (let entry of ret) {
+          let check = true;
+          for (let barber of barbers) {
+            if (!barber.store_ids.includes(entry.store_id)) {
+              check = false;
+            }
+          }
+          if (check) {
+            entry.barbers = barbers;
+            break;
+          }
+        }
+      }
       return response.status(200).send(ret);
     })
     .catch(error => {
@@ -101,10 +120,9 @@ function getBarber(request, response) {
         return Promise.reject("/query/owner/getBarber: No barbers found with given params");
       }
       for (let barber of res) {
-        ret.push({ barber_id: barber.barber_id, barber: barber, reviews: [], reservations: [] });
+        ret.push({ barber_id: barber.barber_id, barber: barber, reviews: [], reservations: [], stores: [] });
         promises.push(schema.Review.find({ barber_id: barber.barber_id }).exec());
       }
-
       return Promise.all(promises);
     })
     .then(res => {
@@ -114,7 +132,6 @@ function getBarber(request, response) {
         if (reviews.length === 0) {
           break;
         }
-
         for (let entry of ret) {
           if (entry.barber_id === reviews[0].barber_id) {
             entry.reviews = reviews;
@@ -122,7 +139,6 @@ function getBarber(request, response) {
           }
         }
       }
-
       for (let entry of ret) {
         promises.push(schema.Reservation.find({ barber_id: entry.barber_id }).exec());
       }
@@ -130,11 +146,12 @@ function getBarber(request, response) {
       return Promise.all(promises);
     })
     .then(res => {
+      let promises = [];
+
       for (let reservations of res) {
         if (reservations.length === 0) {
           break;
         }
-
         for (let entry of ret) {
           if (entry.barber_id === reservations[0].barber_id) {
             entry.reservations = reservations;
@@ -142,7 +159,29 @@ function getBarber(request, response) {
           }
         }
       }
-
+      for (let entry of ret) {
+        promises.push(schema.Store.find({ barber_ids: { $in: [entry.barber_id] } }));
+      }
+      return Promise.all(promises);
+    })
+    .then(res => {
+      for (let stores of res) {
+        if (stores.length === 0) {
+          break;
+        }
+        for (let entry of ret) {
+          let check = true;
+          for (let store of stores) {
+            if (!store.barber_ids.includes(entry.barber_id)) {
+              check = false;
+            }
+          }
+          if (check) {
+            entry.stores = stores;
+            break;
+          }
+        }
+      }
       return response.status(200).send(ret);
     })
     .catch(error => {
@@ -156,11 +195,13 @@ function registerBarber(request, response) {
   doc.save()
     .then(() => {
       let body = [];
+
       for (let store_id of doc.store_ids) {
         body.push({ store_id: store_id });
       }
 
-      const storeQuery = schema.Store.updateMany({ $or: body }, { $push: { barber_ids: doc.barber_id }}).exec();
+      const storeQuery = schema.Store.updateMany({ $or: body }, { $push: { barber_ids: doc.barber_id } }).exec();
+
       return storeQuery;
     })
     .then(() => {
