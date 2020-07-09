@@ -3,7 +3,7 @@ const schema = require("../schemas");
 function getStore(request, response) {
   let ret = [];
 
-  const storeQuery = schema.Store.find(request.body).exec();
+  const storeQuery = schema.Store.find(request.query).exec();
 
   storeQuery
     .then(res => {
@@ -106,12 +106,12 @@ function registerStore(request, response) {
 function getBarber(request, response) {
   let ret = [];
 
-  if (request.body.hasOwnProperty("store_id")) {
-    request.body.store_ids = { $in: [request.body.store_id] };
-    delete request.body.store_id;
+  if (request.query.hasOwnProperty("store_id")) {
+    request.query.store_ids = { $in: [request.query.store_id] };
+    delete request.query.store_id;
   }
 
-  const barberQuery = schema.Barber.find(request.body).exec();
+  const barberQuery = schema.Barber.find(request.query).exec();
 
   barberQuery
     .then(res => {
