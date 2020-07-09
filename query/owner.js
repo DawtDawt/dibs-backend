@@ -1,139 +1,178 @@
-const constant = require("../constants");
-const mongoose = require("mongoose");
 const schema = require("../schemas");
 
-function getStoreById(request, response) {
-    // TODO add statistics
-    const store_id = request.params.store_id;
+function getStore(request, response) {
+  let ret = [];
 
-    const storeQuery = schema.Store.findOne({
-        id: store_id
-    }).exec();
+  const storeQuery = schema.Store.find(request.body).exec();
 
-    const reviewQuery = schema.Review.find({
-        storeID: store_id
-    }).exec();
+  storeQuery
+    .then(res => {
+      let promises = [];
 
-    let ret = {
-        store: {},
-        reviews: []
-    };
-    storeQuery.then(res => {
-        if (res === null) {
-            return Promise.reject("/query/customer/getStoreById: No stores found with given store_id");
+      if (res === []) {
+        return Promise.reject("/query/owner/getStore: No stores found with given params");
+      }
+      for (let store of res) {
+        ret.push({ store_id: store.store_id, store: store, reviews: [], reservations: [] });
+        promises.push(schema.Review.find({ store_id: store.store_id }).exec());
+      }
+
+      return Promise.all(promises);
+    })
+    .then(res => {
+      let promises = [];
+
+      for (let reviews of res) {
+        if (reviews === []) {
+          break;
         }
-        ret.store = res;
-        return reviewQuery;
-    }).then(res => {
-        ret.reviews = res;
-        return response.status(200).send(ret);
-    }).catch(error => {
-        console.log(error);
-        return response.status(404).send(error);
-    });
-}
 
-function getBarberReservations(request, response) {
-    const store_id = request.params.store_id;
-    const barber_id = request.params.barber_id;
+        for (let entry of ret) {
+          if (entry.store_id === reviews[0].store_id) {
+            entry.reviews = reviews;
+            break;
+          }
+        }
+      }
 
-    const reservationQuery = schema.Reservation.find({ storeID: store_id, barberID: barber_id }).exec();
+      for (let entry of ret) {
+        promises.push(schema.Reservation.find({ store_id: entry.store_id }).exec());
+      }
 
-    reservationQuery.then(reservations => {
+      return Promise.all(promises);
+    })
+    .then(res => {
+      for (let reservations of res) {
         if (reservations === []) {
-            return Promise.reject("/query/customer/getReservations: No stores found with given store_id");
+          break;
         }
-        return response.status(200).send({ reservations: reservations });
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).send(error);
-    });
-}
 
-function registerBarber(request, response) {
-    const name = request.body.name;
-    const description = request.body.description;
-    const picture = request.body.picture;
-    const services = request.body.services;
-    const id = name + picture % 32;
+        for (let entry of ret) {
+          if (entry.store_id === reservations[0].store_id) {
+            entry.reservations = reservations;
+            break;
+          }
+        }
+      }
 
-    const entry = {
-        id: id,
-        name: name,
-        description: description,
-        picture: picture,
-        storeIDs: [],
-        services: services,
-        schedule: []
-    }
-    const doc = new schema.Barber(entry);
-    return doc.save().then(() => {
-        return response.status(200).send({ barber_id: id });
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).send(error);
+      return response.status(200).send(ret);
+    })
+    .catch(error => {
+      console.log(error);
+      return response.status(404).send(error);
     });
 }
 
 function registerStore(request, response) {
-    const name = request.body.name;
-    const address = request.body.address;
-    const city = request.body.city;
-    const province = request.body.province;
-    const description = request.body.description;
-    const price = request.body.price;
-    const lat = request.body.lat;
-    const lon = request.body.lon;
-    const website = request.body.website;
-    const phone_number = request.body.phone_number;
-    const pictures = request.body.pictures;
-    const services = request.body.services;
-    const hours = request.body.hours;
-    const barbers = request.body.barbers;
-    const id = name + lat + lon;
+  // TODO hook up external API to populate lat and lon
+  request.body.lat = 0;
+  request.body.lon = 0;
+  request.body.rating = 0;
+  request.body.barber_ids = [];
 
-    const entry = {
-        id: id,
-        name: name,
-        address: address,
-        city: city,
-        province: province,
-        description: description,
-        price: price,
-        lat: lat,
-        lon: lon,
-        website: website,
-        phoneNumber: phone_number,
-        pictures: pictures,
-        rating: 0,
-        services: services,
-        hours: hours,
-        barberIDs: barbers
-    };
-    const doc = new schema.Store(entry);
-    return doc.save().then(() => {
-        let body = [];
-        for (let i = 0; i < barbers.length; i++) {
-            body.push({id: barbers[i]});
+  const doc = new schema.Store(request.body);
+
+  doc.save()
+    .then(() => {
+      return response.status(200).send({ store_id: doc.store_id });
+    })
+    .catch(error => {
+      console.log(error);
+      return response.status(500).send(error);
+    });
+}
+
+function getBarber(request, response) {
+  let ret = [];
+
+  if (request.body.hasOwnProperty("store_id")) {
+    request.body.store_ids = { $in: [request.body.store_id] };
+    delete request.body.store_id;
+  }
+
+  const barberQuery = schema.Barber.find(request.body).exec();
+
+  barberQuery
+    .then(res => {
+      let promises = [];
+
+      if (res === []) {
+        return Promise.reject("/query/owner/getBarber: No barbers found with given params");
+      }
+      for (let barber of res) {
+        ret.push({ barber_id: barber.barber_id, barber: barber, reviews: [], reservations: [] });
+        promises.push(schema.Review.find({ barber_id: barber.barber_id }).exec());
+      }
+
+      return Promise.all(promises);
+    })
+    .then(res => {
+      let promises = [];
+
+      for (let reviews of res) {
+        if (reviews === []) {
+          break;
         }
 
-        const barberQuery = schema.Barber.update({
-            $or: body
-        }, {
-            $push: { storeIDs: id }
-        }).exec();
-        return barberQuery;
-    }).then(() => {
-        return response.status(200).send({ store_id: id });
+        for (let entry of ret) {
+          if (entry.barber_id === reviews[0].barber_id) {
+            entry.reviews = reviews;
+            break;
+          }
+        }
+      }
+
+      for (let entry of ret) {
+        promises.push(schema.Reservation.find({ barber_id: entry.barber_id }).exec());
+      }
+
+      return Promise.all(promises);
+    })
+    .then(res => {
+      for (let reservations of res) {
+        if (reservations === []) {
+          break;
+        }
+
+        for (let entry of ret) {
+          if (entry.barber_id === reservations[0].barber_id) {
+            entry.reservations = reservations;
+            break;
+          }
+        }
+      }
+
+      return response.status(200).send(ret);
+    })
+    .catch(error => {
+      console.log(error);
+      return response.status(404).send(error);
+    });
+}
+
+function registerBarber(request, response) {
+  const doc = new schema.Barber(request.body);
+  doc.save()
+    .then(() => {
+      let body = [];
+      for (let store_id of doc.store_ids) {
+        body.push({ store_id: store_id });
+      }
+
+      const storeQuery = schema.Store.updateMany({ $or: body }, { $push: { barber_ids: doc.barber_id }}).exec();
+      return storeQuery;
+    })
+    .then(() => {
+      return response.status(200).send({ barber_id: doc.barber_id });
     }).catch(error => {
-        console.log(error);
-        return response.status(500).send(error);
+      console.log(error);
+      return response.status(500).send(error);
     });
 }
 
 module.exports = {
-    getStoreById,
-    getBarberReservations,
-    registerBarber,
-    registerStore,
+  getStore,
+  getBarber,
+  registerBarber,
+  registerStore,
 }

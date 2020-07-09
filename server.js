@@ -7,7 +7,7 @@ const init = require("./boot");
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
-let populate = true;
+let populate = false;
 
 /* Init Mongoose */
 
@@ -68,13 +68,14 @@ app.get("/", (request, response) => {
 
 /* Owner */
 
-app.get("/api/owner/store/:store_id", owner.getStoreById);
+app.get("/api/owner/store", owner.getStore);
 
-app.get("/api/owner/barber/:store_id/:barber_id", owner.getBarberReservations);
+app.post("/api/owner/store", owner.registerStore);
+
+app.get("/api/owner/barber", owner.getBarber);
 
 app.post("/api/owner/barber", owner.registerBarber);
 
-app.post("/api/owner/store", owner.registerStore);
 
 /* Customer */
 
