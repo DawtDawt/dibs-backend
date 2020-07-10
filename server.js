@@ -1,13 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const owner = require("./query/owner");
 const customer = require("./query/customer");
+const auth = require("./query/auth");
 const init = require("./boot");
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
-let populate = true;
+let populate = false;
 
 /* Init Mongoose */
 
@@ -49,6 +51,7 @@ app.use(express.urlencoded({
   extended: true,
 }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 /* Init Fake Data */
 
@@ -93,6 +96,16 @@ app.get("/api/customer/reservations/:user_id", customer.getReservations);
 app.post("/api/customer/reservations", customer.setReservation);
 
 app.delete("/api/customer/reservations/:reservation_id", customer.removeReservation);
+
+
+
+
+/* Authentication */
+app.post("/api/auth/signin/", auth.signIn);
+
+app.get("/api/auth/signout/", auth.signOut);
+
+app.post("/api/auth/signup/", auth.signUp);
 
 /* Thread */
 
