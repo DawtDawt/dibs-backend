@@ -97,7 +97,7 @@ function searchStore(request, response) {
         for (let i = 0; i < res.length; i++) {
             // TODO picture
             ret.push({
-                store_id: res[i].id,
+                store_id: res[i].store_id,
                 rating: res[i].rating,
                 price: res[i].price,
                 services: res[i].services
