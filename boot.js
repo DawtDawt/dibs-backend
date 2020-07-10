@@ -38,7 +38,7 @@ async function initStores() {
       description: "This is a description",
       price: price,
       lat: "49.2606",
-      lon: "123.2460",
+      lon: "-123.2460",
       website: "www.website.com",
       phone_number: "7781234567",
       pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
