@@ -6,6 +6,7 @@ const owner = require("./query/owner");
 const customer = require("./query/customer");
 const auth = require("./query/auth");
 const init = require("./boot");
+const cors = require("cors");
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
@@ -40,9 +41,10 @@ global.mongoose = mongoose;
 const app = express();
 
 const allowCrossDomain = function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
-  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", true);
+  // res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   next();
 };
 app.use(allowCrossDomain);
@@ -52,6 +54,12 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+// TODO: Remove this in prod
+// app.use(cors({
+//   credentials: true,
+//   // origin: 'http://localhost:3000',
+// }));
 
 /* Init Fake Data */
 
