@@ -1,5 +1,3 @@
-const constant = require("../constants");
-const mongoose = require("mongoose");
 const schema = require("../schemas");
 
 function getStoreById(request, response) {
@@ -72,9 +70,11 @@ function searchStore(request, response) {
         body.rating = {"$gte": Number(request.query.rating)};
     }
     if (request.query.hasOwnProperty("price")) {
+        // change frontend api too for price
         let priceArr = [];
-        for (let i = 0; i < request.query.price.length; i++) {
-            priceArr.push({price: Number(request.query.price[i])});
+        const prices = request.query.price.split(",");
+        for (let i = 0; i < prices.length; i++) {
+            priceArr.push({ price: Number(prices[i]) });
         }
         body.$or = priceArr;
     }
@@ -97,7 +97,7 @@ function searchStore(request, response) {
         for (let i = 0; i < res.length; i++) {
             // TODO picture
             ret.push({
-                store_id: res[i].id,
+                store_id: res[i].store_id,
                 rating: res[i].rating,
                 price: res[i].price,
                 services: res[i].services

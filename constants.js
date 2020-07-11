@@ -25,6 +25,7 @@ const SERVICES = [
   "Hair color",
   "Eyebrows",
   "Nails",
+  "Waxing"
 ];
 
 module.exports = {

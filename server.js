@@ -7,7 +7,7 @@ const init = require("./boot");
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
-let populate = true;
+let populate = false;
 
 /* Init Mongoose */
 
@@ -44,11 +44,9 @@ const allowCrossDomain = function(req, res, next) {
   next();
 };
 app.use(allowCrossDomain);
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
+app.use(bodyParser.json({limit: '50mb'} ));
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true,
-}));
-app.use(bodyParser.json());
 
 /* Init Fake Data */
 
@@ -68,13 +66,18 @@ app.get("/", (request, response) => {
 
 /* Owner */
 
-app.get("/api/owner/store/:store_id", owner.getStoreById);
+app.get("/api/owner/store", owner.getStore);
 
-app.get("/api/owner/barber/:store_id/:barber_id", owner.getBarberReservations);
+app.post("/api/owner/store", owner.registerStore);
+
+app.delete("/api/owner/store", owner.deleteStore);
+
+app.get("/api/owner/barber", owner.getBarber);
 
 app.post("/api/owner/barber", owner.registerBarber);
 
-app.post("/api/owner/store", owner.registerStore);
+app.delete("/api/owner/barber", owner.deleteBarber);
+
 
 /* Customer */
 
