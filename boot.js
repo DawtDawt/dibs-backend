@@ -111,6 +111,10 @@ async function initReservations() {
   }
 }
 
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes*60000);
+}
+
 async function initDefaultShops(){
   // user
   const user = new schema.User({
@@ -259,6 +263,71 @@ async function initDefaultShops(){
     entry.save(function (error) {
       if (error) return console.log(error.message);
     });
+  }
+  // init reservations
+  // init the array of times
+  const today = new Date();
+  const month = today.getMonth();
+  const day = today.getDate();
+  const year = today.getFullYear();
+  const from = [
+      new Date(year,month,day,10,0,0,0),
+      new Date(year,month,day+1,10,0,0,0),
+      new Date(year,month,day+2,12,30,0,0),
+      new Date(year,month,day-1,15,30,0,0),
+      new Date(year,month,day-2,16,0,0,0),
+      new Date(year,month,day,9,0,0,0),
+      new Date(year,month,day+1,11,0,0,0),
+      new Date(year,month,day+2,13,0,0,0),
+      new Date(year,month,day-1,14,30,0,0),
+      new Date(year,month,day-2,15,0,0,0),
+      new Date(year,month,day,12,0,0,0),
+      new Date(year,month,day+1,10,0,0,0),
+      new Date(year,month,day+2,10,0,0,0),
+      new Date(year,month,day-1,10,30,0,0),
+      new Date(year,month,day-2,10,0,0,0),
+      new Date(year,month,day,14,0,0,0),
+      new Date(year,month,day+1,16,0,0,0),
+      new Date(year,month,day+2,9,30,0,0),
+      new Date(year,month,day-1,11,0,0,0),
+      new Date(year,month,day-2,12,30,0,0),
+  ];
+  const to = [];
+  // add the times to reservations for the barbers
+  for(let i = 0; i < from.length; i++) {
+    let toAdd = 30;
+    if(i % 5 === 0) {
+      toAdd = 45
+    }
+    if(i % 3 === 0) {
+      toAdd = 60;
+    }
+    if(i === 19 || i === 11) {
+      toAdd = 120;
+    }
+    to[i] = addMinutes(from[i], toAdd);
+  }
+  for (let i =  0; i < from.length; i++) {
+    let b = 0;
+    if(i % 3 === 0) {
+      b = 11;
+    } else if(i % 3 === 1) {
+      b = 12;
+    } else if(i % 3 === 2) {
+      b = 13;
+    }
+      const service = constant.SERVICES[i % constant.SERVICES.length];
+      const entry = new schema.Reservation({
+        user_id: 10,
+        barber_id: b,
+        store_id: 11,
+        service: service,
+        from: from[i],
+        to: to[i]
+      });
+      entry.save(function (error) {
+        if (error) return console.log(error.message);
+      });
   }
 }
 
