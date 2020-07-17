@@ -32,7 +32,8 @@ async function signIn(req, res) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
         });
-        res.sendStatus(200);
+
+        res.status(200).json({ username: user.id, role: user.role });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
