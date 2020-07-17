@@ -1,25 +1,25 @@
 {
-    "name": "Dibs-Backend",
-    "version": "0.0.1",
-    "description": "Backend for Reservation System Dibs",
-    "main": "index.js",
-    "repository": "https://github.com/yehmond/group1234-backend.git",
-    "author": "TJ Wu <tjwu24@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "bcrypt": "^5.0.0",
-        "body-parser": "^1.19.0",
-        "concurrently": "^5.2.0",
-        "cookie-parser": "^1.4.5",
-        "cors": "^2.8.5",
-        "dotenv": "^8.2.0",
-        "eslint": "^7.4.0",
-        "express": "^4.17.1",
-        "jsonwebtoken": "^8.5.1",
-        "mongoose": "^5.9.15",
-        "nodemon": "^2.0.4"
-    },
-    "scripts": {
-        "start": "nodemon server.js"
-    }
+  "name": "dibs-backend",
+  "version": "0.0.1",
+  "description": "Backend for Reservation System Dibs",
+  "main": "index.js",
+  "repository": "https://github.com/yehmond/group1234-backend.git",
+  "author": "TJ Wu <tjwu24@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "concurrently": "^5.2.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.4.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.15",
+    "mongoose-sequence": "^5.2.2",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  }
 }
