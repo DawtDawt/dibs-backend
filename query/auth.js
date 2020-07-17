@@ -8,7 +8,7 @@ async function signIn(req, res) {
     try {
         // Find user in db
         const user = await schema.User.findOne({
-            id: req.body.id,
+            email: req.body.email,
         });
         const inputPassword = req.body.password;
 
@@ -20,7 +20,7 @@ async function signIn(req, res) {
         // Create JWT
         const token = jwt.sign(
             {
-                id: user.id,
+                email: user.email,
                 role: user.role,
                 exp: Math.floor(Date.now() / 1000) + 60 * 60, // expires in 1hr
             },
@@ -33,7 +33,7 @@ async function signIn(req, res) {
             secure: process.env.NODE_ENV === "production",
         });
 
-        res.status(200).json({ username: user.id, role: user.role });
+        res.status(200).json({ email: user.email, role: user.role });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
@@ -53,7 +53,7 @@ function signOut(req, res) {
 async function signUp(req, res) {
     try {
         // Check if any fields are missing
-        const fields = ["id", "password", "role", "firstName", "lastName", "email", "phoneNumber"];
+        const fields = ["password", "role", "first_name", "last_name", "email", "phone_number"];
         for (const elem of fields) {
             if (typeof req.body[elem] === "undefined") {
                 return res.status(400).send({ msg: `Missing ${elem}` });
@@ -61,19 +61,18 @@ async function signUp(req, res) {
         }
 
         // Check if username already exists
-        if (await schema.User.exists({ id: String(req.body.id) })) {
+        if (await schema.User.exists({ email: String(req.body.email) })) {
             return res.status(409).send({ msg: "Username already exists" });
         }
 
         // Create User object to be stored in db
         const doc = {
-            id: String(req.body.id),
             password: await bcrypt.hash(String(req.body.password), 10),
             role: String(req.body.role),
-            firstName: String(req.body.firstName),
-            lastName: String(req.body.lastName),
+            first_name: String(req.body.first_name),
+            last_name: String(req.body.last_name),
             email: String(req.body.email),
-            phoneNumber: String(req.body.phoneNumber),
+            phone_number: String(req.body.phone_number),
         };
 
         // Save new user
