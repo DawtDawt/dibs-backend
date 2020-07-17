@@ -101,6 +101,7 @@ async function initReservations() {
       user_id: id,
       barber_id: id,
       store_id: id,
+      name: "Joey Tribbiani",
       service: service,
       from: from,
       to: to

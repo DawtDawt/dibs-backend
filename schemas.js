@@ -177,6 +177,10 @@ const reservationSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  name: {
+    type: String,
+    required: true
+  },
   service: {
     type: String,
     enum: constant.SERVICES,
