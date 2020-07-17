@@ -52,6 +52,20 @@ function signOut(req, res) {
 
 async function signUp(req, res) {
     try {
+        // Check if any fields are missing
+        const fields = ["id", "password", "role", "firstName", "lastName", "email", "phoneNumber"];
+        for (const elem of fields) {
+            if (typeof req.body[elem] === "undefined") {
+                return res.status(400).send({ msg: `Missing ${elem}` });
+            }
+        }
+
+        // Check if username already exists
+        if (await schema.User.exists({ id: String(req.body.id) })) {
+            return res.status(409).send({ msg: "Username already exists" });
+        }
+
+        // Create User object to be stored in db
         const doc = {
             id: String(req.body.id),
             password: await bcrypt.hash(String(req.body.password), 10),
@@ -61,18 +75,6 @@ async function signUp(req, res) {
             email: String(req.body.email),
             phoneNumber: String(req.body.phoneNumber),
         };
-
-        // Check if any fields are missing
-        for (const key in doc) {
-            if (typeof doc[key] === "undefined") {
-                return res.status(400).send({ msg: `Missing ${key}` });
-            }
-        }
-
-        // Check if username already exists
-        if (await schema.User.exists({ id: doc.id })) {
-            return res.status(400).send({ msg: "Username already exists" });
-        }
 
         // Save new user
         const user = new schema.User(doc);
@@ -91,7 +93,7 @@ function verifyJWT(req, res, next) {
     jwt.verify(token, JWT_SECRET, (err, payload) => {
         if (err) {
             console.log(err);
-            return res.sendStatus(403);
+            return res.status(403).send({ msg: "Invalid credentials" });
         }
         req.payload = payload;
         next();
