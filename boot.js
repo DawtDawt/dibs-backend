@@ -27,7 +27,7 @@ async function initStores() {
     const price = (i%2) + 1;
     let hours = [];
     for (let j = 0; j < constant.DAYSINAWEEK; j++) {
-      hours[j] = { isOpen: true, from: "0000", to: "2400" };
+      hours[j] = { isOpen: true, from: "0800", to: "1700" };
     }
     const entry = new schema.Store({
       owner_id: id,
@@ -96,7 +96,7 @@ async function initReservations() {
     const service = constant.SERVICES[i % constant.SERVICES.length];
     const from = new Date();
     const to = new Date();
-    to.setDate(to.getDate() + 1);
+    to.setDate(to.getHours() + 1);
     const entry = new schema.Reservation({
       user_id: id,
       barber_id: id,
@@ -130,7 +130,7 @@ async function initDefaultShops(){
   });
   let hours = [];
   for (let j = 0; j < constant.DAYSINAWEEK; j++) {
-    hours[j] = { isOpen: true, from: "0000", to: "2400" };
+    hours[j] = { isOpen: true, from: "0700", to: "1900" };
   }
   // shops
   const store = new schema.Store({
