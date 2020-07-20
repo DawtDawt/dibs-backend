@@ -2,31 +2,36 @@ const schema = require("../schemas");
 
 function getStoreById(request, response) {
     const store_id = request.params.store_id;
-    
+
     const storeQuery = schema.Store.findOne({
-        id: store_id
+        id: store_id,
     }).exec();
     const reviewQuery = schema.Review.find({
-        storeID: store_id
+        storeID: store_id,
     }).exec();
 
     let ret = {
         store: {},
-        reviews: []
+        reviews: [],
     };
-    storeQuery.then(res => {
-        if (res === null) {
-            return Promise.reject("/query/customer/getStoreById: No stores found with given store_id");
-        }
-        ret.store = res;
-        return reviewQuery;
-    }).then(res => {
-        ret.reviews = res;
-        return response.status(200).send(ret);
-    }).catch(error => {
-        console.log(error);
-        return response.status(404).send(error);
-    });
+    storeQuery
+        .then((res) => {
+            if (res === null) {
+                return Promise.reject(
+                    "/query/customer/getStoreById: No stores found with given store_id"
+                );
+            }
+            ret.store = res;
+            return reviewQuery;
+        })
+        .then((res) => {
+            ret.reviews = res;
+            return response.status(200).send(ret);
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(404).send(error);
+        });
 }
 
 function getBarberReservations(request, response) {
@@ -35,21 +40,23 @@ function getBarberReservations(request, response) {
 
     const reservationQuery = schema.Reservation.find({
         storeID: store_id,
-        barberID: barber_id
+        barberID: barber_id,
     }).exec();
-    
+
     let ret = {
-        schedule: []
+        schedule: [],
     };
-    reservationQuery.then((res) => {
-        for (let i = 0; i < res.length; i++) {
-            ret.schedule[i] = {from: res[i].from, to: res[i].to};
-        }
-        return response.status(200).send(ret);
-    }).catch(error => {
-        console.log(error);
-        return response.status(404).send(error);
-    });
+    reservationQuery
+        .then((res) => {
+            for (let i = 0; i < res.length; i++) {
+                ret.schedule[i] = { from: res[i].from, to: res[i].to };
+            }
+            return response.status(200).send(ret);
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(404).send(error);
+        });
 }
 
 function searchStore(request, response) {
@@ -64,10 +71,11 @@ function searchStore(request, response) {
         body.city = request.query.city;
     }
     if (request.query.hasOwnProperty("services")) {
-        body.services = {"$all": request.query.services};
+        const services = request.query.services.split(",");
+        body.services = { "$all": services };
     }
     if (request.query.hasOwnProperty("rating")) {
-        body.rating = {"$gte": Number(request.query.rating)};
+        body.rating = { "$gte": Number(request.query.rating) };
     }
     if (request.query.hasOwnProperty("price")) {
         // change frontend api too for price
@@ -86,49 +94,60 @@ function searchStore(request, response) {
     const countQuery = schema.Store.find(body).exec();
     const storeQuery = schema.Store.find(body, {}, param).exec();
 
-    countQuery.then(res => {
-        if (res === []) {
-            return Promise.reject("/query/customer/searchStore: No stores found with given params");
-        }
-        resCount = res.length;
-        return storeQuery;
-    }).then(res => {
-        let ret = [];
-        for (let i = 0; i < res.length; i++) {
-            // TODO picture
-            ret.push({
-                store_id: res[i].store_id,
-                rating: res[i].rating,
-                price: res[i].price,
-                services: res[i].services
-            })
-        }
-        return response.status(200).send({
-            count: resCount,
-            stores: ret
+    countQuery
+        .then((res) => {
+            if (res === []) {
+                return Promise.reject(
+                    "/query/customer/searchStore: No stores found with given params"
+                );
+            }
+            resCount = res.length;
+            return storeQuery;
         })
-    }).catch(error => {
-        console.log(error);
-        return response.status(404).send(error);
-    });
+        .then((res) => {
+            let ret = [];
+            for (let i = 0; i < res.length; i++) {
+                // TODO picture
+                ret.push({
+                    store_id: res[i].id,
+                    rating: res[i].rating,
+                    price: res[i].price,
+                    services: res[i].services,
+                    address: res[i].address,
+                    name: res[i].name,
+                });
+            }
+            return response.status(200).send({
+                count: resCount,
+                stores: ret,
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(404).send(error);
+        });
 }
 
 function getReviews(request, response) {
     const user_id = request.params.user_id;
-    
+
     const reviewQuery = schema.Review.find({
-        customerID: user_id
+        customerID: user_id,
     }).exec();
-    
-    reviewQuery.then(reviews => {
-        if (reviews === []) {
-            return Promise.reject("/query/customer/getReviews: No reviews found with given user_id");
-        }
-        return response.status(200).send({reviews: reviews})
-    }).catch(error => {
-        console.log(error);
-        return response.status(404).send(error);
-    });
+
+    reviewQuery
+        .then((reviews) => {
+            if (reviews === []) {
+                return Promise.reject(
+                    "/query/customer/getReviews: No reviews found with given user_id"
+                );
+            }
+            return response.status(200).send({ reviews: reviews });
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(404).send(error);
+        });
 }
 
 function setReview(request, response) {
@@ -142,16 +161,18 @@ function setReview(request, response) {
         barberID: barber_id,
         customerID: user_id,
         rating: rating,
-        review: review
+        review: review,
     };
 
     const doc = new schema.Review(entry);
-    doc.save().then(() => {
-        return response.status(200).send({});
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).send(error);
-    });
+    doc.save()
+        .then(() => {
+            return response.status(200).send({});
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(500).send(error);
+        });
 }
 
 function getReservations(request, response) {
@@ -159,24 +180,28 @@ function getReservations(request, response) {
     let body = {};
     // Initialize local constants
     if (request.query.hasOwnProperty("start_time")) {
-        body.from = {"$gte": ISODate(request.query.start_time)};
+        body.from = { "$gte": ISODate(request.query.start_time) };
     }
     if (request.query.hasOwnProperty("end_time")) {
-        body.to = {"$lte": ISODate(request.query.end_time)};
+        body.to = { "$lte": ISODate(request.query.end_time) };
     }
     body.customerID = user_id;
 
     const reservationQuery = schema.Reservation.find(body).exec();
 
-    reservationQuery.then(reservations => {
-        if (reservations === []) {
-            return Promise.reject("/query/customer/getReservations: No stores found with given store_id");
-        }
-        return response.status(200).send({reservations: reservations});
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).send(error);
-    });
+    reservationQuery
+        .then((reservations) => {
+            if (reservations === []) {
+                return Promise.reject(
+                    "/query/customer/getReservations: No stores found with given store_id"
+                );
+            }
+            return response.status(200).send({ reservations: reservations });
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(500).send(error);
+        });
 }
 
 function setReservation(request, response) {
@@ -188,51 +213,58 @@ function setReservation(request, response) {
     const service = request.body.service;
     const id = user_id + barber_id + start_time;
 
-    const barberQuery = schema.Barber.findOne({id: barber_id}).exec();
+    const barberQuery = schema.Barber.findOne({ id: barber_id }).exec();
 
-    barberQuery.then(barber => {
-        if (barber === null) {
-            return Promise.reject("/query/customer/setReservation: No barber found with given barber_id");
-        }
-        for (let i = 0; i < barber.services.length; i++) {
-            if (barber.services[i].service === service) {
-                end_time += barber.services[i].duration * 1000 * 60;
+    barberQuery
+        .then((barber) => {
+            if (barber === null) {
+                return Promise.reject(
+                    "/query/customer/setReservation: No barber found with given barber_id"
+                );
             }
-            break;
-        }
-        return Promise.resolve();
-    }).then(() => {
-        const entry = {
-            storeID: store_id,
-            barberID: barber_id,
-            customerID: user_id,
-            from: start_time,
-            service: service,
-            id: id,
-            to: end_time
-        };
-        const doc = new schema.Reservation(entry);
-        return doc.save().then(() => {
+            for (let i = 0; i < barber.services.length; i++) {
+                if (barber.services[i].service === service) {
+                    end_time += barber.services[i].duration * 1000 * 60;
+                }
+                break;
+            }
+            return Promise.resolve();
+        })
+        .then(() => {
+            const entry = {
+                storeID: store_id,
+                barberID: barber_id,
+                customerID: user_id,
+                from: start_time,
+                service: service,
+                id: id,
+                to: end_time,
+            };
+            const doc = new schema.Reservation(entry);
+            return doc.save().then(() => {});
+        })
+        .then(() => {
+            return response.status(200).send({ reservation_id: id, end_time: end_time.toJSON() });
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(500).send(error);
         });
-    }).then(() => {
-        return response.status(200).send({reservation_id: id, end_time: end_time.toJSON()});
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).send(error);
-    });
 }
 
 function removeReservation(request, response) {
     const reservation_id = request.params.reservation_id;
 
-    const reservationQuery = schema.Reservation.deleteOne({id: reservation_id}).exec();
+    const reservationQuery = schema.Reservation.deleteOne({ id: reservation_id }).exec();
 
-    reservationQuery.then(() => {
-        return response.status(200).send({});
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).send(error);
-    });
+    reservationQuery
+        .then(() => {
+            return response.status(200).send({});
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(500).send(error);
+        });
 }
 
 module.exports = {
@@ -244,4 +276,4 @@ module.exports = {
     getReservations,
     setReservation,
     removeReservation,
-}
+};
