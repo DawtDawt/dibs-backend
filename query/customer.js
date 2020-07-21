@@ -1,6 +1,6 @@
 const schema = require("../schemas");
 
-function getStoreById(request, response) {
+function getStore(request, response) {
     const store_id = request.params.store_id;
     
     const storeQuery = schema.Store.findOne({
@@ -52,7 +52,7 @@ function getBarberReservations(request, response) {
     });
 }
 
-function searchStore(request, response) {
+function searchStores(request, response) {
     let param = {};
     let body = {};
     let resCount = 0;
@@ -131,7 +131,7 @@ function getReviews(request, response) {
     });
 }
 
-function setReview(request, response) {
+function registerReview(request, response) {
     const user_id = request.body.user_id;
     const store_id = request.body.store_id;
     const barber_id = request.body.barber_id;
@@ -179,7 +179,7 @@ function getReservations(request, response) {
     });
 }
 
-function setReservation(request, response) {
+function registerReservation(request, response) {
     const user_id = request.body.user_id;
     const store_id = request.body.store_id;
     const barber_id = request.body.barber_id;
@@ -222,7 +222,7 @@ function setReservation(request, response) {
     });
 }
 
-function removeReservation(request, response) {
+function deleteReservation(request, response) {
     const reservation_id = request.params.reservation_id;
 
     const reservationQuery = schema.Reservation.deleteOne({id: reservation_id}).exec();
@@ -236,12 +236,13 @@ function removeReservation(request, response) {
 }
 
 module.exports = {
-    getStoreById,
-    getBarberReservations,
-    searchStore,
+    getStore,
+    searchStores,
     getReviews,
-    setReview,
+    registerReview,
+    updateReview,
+    deleteReview,
     getReservations,
-    setReservation,
-    removeReservation,
+    registerReservation,
+    deleteReservation,
 }

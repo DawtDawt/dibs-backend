@@ -128,20 +128,21 @@ const barberSchema = new mongoose.Schema({
 });
 
 const reviewSchema = new mongoose.Schema({
+  review_id: {
+    type: Number,
+    unique: true
+  },
   store_id: {
     type: Number,
-    required: true,
-    index: true
+    required: true
   },
   barber_id: {
     type: Number,
-    required: true,
-    index: true
+    required: true
   },
   user_id: {
     type: Number,
-    required: true,
-    index: true
+    required: true
   },
   name: {
     type: String,
@@ -203,12 +204,11 @@ function hoursLimit(val) {
 userSchema.plugin(autoincrement, { inc_field: "user_id" });
 storeSchema.plugin(autoincrement, { inc_field: "store_id" });
 barberSchema.plugin(autoincrement, { inc_field: "barber_id" });
+reviewSchema.plugin(autoincrement, { inc_field: "review_id" });
 reservationSchema.plugin(autoincrement, { inc_field: "reservation_id" });
 const User = mongoose.model("User", userSchema);
 const Store = mongoose.model("Store", storeSchema);
 const Barber = mongoose.model("Barber", barberSchema);
-// [TW] unique compound index not working, need to debug
-reviewSchema.index({ barberID: 1, customerID: 1 }, { unique: true });
 const Review = mongoose.model("Review", reviewSchema);
 const Reservation = mongoose.model("Reservation", reservationSchema);
 

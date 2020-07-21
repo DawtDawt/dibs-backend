@@ -1,4 +1,12 @@
 const schema = require("../schemas");
+const nodeGeocoder = require('node-geocoder');
+
+const options = {
+  provider = 'google',
+  apiKey: '',
+  formatter: null
+}
+const geocoder = nodeGeocoder(options);
 
 function getStore(request, response) {
   let ret = [];

@@ -81,21 +81,23 @@ app.delete("/api/owner/barber", owner.deleteBarber);
 
 /* Customer */
 
-app.get("/api/customer/store/:store_id", customer.getStoreById);
+app.get("/api/customer/store/:store_id", customer.getStore);
 
-app.get("/api/customer/barber/:store_id/:barber_id", customer.getBarberReservations);
+app.get("/api/customer/store/search/:count", customer.searchStores);
 
-app.get("/api/customer/store/search/:count", customer.searchStore);
+app.get("/api/customer/review/:user_id", customer.getReviews);
 
-app.get("/api/customer/reviews/:user_id", customer.getReviews);
+app.post("/api/customer/review", customer.registerReview);
 
-app.post("/api/customer/reviews", customer.setReview)
+app.put("/api/customer/review", customer.updateReview);
+
+app.delete("/api/customer/review/:review_id", customer.deleteReview);
 
 app.get("/api/customer/reservations/:user_id", customer.getReservations);
 
-app.post("/api/customer/reservations", customer.setReservation);
+app.post("/api/customer/reservations", customer.registerReservation);
 
-app.delete("/api/customer/reservations/:reservation_id", customer.removeReservation);
+app.delete("/api/customer/reservations/:reservation_id", customer.deleteReservation);
 
 /* Thread */
 
