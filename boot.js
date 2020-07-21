@@ -235,16 +235,16 @@ async function initDefaultShops(){
   // Reviews
   const names = ["Frank Costanza", "Elaine Benes", "David Puddy", "Uncle Leo", "Newman", "J. Peterman", "Leon Black", "Lloyd Braun", "Susan Ross", "Morty Seinfeld"]
   const reviews = [
-      "This shop doesn't celebrate FESTIVUS! SERENITY NOW!",
-      "Got a haircut, yada yada yada...",
-      "Cool haircut place",
-      "My son is a better barber than these fools! Absolutely terrible service.",
-      "Special service for postal workers, absolutely fantastic! Will be coming back. Just remember, when you control the mail, you control… information",
-      "The toll road of denial is a long and dangerous one. The price, your soul. Oh, by the way, you have until five to clear out your desk. You’re fired.",
-      "Everything I ate tasted like peaches! Good haircut anyways.",
-      "Serenity now. Insanity later.",
-      "We’ve got five hundred shows to choose from. Why should we give two guys, who have no idea, and no experience, more money?",
-      "Look, I got a few good years left. If I want a Chip Ahoy, I’m having it.",
+    "This shop doesn't celebrate FESTIVUS! SERENITY NOW!",
+    "Got a haircut, yada yada yada...",
+    "Cool haircut place",
+    "My son is a better barber than these fools! Absolutely terrible service.",
+    "Special service for postal workers, absolutely fantastic! Will be coming back. Just remember, when you control the mail, you control… information",
+    "The toll road of denial is a long and dangerous one. The price, your soul. Oh, by the way, you have until five to clear out your desk. You’re fired.",
+    "Everything I ate tasted like peaches! Good haircut anyways.",
+    "Serenity now. Insanity later.",
+    "We’ve got five hundred shows to choose from. Why should we give two guys, who have no idea, and no experience, more money?",
+    "Look, I got a few good years left. If I want a Chip Ahoy, I’m having it.",
   ]
   for (let i = 0; i < 10; i++) {
     let id = 11;
@@ -271,26 +271,26 @@ async function initDefaultShops(){
   const day = today.getDate();
   const year = today.getFullYear();
   const from = [
-      new Date(year,month,day,10,0,0,0),
-      new Date(year,month,day+1,10,0,0,0),
-      new Date(year,month,day+2,12,30,0,0),
-      new Date(year,month,day-1,15,30,0,0),
-      new Date(year,month,day-2,16,0,0,0),
-      new Date(year,month,day,9,0,0,0),
-      new Date(year,month,day+1,11,0,0,0),
-      new Date(year,month,day+2,13,0,0,0),
-      new Date(year,month,day-1,14,30,0,0),
-      new Date(year,month,day-2,15,0,0,0),
-      new Date(year,month,day,12,0,0,0),
-      new Date(year,month,day+1,10,0,0,0),
-      new Date(year,month,day+2,10,0,0,0),
-      new Date(year,month,day-1,10,30,0,0),
-      new Date(year,month,day-2,10,0,0,0),
-      new Date(year,month,day,14,0,0,0),
-      new Date(year,month,day+1,16,0,0,0),
-      new Date(year,month,day+2,9,30,0,0),
-      new Date(year,month,day-1,11,0,0,0),
-      new Date(year,month,day-2,12,30,0,0),
+    new Date(year,month,day,10,0,0,0),
+    new Date(year,month,day+1,10,0,0,0),
+    new Date(year,month,day+2,12,30,0,0),
+    new Date(year,month,day-1,15,30,0,0),
+    new Date(year,month,day-2,16,0,0,0),
+    new Date(year,month,day,9,0,0,0),
+    new Date(year,month,day+1,11,0,0,0),
+    new Date(year,month,day+2,13,0,0,0),
+    new Date(year,month,day-1,14,30,0,0),
+    new Date(year,month,day-2,15,0,0,0),
+    new Date(year,month,day,12,0,0,0),
+    new Date(year,month,day+1,10,0,0,0),
+    new Date(year,month,day+2,10,0,0,0),
+    new Date(year,month,day-1,10,30,0,0),
+    new Date(year,month,day-2,10,0,0,0),
+    new Date(year,month,day,14,0,0,0),
+    new Date(year,month,day+1,16,0,0,0),
+    new Date(year,month,day+2,9,30,0,0),
+    new Date(year,month,day-1,11,0,0,0),
+    new Date(year,month,day-2,12,30,0,0),
   ];
   const to = [];
   // add the times to reservations for the barbers
@@ -316,18 +316,18 @@ async function initDefaultShops(){
     } else if(i % 3 === 2) {
       b = 13;
     }
-      const service = constant.SERVICES[i % constant.SERVICES.length];
-      const entry = new schema.Reservation({
-        user_id: 10,
-        barber_id: b,
-        store_id: 11,
-        service: service,
-        from: from[i],
-        to: to[i]
-      });
-      entry.save(function (error) {
-        if (error) return console.log(error.message);
-      });
+    const service = constant.SERVICES[i % constant.SERVICES.length];
+    const entry = new schema.Reservation({
+      user_id: 10,
+      barber_id: b,
+      store_id: 11,
+      service: service,
+      from: from[i],
+      to: to[i]
+    });
+    entry.save(function (error) {
+      if (error) return console.log(error.message);
+    });
   }
 }
 
