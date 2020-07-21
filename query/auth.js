@@ -22,6 +22,7 @@ async function signIn(req, res) {
             {
                 email: user.email,
                 role: user.role,
+                id: user.user_id,
                 exp: Math.floor(Date.now() / 1000) + 60 * 60, // expires in 1hr
             },
             JWT_SECRET
@@ -32,8 +33,7 @@ async function signIn(req, res) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
         });
-
-        res.status(200).json({ email: user.email, role: user.role });
+        res.status(200).json({ email: user.email, role: user.role, id: user.user_id });
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);

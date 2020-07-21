@@ -1,6 +1,7 @@
 const images = require("./photosBase64");
 const constant = require("./constants");
 const schema = require("./schemas");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 async function initUsers() {
@@ -8,7 +9,7 @@ async function initUsers() {
     const roles = [constant.OWNER, constant.CUSTOMER];
     const role = roles[i % roles.length];
     const entry = new schema.User({
-      password: "password",
+      password: bcrypt.hashSync("password", 10),
       role: role,
       first_name: "Michael",
       last_name: "Scott",
@@ -118,7 +119,7 @@ function addMinutes(date, minutes) {
 async function initDefaultShops(){
   // user
   const user = new schema.User({
-    password: "password",
+    password: bcrypt.hashSync("password", 10),
     role: constant.OWNER,
     first_name: "Larry",
     last_name: "David",
