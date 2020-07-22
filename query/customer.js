@@ -89,6 +89,15 @@ function searchStore(request, response) {
     if (request.query.hasOwnProperty("startIndex")) {
         param.skip = Number(request.query.startIndex);
     }
+    if (request.query.hasOwnProperty("neighbourhoods")) {
+        const neighbourhoodArr = [];
+        const neighbourhoods = request.query.neighbourhoods.split(",");
+        for (let i = 0; i < neighbourhoods.length; i++) {
+            neighbourhoodArr.push({ neighbourhood: neighbourhoods[i] });
+        }
+
+        body.$or = [...(body.$or || []), ...neighbourhoodArr];
+    }
     param.limit = Number(request.params.count);
 
     const countQuery = schema.Store.find(body).exec();
@@ -109,12 +118,15 @@ function searchStore(request, response) {
             for (let i = 0; i < res.length; i++) {
                 // TODO picture
                 ret.push({
-                    store_id: res[i].id,
+                    store_id: res[i].store_id,
                     rating: res[i].rating,
                     price: res[i].price,
                     services: res[i].services,
                     address: res[i].address,
                     name: res[i].name,
+                    city: res[i].city,
+                    province: res[i].province,
+                    neighbourhood: res[i].neighbourhood,
                 });
             }
             return response.status(200).send({

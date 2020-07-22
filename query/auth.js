@@ -86,7 +86,6 @@ async function signUp(req, res) {
 }
 
 function verifyJWT(req, res, next) {
-    console.log(req.cookies);
     const token = req.cookies.token;
 
     jwt.verify(token, JWT_SECRET, (err, payload) => {

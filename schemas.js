@@ -60,6 +60,10 @@ const storeSchema = new mongoose.Schema({
         enum: constant.PROVINCES,
         required: true,
     },
+    neighbourhood: {
+        type: String,
+        required: true,
+    },
     description: String,
     price: {
         type: Number,
