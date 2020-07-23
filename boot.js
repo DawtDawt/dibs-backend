@@ -1,6 +1,7 @@
 const images = require("./photosBase64");
 const constant = require("./constants");
 const schema = require("./schemas");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 async function initUsers() {
@@ -8,7 +9,7 @@ async function initUsers() {
     const roles = [constant.OWNER, constant.CUSTOMER];
     const role = roles[i % roles.length];
     const entry = new schema.User({
-      password: "password",
+      password: bcrypt.hashSync("password", 10),
       role: role,
       first_name: "Michael",
       last_name: "Scott",
@@ -27,7 +28,7 @@ async function initStores() {
     const price = (i%2) + 1;
     let hours = [];
     for (let j = 0; j < constant.DAYSINAWEEK; j++) {
-      hours[j] = { isOpen: true, from: "0000", to: "2400" };
+      hours[j] = { isOpen: true, from: "0800", to: "1700" };
     }
     const entry = new schema.Store({
       owner_id: id,
@@ -96,7 +97,7 @@ async function initReservations() {
     const service = constant.SERVICES[i % constant.SERVICES.length];
     const from = new Date();
     const to = new Date();
-    to.setDate(to.getDate() + 1);
+    to.setDate(to.getHours() + 1);
     const entry = new schema.Reservation({
       user_id: id,
       barber_id: id,
@@ -111,10 +112,14 @@ async function initReservations() {
   }
 }
 
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes*60000);
+}
+
 async function initDefaultShops(){
   // user
   const user = new schema.User({
-    password: "password",
+    password: bcrypt.hashSync("password", 10),
     role: constant.OWNER,
     first_name: "Larry",
     last_name: "David",
@@ -126,7 +131,7 @@ async function initDefaultShops(){
   });
   let hours = [];
   for (let j = 0; j < constant.DAYSINAWEEK; j++) {
-    hours[j] = { isOpen: true, from: "0000", to: "2400" };
+    hours[j] = { isOpen: true, from: "0700", to: "1900" };
   }
   // shops
   const store = new schema.Store({
@@ -231,16 +236,16 @@ async function initDefaultShops(){
   // Reviews
   const names = ["Frank Costanza", "Elaine Benes", "David Puddy", "Uncle Leo", "Newman", "J. Peterman", "Leon Black", "Lloyd Braun", "Susan Ross", "Morty Seinfeld"]
   const reviews = [
-      "This shop doesn't celebrate FESTIVUS! SERENITY NOW!",
-      "Got a haircut, yada yada yada...",
-      "Cool haircut place",
-      "My son is a better barber than these fools! Absolutely terrible service.",
-      "Special service for postal workers, absolutely fantastic! Will be coming back. Just remember, when you control the mail, you control… information",
-      "The toll road of denial is a long and dangerous one. The price, your soul. Oh, by the way, you have until five to clear out your desk. You’re fired.",
-      "Everything I ate tasted like peaches! Good haircut anyways.",
-      "Serenity now. Insanity later.",
-      "We’ve got five hundred shows to choose from. Why should we give two guys, who have no idea, and no experience, more money?",
-      "Look, I got a few good years left. If I want a Chip Ahoy, I’m having it.",
+    "This shop doesn't celebrate FESTIVUS! SERENITY NOW!",
+    "Got a haircut, yada yada yada...",
+    "Cool haircut place",
+    "My son is a better barber than these fools! Absolutely terrible service.",
+    "Special service for postal workers, absolutely fantastic! Will be coming back. Just remember, when you control the mail, you control… information",
+    "The toll road of denial is a long and dangerous one. The price, your soul. Oh, by the way, you have until five to clear out your desk. You’re fired.",
+    "Everything I ate tasted like peaches! Good haircut anyways.",
+    "Serenity now. Insanity later.",
+    "We’ve got five hundred shows to choose from. Why should we give two guys, who have no idea, and no experience, more money?",
+    "Look, I got a few good years left. If I want a Chip Ahoy, I’m having it.",
   ]
   for (let i = 0; i < 10; i++) {
     let id = 11;
@@ -255,6 +260,71 @@ async function initDefaultShops(){
       date: new Date(),
       rating: Math.ceil(Math.random() * Math.floor(4)),
       review: reviews[i]
+    });
+    entry.save(function (error) {
+      if (error) return console.log(error.message);
+    });
+  }
+  // init reservations
+  // init the array of times
+  const today = new Date();
+  const month = today.getMonth();
+  const day = today.getDate();
+  const year = today.getFullYear();
+  const from = [
+    new Date(year,month,day,10,0,0,0),
+    new Date(year,month,day+1,10,0,0,0),
+    new Date(year,month,day+2,12,30,0,0),
+    new Date(year,month,day-1,15,30,0,0),
+    new Date(year,month,day-2,16,0,0,0),
+    new Date(year,month,day,9,0,0,0),
+    new Date(year,month,day+1,11,0,0,0),
+    new Date(year,month,day+2,13,0,0,0),
+    new Date(year,month,day-1,14,30,0,0),
+    new Date(year,month,day-2,15,0,0,0),
+    new Date(year,month,day,12,0,0,0),
+    new Date(year,month,day+1,10,0,0,0),
+    new Date(year,month,day+2,10,0,0,0),
+    new Date(year,month,day-1,10,30,0,0),
+    new Date(year,month,day-2,10,0,0,0),
+    new Date(year,month,day,14,0,0,0),
+    new Date(year,month,day+1,16,0,0,0),
+    new Date(year,month,day+2,9,30,0,0),
+    new Date(year,month,day-1,11,0,0,0),
+    new Date(year,month,day-2,12,30,0,0),
+  ];
+  const to = [];
+  // add the times to reservations for the barbers
+  for(let i = 0; i < from.length; i++) {
+    let toAdd = 30;
+    if(i % 5 === 0) {
+      toAdd = 45
+    }
+    if(i % 3 === 0) {
+      toAdd = 60;
+    }
+    if(i === 19 || i === 11) {
+      toAdd = 120;
+    }
+    to[i] = addMinutes(from[i], toAdd);
+  }
+  for (let i =  0; i < from.length; i++) {
+    let b = 0;
+    if(i % 3 === 0) {
+      b = 11;
+    } else if(i % 3 === 1) {
+      b = 12;
+    } else if(i % 3 === 2) {
+      b = 13;
+    }
+    const service = constant.SERVICES[i % constant.SERVICES.length];
+    const entry = new schema.Reservation({
+      user_id: 10,
+      barber_id: b,
+      store_id: 11,
+      service: service,
+      from: from[i],
+      to: to[i]
     });
     entry.save(function (error) {
       if (error) return console.log(error.message);
