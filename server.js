@@ -106,11 +106,11 @@ app.put("/api/customer/review", customer.updateReview);
 
 app.delete("/api/customer/review/:review_id", customer.deleteReview);
 
-app.get("/api/customer/reservations/:user_id", customer.getReservations);
+app.get("/api/customer/reservation/:user_id", customer.getReservations);
 
-app.post("/api/customer/reservations", customer.registerReservation);
+app.post("/api/customer/reservation", customer.registerReservation);
 
-app.delete("/api/customer/reservations/:reservation_id", customer.deleteReservation);
+app.delete("/api/customer/reservation/:reservation_id", customer.deleteReservation);
 
 /* Authentication */
 app.post("/api/auth/signin/", auth.signIn);

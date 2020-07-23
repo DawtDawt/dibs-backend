@@ -123,14 +123,8 @@ const barberSchema = new mongoose.Schema({
     ],
     schedule: [
         {
-            from: {
-                type: Date,
-                required: true,
-            },
-            to: {
-                type: Date,
-                required: true,
-            },
+            from: String,
+            to: String
         },
     ],
 });
@@ -204,10 +198,6 @@ const reservationSchema = new mongoose.Schema({
     required: true
   }
 });
-
-function hoursLimit(val) {
-    return val.length === constant.DAYSINAWEEK;
-}
 
 userSchema.plugin(autoincrement, { inc_field: "user_id" });
 storeSchema.plugin(autoincrement, { inc_field: "store_id" });

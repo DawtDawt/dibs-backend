@@ -44,6 +44,7 @@ async function initStores() {
       pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
       rating: price,
       services: "Haircut",
+      neightbourhood: "Kitslano",
       hours: hours,
       barber_ids: [id]
     });

@@ -93,7 +93,6 @@ function getStore(request, response) {
 }
 
 function registerStore(request, response) {
-  // TODO hook up external API to populate lat and lon
   const geocode = geocoder.geocode({
     address: request.body.address
   });
@@ -149,7 +148,7 @@ function deleteStore(request, response) {
     .then(() => {
       return schema.Barber.updateMany({ store_ids: { $in: ret.store_ids }}, { $pullAll: { store_ids: ret.store_ids }}).exec();
     })
-    .then(res => {
+    .then(() => {
       return schema.Barber.find({ store_ids: [] }).exec();
     })
     .then(res => {
