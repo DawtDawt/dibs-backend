@@ -116,7 +116,6 @@ function searchStore(request, response) {
         .then((res) => {
             let ret = [];
             for (let i = 0; i < res.length; i++) {
-                // TODO picture
                 ret.push({
                     store_id: res[i].store_id,
                     rating: res[i].rating,
@@ -127,6 +126,7 @@ function searchStore(request, response) {
                     city: res[i].city,
                     province: res[i].province,
                     neighbourhood: res[i].neighbourhood,
+                    picture: res[i].pictures && res[i].pictures[0],
                 });
             }
             return response.status(200).send({
@@ -137,6 +137,29 @@ function searchStore(request, response) {
         .catch((error) => {
             console.log(error);
             return response.status(404).send(error);
+        });
+}
+
+function getNeighbourhoods(request, response) {
+    const { city, province, limit } = request.query;
+    const query = schema.Store.aggregate([
+        { $match: { city, province } },
+        {
+            $group: {
+                _id: "$neighbourhood",
+            },
+        },
+        { $limit: Number(limit) },
+    ]);
+    query
+        .then((res) => {
+            const neighbourhoods = res.map((elem) => {
+                return elem._id;
+            });
+            return response.status(200).send(neighbourhoods);
+        })
+        .catch((err) => {
+            return response.status(404).send(err);
         });
 }
 
@@ -282,6 +305,7 @@ function removeReservation(request, response) {
 module.exports = {
     getStoreById,
     getBarberReservations,
+    getNeighbourhoods,
     searchStore,
     getReviews,
     setReview,

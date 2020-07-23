@@ -100,6 +100,8 @@ app.get("/api/customer/barber/:store_id/:barber_id", customer.getBarberReservati
 
 app.get("/api/customer/store/search/:count", customer.searchStore);
 
+app.get("/api/customer/neighbourhoods/", customer.getNeighbourhoods);
+
 app.get("/api/customer/reviews/:user_id", customer.getReviews);
 
 app.post("/api/customer/reviews", customer.setReview);
