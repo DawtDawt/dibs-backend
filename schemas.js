@@ -136,7 +136,6 @@ const barberSchema = new mongoose.Schema({
 });
 
 const reviewSchema = new mongoose.Schema({
-<<<<<<< HEAD
   review_id: {
     type: Number,
     unique: true
@@ -204,70 +203,6 @@ const reservationSchema = new mongoose.Schema({
     type: Date,
     required: true
   }
-=======
-    store_id: {
-        type: Number,
-        required: true,
-        index: true,
-    },
-    barber_id: {
-        type: Number,
-        required: true,
-        index: true,
-    },
-    user_id: {
-        type: Number,
-        required: true,
-        index: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    date: {
-        type: Date,
-        required: true,
-    },
-    rating: {
-        type: Number,
-        min: 1,
-        max: 5,
-        required: true,
-    },
-    review: String,
-});
-
-const reservationSchema = new mongoose.Schema({
-    reservation_id: {
-        type: Number,
-        unique: true,
-    },
-    user_id: {
-        type: Number,
-        required: true,
-    },
-    barber_id: {
-        type: Number,
-        required: true,
-    },
-    store_id: {
-        type: Number,
-        required: true,
-    },
-    service: {
-        type: String,
-        enum: constant.SERVICES,
-        required: true,
-    },
-    from: {
-        type: Date,
-        required: true,
-    },
-    to: {
-        type: Date,
-        required: true,
-    },
->>>>>>> develop
 });
 
 function hoursLimit(val) {

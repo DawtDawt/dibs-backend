@@ -2,8 +2,8 @@ const schema = require("../schemas");
 const nodeGeocoder = require('node-geocoder');
 
 const options = {
-  provider = 'google',
-  apiKey: '',
+  provider: 'google',
+  apiKey: 'AIzaSyDlE3gDidbd2I5fmBqRq0seTJTkf4vWW7w',
   formatter: null
 }
 const geocoder = nodeGeocoder(options);
@@ -94,14 +94,24 @@ function getStore(request, response) {
 
 function registerStore(request, response) {
   // TODO hook up external API to populate lat and lon
+  const geocode = geocoder.geocode({
+    address: request.body.address
+  });
+  let doc;
+
   request.body.lat = 0;
   request.body.lon = 0;
   request.body.rating = 0;
   request.body.barber_ids = [];
 
-  const doc = new schema.Store(request.body);
-
-  doc.save()
+  geocode
+    .then(res => {
+      console.log(res);
+      request.body.lat = res[0].latitude;
+      request.body.lon = res[0].longitude;
+      doc = new schema.Store(request.body);
+      return doc.save();
+    })
     .then(() => {
       return response.status(200).send({ store_id: doc.store_id });
     })

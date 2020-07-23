@@ -16,11 +16,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.9.15",
     "mongoose-sequence": "^5.2.2",
-<<<<<<< HEAD
     "node-geocoder": "^3.27.0",
-=======
     "jsonwebtoken": "^8.5.1",
->>>>>>> develop
     "nodemon": "^2.0.4"
   },
   "scripts": {

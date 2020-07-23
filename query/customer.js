@@ -18,7 +18,7 @@ function getStore(request, response) {
         .then((res) => {
             if (res === null) {
                 return Promise.reject(
-                    "/query/customer/getStoreById: No stores found with given store_id"
+                    "/query/customer/getStore: No stores found with given store_id"
                 );
             }
             ret.store = res;
@@ -26,31 +26,6 @@ function getStore(request, response) {
         })
         .then((res) => {
             ret.reviews = res;
-            return response.status(200).send(ret);
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(404).send(error);
-        });
-}
-
-function getBarberReservations(request, response) {
-    const store_id = request.params.store_id;
-    const barber_id = request.params.barber_id;
-
-    const reservationQuery = schema.Reservation.find({
-        storeID: store_id,
-        barberID: barber_id,
-    }).exec();
-
-    let ret = {
-        schedule: [],
-    };
-    reservationQuery
-        .then((res) => {
-            for (let i = 0; i < res.length; i++) {
-                ret.schedule[i] = { from: res[i].from, to: res[i].to };
-            }
             return response.status(200).send(ret);
         })
         .catch((error) => {
@@ -175,6 +150,16 @@ function registerReview(request, response) {
         });
 }
 
+function updateReview(request, response) {
+  // STUB
+  return response.status(200).send("ok");
+}
+
+function deleteReview(request, response) {
+  // STUB
+  return response.status(200).send("ok");
+}
+
 function getReservations(request, response) {
     const user_id = request.params.user_id;
     let body = {};
@@ -275,12 +260,6 @@ module.exports = {
     updateReview,
     deleteReview,
     getReservations,
-<<<<<<< HEAD
     registerReservation,
     deleteReservation,
 }
-=======
-    setReservation,
-    removeReservation,
-};
->>>>>>> develop
