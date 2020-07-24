@@ -23,7 +23,7 @@ async function signIn(req, res) {
                 email: user.email,
                 role: user.role,
                 id: user.user_id,
-                exp: Math.floor(Date.now() / 1000) + 60 * 60, // expires in 1hr
+                // exp: Math.floor(Date.now() / 1000) + 60 * 60, // expires in 1hr
             },
             JWT_SECRET
         );
@@ -87,6 +87,10 @@ async function signUp(req, res) {
 
 function verifyJWT(req, res, next) {
     const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(403).send({ msg: "No JWT found in request" });
+    }
 
     jwt.verify(token, JWT_SECRET, (err, payload) => {
         if (err) {
