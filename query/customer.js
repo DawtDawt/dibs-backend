@@ -10,10 +10,10 @@ function getStore(request, response) {
   };
   const store_id = request.params.store_id;
 
-  const storeQuery = schema.Store.findOne({ store_id: store_id }).exec();
-  const reviewQuery = schema.Review.findOne({ store_id: store_id }).exec();
-  const reservationQuery = schema.Reservation.findOne({ store_id: store_id }).exec();
-  const barberQuery = schema.Barber.findOne({ store_ids: { $in: store_id }}).exec();
+  const storeQuery = schema.Store.findOne({ store_id }).exec();
+  const reviewQuery = schema.Review.findOne({ store_id }).exec();
+  const reservationQuery = schema.Reservation.findOne({ store_id }).exec();
+  const barberQuery = schema.Barber.findOne({ store_ids: { $in: store_id } }).exec();
 
   storeQuery
     .then(res => {
@@ -23,18 +23,7 @@ function getStore(request, response) {
         );
       }
       ret.store_id = res.store_id;
-      ret.store = {
-        store_id: res.store_id,
-        name: res.name,
-        address: res.address,
-        city: res.city,
-        province: res.province,
-        description: res.description,
-        price: res.price,
-        lat: res.lat,
-        lon: res.lon,
-        
-      };
+      ret.store = res;
       return reviewQuery;
     })
     .then(res => {
@@ -47,7 +36,7 @@ function getStore(request, response) {
     })
     .then(res => {
       ret.barbers = res;
-      
+      return response.status(200).send(ret);
     })
     .catch((error) => {
       console.log(error);
@@ -59,12 +48,14 @@ function searchStores(request, response) {
   let param = {};
   let body = {};
   let resCount = 0;
-  // Initialize local constants
   if (request.query.hasOwnProperty("store")) {
-    body.store = "/" + request.query.store + "/";
+    body.name = "/" + request.query.store + "/";
   }
   if (request.query.hasOwnProperty("city")) {
     body.city = request.query.city;
+  }
+  if (request.query.hasOwnProperty("city")) {
+    body.neighbourhood = request.query.neighbourhood;
   }
   if (request.query.hasOwnProperty("services")) {
     const services = request.query.services.split(",");
@@ -74,7 +65,6 @@ function searchStores(request, response) {
     body.rating = { "$gte": Number(request.query.rating) };
   }
   if (request.query.hasOwnProperty("price")) {
-    // change frontend api too for price
     let priceArr = [];
     const prices = request.query.price.split(",");
     for (let i = 0; i < prices.length; i++) {
@@ -101,21 +91,9 @@ function searchStores(request, response) {
       return storeQuery;
     })
     .then((res) => {
-      let ret = [];
-      for (let i = 0; i < res.length; i++) {
-        // TODO picture
-        ret.push({
-          store_id: res[i].id,
-          rating: res[i].rating,
-          price: res[i].price,
-          services: res[i].services,
-          address: res[i].address,
-          name: res[i].name,
-        });
-      }
       return response.status(200).send({
         count: resCount,
-        stores: ret,
+        stores: res
       });
     })
     .catch((error) => {
@@ -124,11 +102,35 @@ function searchStores(request, response) {
     });
 }
 
+function getNeighbourhoods(request, response) {
+  const limit = request.query.limit;
+  delete request.query.limit;
+  const query = schema.Store.aggregate([
+    { $match: request.query },
+    {
+      $group: {
+        _id: "$neighbourhood",
+      },
+    },
+    { $limit: Number(limit) },
+  ]);
+  query
+    .then((res) => {
+      const neighbourhoods = res.map((elem) => {
+        return elem._id;
+      });
+      return response.status(200).send(neighbourhoods);
+    })
+    .catch((err) => {
+      return response.status(404).send(err);
+    });
+}
+
 function getReviews(request, response) {
   const user_id = request.params.user_id;
 
   const reviewQuery = schema.Review.find({
-    customerID: user_id,
+    user_id
   }).exec();
 
   reviewQuery
@@ -138,7 +140,7 @@ function getReviews(request, response) {
           "/query/customer/getReviews: No reviews found with given user_id"
         );
       }
-      return response.status(200).send({ reviews: reviews });
+      return response.status(200).send({ reviews });
     })
     .catch((error) => {
       console.log(error);
@@ -150,20 +152,45 @@ function registerReview(request, response) {
   const user_id = request.body.user_id;
   const store_id = request.body.store_id;
   const barber_id = request.body.barber_id;
-  const review = request.body.review;
-  const rating = request.body.rating;
-  const entry = {
-    storeID: store_id,
-    barberID: barber_id,
-    customerID: user_id,
-    rating: rating,
-    review: review,
-  };
+  const storeQuery = schema.Store.findOne({ store_id }).exec(); 
+  const barberQuery = schema.Barber.findOne({ barber_id }).exec();
+  const userQuery = schema.User.findOne({ user_id }).exec();
+  let doc;
 
-  const doc = new schema.Review(entry);
-  doc.save()
+  storeQuery
+    .then(res => {
+      if (res === null) {
+        return Promise.reject(
+          "/query/customer/registerReview: No stores found with given store_id"
+        );
+      }
+      request.body.store_name = res.name;
+      return barberQuery;
+    })
+    .then(res => {
+      if (res === null) {
+        return Promise.reject(
+          "/query/customer/registerReview: No barber found with given barber_id"
+        );
+      }
+      request.body.barber_name = res.name;
+      return userQuery;
+    })
+    .then(res => {
+      if (res === null) {
+        return Promise.reject(
+          "/query/customer/registerReview: No user found with given user_id"
+        );
+      }
+      request.body.user_name = res.first_name + " " + res.last_name;
+      request.body.date = new Date();
+      doc = new schema.Review(request.body);
+      return doc.save();
+    })
     .then(() => {
-      return response.status(200).send({});
+      return response.status(200).send({
+        review_id: doc.review_id,
+      });
     })
     .catch((error) => {
       console.log(error);
@@ -172,26 +199,44 @@ function registerReview(request, response) {
 }
 
 function updateReview(request, response) {
-  // STUB
-  return response.status(200).send("ok");
+  const review_id = request.body.review_id;
+  delete request.body.review_id;
+  const reviewQuery = schema.Review.findOneAndUpdate({ review_id }, request.body).exec();
+
+  reviewQuery
+    .then(() => {
+      return response.status(200).send({ review_id });
+    })
+    .catch((error) => {
+      console.log(error);
+      return response.status(500).send(error);
+    });
 }
 
 function deleteReview(request, response) {
-  // STUB
-  return response.status(200).send("ok");
+  const review_id = request.params.reivew_id;
+  const reviewQuery = schema.Review.findOneAndDelete( {review_id }).exec();
+
+  reviewQuery
+    .then(() => {
+      return response.status(200).send({ review_id });
+    })
+    .catch((error) => {
+      console.log(error);
+      return response.status(500).send(error);
+    });
 }
 
 function getReservations(request, response) {
   const user_id = request.params.user_id;
   let body = {};
-  // Initialize local constants
-  if (request.query.hasOwnProperty("start_time")) {
-    body.from = { "$gte": ISODate(request.query.start_time) };
+  if (request.query.hasOwnProperty("from")) {
+    body.from = { "$gte": ISODate(request.query.from) };
   }
-  if (request.query.hasOwnProperty("end_time")) {
-    body.to = { "$lte": ISODate(request.query.end_time) };
+  if (request.query.hasOwnProperty("to")) {
+    body.to = { "$lte": ISODate(request.query.to) };
   }
-  body.customerID = user_id;
+  body.user_id = user_id;
 
   const reservationQuery = schema.Reservation.find(body).exec();
 
@@ -202,7 +247,7 @@ function getReservations(request, response) {
           "/query/customer/getReservations: No stores found with given store_id"
         );
       }
-      return response.status(200).send({ reservations: reservations });
+      return response.status(200).send({ reservations });
     })
     .catch((error) => {
       console.log(error);
@@ -214,43 +259,50 @@ function registerReservation(request, response) {
   const user_id = request.body.user_id;
   const store_id = request.body.store_id;
   const barber_id = request.body.barber_id;
-  const start_time = ISODate(request.body.start_time);
-  const end_time = start_time;
-  const service = request.body.service;
-  const id = user_id + barber_id + start_time;
+  request.body.from = ISODate(request.body.from);
+  request.body.to = from;
 
-  const barberQuery = schema.Barber.findOne({ id: barber_id }).exec();
+  const storeQuery = schema.Store.findOne({ store_id }).exec();
+  const userQuery = schema.User.findOne({ user_id }).exec();
+  const barberQuery = schema.Barber.findOne({ barber_id }).exec();
 
-  barberQuery
-    .then((barber) => {
-      if (barber === null) {
+  storeQuery
+    .then(res => {
+      if (res === null) {
         return Promise.reject(
-          "/query/customer/setReservation: No barber found with given barber_id"
+          "/query/customer/registerReservation: No stores found with given store_id"
         );
       }
-      for (let i = 0; i < barber.services.length; i++) {
-        if (barber.services[i].service === service) {
-          end_time += barber.services[i].duration * 1000 * 60;
+      request.body.store_name = res.name;
+      return userQuery;
+    })
+    .then(res => {
+      if (res === null) {
+        return Promise.reject(
+          "/query/customer/registerReservation: No user found with given user_id"
+        );
+      }
+      request.body.user_name = res.name;
+      return barberQuery;
+    })
+    .then(res => {
+      if (res === null) {
+        return Promise.reject(
+          "/query/customer/registerReservation: No barber found with given barber_id"
+        );
+      }
+      request.body.barber_name = res.name;
+      for (let i = 0; i < res.services.length; i++) {
+        if (res.services[i].service === service) {
+          to += res.services[i].duration * 1000 * 60;
         }
         break;
       }
-      return Promise.resolve();
+      const doc = new schema.Reservation(request.body);
+      return doc.save();
     })
     .then(() => {
-      const entry = {
-        storeID: store_id,
-        barberID: barber_id,
-        customerID: user_id,
-        from: start_time,
-        service: service,
-        id: id,
-        to: end_time,
-      };
-      const doc = new schema.Reservation(entry);
-      return doc.save().then(() => { });
-    })
-    .then(() => {
-      return response.status(200).send({ reservation_id: id, end_time: end_time.toJSON() });
+      return response.status(200).send({ reservation_id: doc.reservation_id, to: doc.to.toJSON() });
     })
     .catch((error) => {
       console.log(error);
@@ -261,11 +313,11 @@ function registerReservation(request, response) {
 function deleteReservation(request, response) {
   const reservation_id = request.params.reservation_id;
 
-  const reservationQuery = schema.Reservation.deleteOne({ id: reservation_id }).exec();
+  const reservationQuery = schema.Reservation.deleteOne({ reservation_id }).exec();
 
   reservationQuery
     .then(() => {
-      return response.status(200).send({});
+      return response.status(200).send({ reservation_id });
     })
     .catch((error) => {
       console.log(error);
@@ -276,6 +328,7 @@ function deleteReservation(request, response) {
 module.exports = {
   getStore,
   searchStores,
+  getNeighbourhoods,
   getReviews,
   registerReview,
   updateReview,
@@ -283,4 +336,4 @@ module.exports = {
   getReservations,
   registerReservation,
   deleteReservation,
-}
+};

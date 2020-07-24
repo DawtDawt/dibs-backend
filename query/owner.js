@@ -1,9 +1,10 @@
 const schema = require("../schemas");
 const nodeGeocoder = require('node-geocoder');
+require("dotenv").config();
 
 const options = {
   provider: 'google',
-  apiKey: 'AIzaSyDlE3gDidbd2I5fmBqRq0seTJTkf4vWW7w',
+  apiKey: process.env.GEOCODE_API,
   formatter: null
 }
 const geocoder = nodeGeocoder(options);

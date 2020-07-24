@@ -60,6 +60,10 @@ const storeSchema = new mongoose.Schema({
         enum: constant.PROVINCES,
         required: true,
     },
+    neighbourhood: {
+        type: String,
+        required: true,
+    },
     description: String,
     price: {
         type: Number,
@@ -138,15 +142,23 @@ const reviewSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  store_name: {
+    type: String,
+    required: true
+  },
   barber_id: {
     type: Number,
+    required: true
+  },
+  barber_name: {
+    type: String,
     required: true
   },
   user_id: {
     type: Number,
     required: true
   },
-  name: {
+  user_name: {
     type: String,
     required: true
   },
@@ -158,6 +170,11 @@ const reviewSchema = new mongoose.Schema({
     type: Number,
     min: 1,
     max: 5,
+    required: true
+  },
+  service: {
+    type: String,
+    enum: constant.SERVICES,
     required: true
   },
   review: String
@@ -172,15 +189,23 @@ const reservationSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  user_name: {
+    type: String,
+    required: true
+  },
   barber_id: {
     type: Number,
+    required: true
+  },
+  barber_name: {
+    type: String,
     required: true
   },
   store_id: {
     type: Number,
     required: true
   },
-  name: {
+  store_name: {
     type: String,
     required: true
   },
@@ -189,11 +214,11 @@ const reservationSchema = new mongoose.Schema({
     enum: constant.SERVICES,
     required: true
   },
-  from: {
+  to: {
     type: Date,
     required: true
   },
-  to: {
+  from: {
     type: Date,
     required: true
   }

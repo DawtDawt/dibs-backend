@@ -98,6 +98,8 @@ app.get("/api/customer/store/:store_id", customer.getStore);
 
 app.get("/api/customer/store/search/:count", customer.searchStores);
 
+app.get("/api/customer/neighbourhoods/", customer.getNeighbourhoods);
+
 app.get("/api/customer/review/:user_id", customer.getReviews);
 
 app.post("/api/customer/review", customer.registerReview);
