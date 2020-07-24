@@ -115,7 +115,7 @@ app.delete("/api/customer/reservations/:reservation_id", customer.removeReservat
 /* Authentication */
 app.post("/api/auth/signin/", auth.signIn);
 
-app.get("/api/auth/signout/", auth.verifyJWT, auth.signOut);
+app.get("/api/auth/signout/", auth.signOut);
 
 app.post("/api/auth/signup/", auth.signUp);
 
