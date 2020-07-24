@@ -94,23 +94,25 @@ app.delete("/api/owner/barber", owner.deleteBarber);
 
 /* Customer */
 
-app.get("/api/customer/store/:store_id", customer.getStoreById);
+app.get("/api/customer/store/:store_id", customer.getStore);
 
-app.get("/api/customer/barber/:store_id/:barber_id", customer.getBarberReservations);
-
-app.get("/api/customer/store/search/:count", customer.searchStore);
+app.get("/api/customer/store/search/:count", customer.searchStores);
 
 app.get("/api/customer/neighbourhoods/", customer.getNeighbourhoods);
 
-app.get("/api/customer/reviews/:user_id", customer.getReviews);
+app.get("/api/customer/review/:user_id", customer.getReviews);
 
-app.post("/api/customer/reviews", customer.setReview);
+app.post("/api/customer/review", customer.registerReview);
 
-app.get("/api/customer/reservations/:user_id", customer.getReservations);
+app.put("/api/customer/review", customer.updateReview);
 
-app.post("/api/customer/reservations", customer.setReservation);
+app.delete("/api/customer/review/:review_id", customer.deleteReview);
 
-app.delete("/api/customer/reservations/:reservation_id", customer.removeReservation);
+app.get("/api/customer/reservation/:user_id", customer.getReservations);
+
+app.post("/api/customer/reservation", customer.registerReservation);
+
+app.delete("/api/customer/reservation/:reservation_id", customer.deleteReservation);
 
 /* Authentication */
 app.post("/api/auth/signin/", auth.signIn);

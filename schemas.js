@@ -127,96 +127,111 @@ const barberSchema = new mongoose.Schema({
     ],
     schedule: [
         {
-            from: {
-                type: Date,
-                required: true,
-            },
-            to: {
-                type: Date,
-                required: true,
-            },
+            from: String,
+            to: String
         },
     ],
 });
 
 const reviewSchema = new mongoose.Schema({
-    store_id: {
-        type: Number,
-        required: true,
-        index: true,
-    },
-    barber_id: {
-        type: Number,
-        required: true,
-        index: true,
-    },
-    user_id: {
-        type: Number,
-        required: true,
-        index: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    date: {
-        type: Date,
-        required: true,
-    },
-    rating: {
-        type: Number,
-        min: 1,
-        max: 5,
-        required: true,
-    },
-    review: String,
+  review_id: {
+    type: Number,
+    unique: true
+  },
+  store_id: {
+    type: Number,
+    required: true
+  },
+  store_name: {
+    type: String,
+    required: true
+  },
+  barber_id: {
+    type: Number,
+    required: true
+  },
+  barber_name: {
+    type: String,
+    required: true
+  },
+  user_id: {
+    type: Number,
+    required: true
+  },
+  user_name: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5,
+    required: true
+  },
+  service: {
+    type: String,
+    enum: constant.SERVICES,
+    required: true
+  },
+  review: String
 });
 
 const reservationSchema = new mongoose.Schema({
-    reservation_id: {
-        type: Number,
-        unique: true,
-    },
-    user_id: {
-        type: Number,
-        required: true,
-    },
-    barber_id: {
-        type: Number,
-        required: true,
-    },
-    store_id: {
-        type: Number,
-        required: true,
-    },
-    service: {
-        type: String,
-        enum: constant.SERVICES,
-        required: true,
-    },
-    from: {
-        type: Date,
-        required: true,
-    },
-    to: {
-        type: Date,
-        required: true,
-    },
+  reservation_id: {
+    type: Number,
+    unique: true
+  },
+  user_id: {
+    type: Number,
+    required: true
+  },
+  user_name: {
+    type: String,
+    required: true
+  },
+  barber_id: {
+    type: Number,
+    required: true
+  },
+  barber_name: {
+    type: String,
+    required: true
+  },
+  store_id: {
+    type: Number,
+    required: true
+  },
+  store_name: {
+    type: String,
+    required: true
+  },
+  service: {
+    type: String,
+    enum: constant.SERVICES,
+    required: true
+  },
+  to: {
+    type: Date,
+    required: true
+  },
+  from: {
+    type: Date,
+    required: true
+  }
 });
-
-function hoursLimit(val) {
-    return val.length === constant.DAYSINAWEEK;
-}
 
 userSchema.plugin(autoincrement, { inc_field: "user_id" });
 storeSchema.plugin(autoincrement, { inc_field: "store_id" });
 barberSchema.plugin(autoincrement, { inc_field: "barber_id" });
+reviewSchema.plugin(autoincrement, { inc_field: "review_id" });
 reservationSchema.plugin(autoincrement, { inc_field: "reservation_id" });
 const User = mongoose.model("User", userSchema);
 const Store = mongoose.model("Store", storeSchema);
 const Barber = mongoose.model("Barber", barberSchema);
-// [TW] unique compound index not working, need to debug
-reviewSchema.index({ barberID: 1, customerID: 1 }, { unique: true });
 const Review = mongoose.model("Review", reviewSchema);
 const Reservation = mongoose.model("Reservation", reservationSchema);
 
