@@ -219,6 +219,19 @@ function registerReview(request, response) {
             return doc.save();
         })
         .then(() => {
+            return schema.Review.find({ store_id }).exec();
+        })
+        .then((res) => {
+            let count = 0;
+            let ratings = 0;
+            for (let review of res) {
+                ratings += review.rating;
+                count++;
+            }
+            const rating = ratings / count;
+            return schema.Store.findOneAndUpdate({ store_id }, { rating }).exec();
+        })
+        .then(() => {
             return response.status(200).send({
                 review_id: doc.review_id,
             });

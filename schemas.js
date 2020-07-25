@@ -128,100 +128,100 @@ const barberSchema = new mongoose.Schema({
     schedule: [
         {
             from: String,
-            to: String
+            to: String,
         },
     ],
 });
 
 const reviewSchema = new mongoose.Schema({
-  review_id: {
-    type: Number,
-    unique: true
-  },
-  store_id: {
-    type: Number,
-    required: true
-  },
-  store_name: {
-    type: String,
-    required: true
-  },
-  barber_id: {
-    type: Number,
-    required: true
-  },
-  barber_name: {
-    type: String,
-    required: true
-  },
-  user_id: {
-    type: Number,
-    required: true
-  },
-  user_name: {
-    type: String,
-    required: true
-  },
-  date: {
-    type: Date,
-    required: true
-  },
-  rating: {
-    type: Number,
-    min: 1,
-    max: 5,
-    required: true
-  },
-  service: {
-    type: String,
-    enum: constant.SERVICES,
-    required: true
-  },
-  review: String
+    review_id: {
+        type: Number,
+        unique: true,
+    },
+    store_id: {
+        type: Number,
+        required: true,
+    },
+    store_name: {
+        type: String,
+        required: true,
+    },
+    barber_id: {
+        type: Number,
+        required: true,
+    },
+    barber_name: {
+        type: String,
+        required: true,
+    },
+    user_id: {
+        type: Number,
+        required: true,
+    },
+    user_name: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: Date,
+        required: true,
+    },
+    rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: true,
+    },
+    service: {
+        type: String,
+        enum: constant.SERVICES,
+        required: true,
+    },
+    review: String,
 });
 
 const reservationSchema = new mongoose.Schema({
-  reservation_id: {
-    type: Number,
-    unique: true
-  },
-  user_id: {
-    type: Number,
-    required: true
-  },
-  user_name: {
-    type: String,
-    required: true
-  },
-  barber_id: {
-    type: Number,
-    required: true
-  },
-  barber_name: {
-    type: String,
-    required: true
-  },
-  store_id: {
-    type: Number,
-    required: true
-  },
-  store_name: {
-    type: String,
-    required: true
-  },
-  service: {
-    type: String,
-    enum: constant.SERVICES,
-    required: true
-  },
-  to: {
-    type: Date,
-    required: true
-  },
-  from: {
-    type: Date,
-    required: true
-  }
+    reservation_id: {
+        type: Number,
+        unique: true,
+    },
+    user_id: {
+        type: Number,
+        required: true,
+    },
+    user_name: {
+        type: String,
+        required: true,
+    },
+    barber_id: {
+        type: Number,
+        required: true,
+    },
+    barber_name: {
+        type: String,
+        required: true,
+    },
+    store_id: {
+        type: Number,
+        required: true,
+    },
+    store_name: {
+        type: String,
+        required: true,
+    },
+    service: {
+        type: String,
+        enum: constant.SERVICES,
+        required: true,
+    },
+    to: {
+        type: Date,
+        required: true,
+    },
+    from: {
+        type: Date,
+        required: true,
+    },
 });
 
 userSchema.plugin(autoincrement, { inc_field: "user_id" });
