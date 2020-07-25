@@ -33,29 +33,29 @@ async function initStores() {
     for (let j = 0; j < constant.DAYSINAWEEK; j++) {
       hours[j] = { isOpen: true, from: "0800", to: "1700" };
     }
+      const entry = new schema.Store({
+          owner_id: id,
+          name: "StoreName",
+          address: "1234 Store Road",
+          city: "Vancouver",
+          province: "BC",
+          description: "This is a description",
+          price: price,
+          lat: "49.2606",
+          lon: "-123.2460",
+          website: "www.website.com",
+          phone_number: "7781234567",
+          pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
+          rating: price,
+          services: "Haircut",
+          neighbourhood: "Kitslano",
+          hours: hours,
+          barber_ids: [id]
+      });
+      entry.save(function (error) {
+          if (error) return console.log(error.message);
+      });
   }
-  const entry = new schema.Store({
-    owner_id: id,
-    name: "StoreName",
-    address: "1234 Store Road",
-    city: "Vancouver",
-    province: "BC",
-    description: "This is a description",
-    price: price,
-    lat: "49.2606",
-    lon: "-123.2460",
-    website: "www.website.com",
-    phone_number: "7781234567",
-    pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
-    rating: price,
-    services: "Haircut",
-    neighbourhood: "Kitslano",
-    hours: hours,
-    barber_ids: [id]
-  });
-  entry.save(function (error) {
-    if (error) return console.log(error.message);
-  });
 }
 
 async function initBarbers() {
@@ -300,96 +300,27 @@ async function initDefaultShops() {
         "We’ve got five hundred shows to choose from. Why should we give two guys, who have no idea, and no experience, more money?",
         "Look, I got a few good years left. If I want a Chip Ahoy, I’m having it.",
     ];
-    for (let i = 0; i < 10; i++) {
-        let id = 11;
-        if (i >= 5) {
-            id = 12;
+        for (let i = 0; i < 10; i++) {
+            let id = 11;
+            if (i >= 5) {
+                id = 12;
+            }
+            const entry = new schema.Review({
+                store_id: id,
+                barber_id: id,
+                user_id: id,
+                user_name: names[i],
+                barber_name: 'Larry David',
+                store_name: 'Larry\'s Excellent Barbershop',
+                date: new Date(),
+                rating: Math.ceil(Math.random() * Math.floor(4)),
+                review: reviews[i],
+                service: constant.SERVICES[0]
+            });
+            entry.save(function (error) {
+                if (error) return console.log(error.message);
+            });
         }
-        // shops
-        const store = new schema.Store({
-            owner_id: 11,
-            name: "Larry's Excellent Barbershop",
-            address: "#4 Privet Drive",
-            city: "Vancouver",
-            province: "BC",
-            description:
-                "If you’re looking for somewhere to get your hair cut in central downtown Vancouver, head to Junior’s Barbershop. Their friendly and professional barbers specialize in everything from edgy to traditional styles. From the friendly and professional staff, to the signed posters from celebrity patrons (like Idris Elba) adorning the walls, this may be the perfect place to laugh, relax, and get a fresh fade.",
-            price: 3,
-            lat: "49.2606",
-            lon: "-123.2460",
-            website: "www.excellentbarbershop.com",
-            neighbourhood: "Kitslano",
-            phone_number: "7781234567",
-            pictures: [
-                images.larrylogo,
-                images.barberChairsBase64,
-                images.barberCutBase64,
-                images.barberScissorsBase64,
-            ],
-            rating: 3,
-            services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
-            hours: hours,
-            barber_ids: [],
-            neighbourhood: "Coal Harbour",
-        });
-        store.save(function (error) {
-            if (error) return console.log(error.message);
-        });
-        const store2 = new schema.Store({
-            owner_id: 11,
-            name: "Jerry's Excellent Barbershop",
-            address: "12 Grimmauld Place",
-            city: "Vancouver",
-            province: "BC",
-            description:
-                "Jerry’s is a gathering place not only to get a haircut, but also to engage in friendly banter, have a laugh, trade gossip and maybe make new friends. A relaxed and friendly environment comes with a great cut every visit, a vintage place for those who care about their hair.",
-            price: 2,
-            lat: "49.2606",
-            lon: "-123.2460",
-            website: "www.excellentbarbershop.com",
-            neighbourhood: "Kitslano",
-            phone_number: "7781234567",
-            pictures: [
-                images.jerrylogo,
-                images.barberChairsBase64,
-                images.barberCutBase64,
-                images.barberScissorsBase64,
-            ],
-            rating: 3,
-            services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
-            hours: hours,
-            barber_ids: [],
-            neighbourhood: "Fairview",
-        });
-        store2.save(function (error) {
-            if (error) return console.log(error.message);
-        });
-        // barbers
-        const date = new Date();
-        const barber = new schema.Barber({
-            name: "Larry David",
-            description:
-                "Lawrence Gene David is an American comedian, writer, actor, director, and television producer. He and Jerry Seinfeld created the television series Seinfeld, of which David was the head writer and executive producer for the first seven seasons. David gained further recognition for the HBO series Curb Your Enthusiasm, which he created and stars in as a semi-fictionalized version of himself. David has written or co-written every episode of Curb Your Enthusiasm since its pilot episode in 1999.",
-            picture: images.larrydavid,
-            store_ids: [11],
-            services: [{ service: "Haircut", duration: 45 }],
-            schedule: [{ from: date, to: date }],
-        });
-        barber.save(function (error) {
-            if (error) return console.log(error.message);
-        });
-        const barber2 = new schema.Barber({
-            name: "Jerry Seinfeld",
-            description:
-                "Jerome Allen Seinfeld is an American comedian, actor, writer, producer, and director. He is known for playing a semi-fictionalized version of himself in the sitcom Seinfeld, which he created and wrote with Larry David. The show aired on NBC from 1989 until 1998, becoming one of the most acclaimed and popular sitcoms of all-time.",
-            picture: images.jerryseinfeld,
-            store_ids: [11],
-            services: [
-                { service: "Haircut", duration: 30 },
-                { service: "Shaving", duration: 30 },
-            ],
-            schedule: [{ from: date, to: date }],
-        });
     }
     // init reservations
     // init the array of times
@@ -459,12 +390,11 @@ async function initDefaultShops() {
             if (error) return console.log(error.message);
         });
     }
-}
 
 async function init() {
     console.log("/boot/init: placeholder init");
     await initUsers();
-    // await initStores();
+    await initStores();
     await initBarbers();
     await initReviews();
     await initReservations();

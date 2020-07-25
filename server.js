@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const owner = require("./query/owner");
 const customer = require("./query/customer");
@@ -51,6 +52,7 @@ const allowCrossDomain = function (req, res, next) {
     next();
 };
 app.use(allowCrossDomain);
+app.use(express.static(path.join(__dirname, '../dibs-frontend/build')));
 app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json());
@@ -74,9 +76,6 @@ try {
 
 /* Endpoints */
 
-app.get("/", (request, response) => {
-    response.status(200).send("ok");
-});
 
 /* Owner */
 
@@ -120,6 +119,11 @@ app.post("/api/auth/signin/", auth.signIn);
 app.get("/api/auth/signout/", auth.signOut);
 
 app.post("/api/auth/signup/", auth.signUp);
+
+// Anything that doesn't match the above, send back the index.html file
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../dibs-frontend/build/index.html'))
+})
 
 /* Thread */
 
