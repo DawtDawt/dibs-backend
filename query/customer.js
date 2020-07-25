@@ -91,6 +91,9 @@ function searchStores(request, response) {
       return storeQuery;
     })
     .then((res) => {
+      if (res.pictures.length > 0) {
+        res.pictures = [res.pictures[0]];
+      }
       return response.status(200).send({
         count: resCount,
         stores: res
