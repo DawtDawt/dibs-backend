@@ -188,62 +188,8 @@ function registerReview(request, response) {
     const userQuery = schema.User.findOne({ user_id }).exec();
     let doc;
 
-<<<<<<< HEAD
-  storeQuery
-    .then(res => {
-      if (res === null) {
-        return Promise.reject(
-          "/query/customer/registerReview: No stores found with given store_id"
-        );
-      }
-      request.body.store_name = res.name;
-      return barberQuery;
-    })
-    .then(res => {
-      if (res === null) {
-        return Promise.reject(
-          "/query/customer/registerReview: No barber found with given barber_id"
-        );
-      }
-      request.body.barber_name = res.name;
-      return userQuery;
-    })
-    .then(res => {
-      if (res === null) {
-        return Promise.reject(
-          "/query/customer/registerReview: No user found with given user_id"
-        );
-      }
-      request.body.user_name = res.first_name + " " + res.last_name;
-      request.body.date = new Date();
-      doc = new schema.Review(request.body);
-      return doc.save();
-    })
-    .then(() => {
-      return schema.Review.find({ store_id }).exec();
-    })
-    .then(res => {
-      let count = 0;
-      let ratings = 0;
-      for (let review of res) {
-        ratings += review.rating;
-        count++;
-      }
-      const rating = ratings / count;
-      return schema.Store.findOneAndUpdate({ store_id }, { rating }).exec();
-    })
-    .then(() => {
-      return response.status(200).send({
-        review_id: doc.review_id,
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-      return response.status(500).send(error);
-    });
-=======
     storeQuery
-        .then((res) => {
+        .then(res => {
             if (res === null) {
                 return Promise.reject(
                     "/query/customer/registerReview: No stores found with given store_id"
@@ -252,7 +198,7 @@ function registerReview(request, response) {
             request.body.store_name = res.name;
             return barberQuery;
         })
-        .then((res) => {
+        .then(res => {
             if (res === null) {
                 return Promise.reject(
                     "/query/customer/registerReview: No barber found with given barber_id"
@@ -261,7 +207,7 @@ function registerReview(request, response) {
             request.body.barber_name = res.name;
             return userQuery;
         })
-        .then((res) => {
+        .then(res => {
             if (res === null) {
                 return Promise.reject(
                     "/query/customer/registerReview: No user found with given user_id"
@@ -273,6 +219,19 @@ function registerReview(request, response) {
             return doc.save();
         })
         .then(() => {
+            return schema.Review.find({ store_id }).exec();
+        })
+        .then(res => {
+            let count = 0;
+            let ratings = 0;
+            for (let review of res) {
+                ratings += review.rating;
+                count++;
+            }
+            const rating = ratings / count;
+            return schema.Store.findOneAndUpdate({ store_id }, { rating }).exec();
+        })
+        .then(() => {
             return response.status(200).send({
                 review_id: doc.review_id,
             });
@@ -281,7 +240,6 @@ function registerReview(request, response) {
             console.log(error);
             return response.status(500).send(error);
         });
->>>>>>> develop
 }
 
 function updateReview(request, response) {
