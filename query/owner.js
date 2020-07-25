@@ -1,12 +1,12 @@
 const schema = require("../schemas");
-const nodeGeocoder = require('node-geocoder');
+const nodeGeocoder = require("node-geocoder");
 require("dotenv").config();
 
 const options = {
-    provider: 'google',
+    provider: "google",
     apiKey: process.env.GEOCODE_API,
-    formatter: null
-}
+    formatter: null,
+};
 const geocoder = nodeGeocoder(options);
 
 function getStore(request, response) {
@@ -15,7 +15,7 @@ function getStore(request, response) {
     const storeQuery = schema.Store.find(request.query).exec();
 
     storeQuery
-        .then(res => {
+        .then((res) => {
             let promises = [];
 
             if (res.length === 0) {
@@ -23,12 +23,18 @@ function getStore(request, response) {
                 return Promise.reject("/query/owner/getStore: No stores found with given params");
             }
             for (let store of res) {
-                ret.push({ store_id: store.store_id, store: store, reviews: [], reservations: [], barbers: [] });
+                ret.push({
+                    store_id: store.store_id,
+                    store: store,
+                    reviews: [],
+                    reservations: [],
+                    barbers: [],
+                });
                 promises.push(schema.Review.find({ store_id: store.store_id }).exec());
             }
             return Promise.all(promises);
         })
-        .then(res => {
+        .then((res) => {
             let promises = [];
 
             for (let reviews of res) {
@@ -47,7 +53,7 @@ function getStore(request, response) {
             }
             return Promise.all(promises);
         })
-        .then(res => {
+        .then((res) => {
             let promises = [];
 
             for (let reservations of res) {
@@ -66,7 +72,7 @@ function getStore(request, response) {
             }
             return Promise.all(promises);
         })
-        .then(res => {
+        .then((res) => {
             for (let barbers of res) {
                 if (barbers.length === 0) {
                     break;
@@ -87,7 +93,7 @@ function getStore(request, response) {
             }
             return response.status(200).send(ret);
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
             return response.status(404).send(error);
         });
@@ -96,7 +102,7 @@ function getStore(request, response) {
 function registerStore(request, response) {
     const geocode = geocoder.geocode({
         address: request.body.address,
-        city: request.body.city
+        city: request.body.city,
     });
     let doc;
 
@@ -106,7 +112,7 @@ function registerStore(request, response) {
     request.body.barber_ids = [];
 
     geocode
-        .then(res => {
+        .then((res) => {
             console.log(res);
             request.body.lat = res[0].latitude;
             request.body.lon = res[0].longitude;
@@ -116,7 +122,7 @@ function registerStore(request, response) {
         .then(() => {
             return response.status(200).send({ store_id: doc.store_id });
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
             return response.status(500).send(error);
         });
@@ -125,16 +131,18 @@ function registerStore(request, response) {
 function deleteStore(request, response) {
     let ret = {
         store_ids: [],
-        barber_ids: []
+        barber_ids: [],
     };
 
     const storeQuery = schema.Store.find(request.query).exec();
 
     storeQuery
-        .then(res => {
+        .then((res) => {
             if (res.length === 0) {
                 console.log("/query/owner/deleteStore: No stores found with given params");
-                return Promise.reject("/query/owner/deleteStore: No stores found with given params");
+                return Promise.reject(
+                    "/query/owner/deleteStore: No stores found with given params"
+                );
             }
             for (let store of res) {
                 ret.store_ids.push(store.store_id);
@@ -148,12 +156,15 @@ function deleteStore(request, response) {
             return schema.Reservation.deleteMany({ store_id: ret.store_ids }).exec();
         })
         .then(() => {
-            return schema.Barber.updateMany({ store_ids: { $in: ret.store_ids } }, { $pullAll: { store_ids: ret.store_ids } }).exec();
+            return schema.Barber.updateMany(
+                { store_ids: { $in: ret.store_ids } },
+                { $pullAll: { store_ids: ret.store_ids } }
+            ).exec();
         })
         .then(() => {
             return schema.Barber.find({ store_ids: [] }).exec();
         })
-        .then(res => {
+        .then((res) => {
             for (let barber of res) {
                 ret.barber_ids.push(barber.barber_id);
             }
@@ -162,7 +173,7 @@ function deleteStore(request, response) {
         .then(() => {
             return response.status(200).send(ret);
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
             return response.status(500).send(error);
         });
@@ -179,19 +190,25 @@ function getBarber(request, response) {
     const barberQuery = schema.Barber.find(request.query).exec();
 
     barberQuery
-        .then(res => {
+        .then((res) => {
             let promises = [];
 
             if (res.length === 0) {
                 return Promise.reject("/query/owner/getBarber: No barbers found with given params");
             }
             for (let barber of res) {
-                ret.push({ barber_id: barber.barber_id, barber: barber, reviews: [], reservations: [], stores: [] });
+                ret.push({
+                    barber_id: barber.barber_id,
+                    barber: barber,
+                    reviews: [],
+                    reservations: [],
+                    stores: [],
+                });
                 promises.push(schema.Review.find({ barber_id: barber.barber_id }).exec());
             }
             return Promise.all(promises);
         })
-        .then(res => {
+        .then((res) => {
             let promises = [];
 
             for (let reviews of res) {
@@ -211,7 +228,7 @@ function getBarber(request, response) {
 
             return Promise.all(promises);
         })
-        .then(res => {
+        .then((res) => {
             let promises = [];
 
             for (let reservations of res) {
@@ -230,7 +247,7 @@ function getBarber(request, response) {
             }
             return Promise.all(promises);
         })
-        .then(res => {
+        .then((res) => {
             for (let stores of res) {
                 if (stores.length === 0) {
                     break;
@@ -251,7 +268,7 @@ function getBarber(request, response) {
             }
             return response.status(200).send(ret);
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
             return response.status(404).send(error);
         });
@@ -267,13 +284,17 @@ function registerBarber(request, response) {
                 body.push({ store_id: store_id });
             }
 
-            const storeQuery = schema.Store.updateMany({ $or: body }, { $push: { barber_ids: doc.barber_id } }).exec();
+            const storeQuery = schema.Store.updateMany(
+                { $or: body },
+                { $push: { barber_ids: doc.barber_id } }
+            ).exec();
 
             return storeQuery;
         })
         .then(() => {
             return response.status(200).send({ barber_id: doc.barber_id });
-        }).catch(error => {
+        })
+        .catch((error) => {
             console.log(error);
             return response.status(500).send(error);
         });
@@ -281,7 +302,7 @@ function registerBarber(request, response) {
 
 function deleteBarber(request, response) {
     let ret = {
-        barber_ids: []
+        barber_ids: [],
     };
 
     if (request.query.hasOwnProperty("store_id")) {
@@ -292,10 +313,12 @@ function deleteBarber(request, response) {
     const barberQuery = schema.Barber.find(request.query).exec();
 
     barberQuery
-        .then(res => {
+        .then((res) => {
             if (res.length === 0) {
                 console.log("/query/owner/deleteBarber: No barbers found with given params");
-                return Promise.reject("/query/owner/deleteBarber: No barbers found with given params");
+                return Promise.reject(
+                    "/query/owner/deleteBarber: No barbers found with given params"
+                );
             }
             for (let barber of res) {
                 ret.barber_ids.push(barber.barber_id);
@@ -309,68 +332,18 @@ function deleteBarber(request, response) {
             return schema.Reservation.deleteMany({ barber_id: ret.barber_ids }).exec();
         })
         .then(() => {
-            return schema.Store.updateMany({ barber_ids: { $in: ret.barber_ids } }, { $pullAll: { barber_ids: ret.barber_ids } }).exec();
+            return schema.Store.updateMany(
+                { barber_ids: { $in: ret.barber_ids } },
+                { $pullAll: { barber_ids: ret.barber_ids } }
+            ).exec();
         })
         .then(() => {
             return response.status(200).send(ret);
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
             return response.status(500).send(error);
         });
-}
-
-function getStoreStatistics(request, response) {
-    const storeQuery = schema.Store.findOne(request.query).exec();
-    const reviewQuery = schema.Review.find(request.query).exec();
-    const reservationQuery = schema.Reservation.find(request.query).exec();
-
-    let ret = {
-        rating_total: 0,
-        rating_day: 0,
-        rating_week: 0,
-        rating_month: 0,
-        rating_diff_day: 0,
-        rating_diff_week: 0,
-        rating_diff_month: 0,
-        services_count_total: [],
-        services_count_day: [],
-        services_count_week: [],
-        services_count_month: [],
-        reservations_total: 0,
-        reservations_day: 0,
-        reservations_week: 0,
-        reservations_month: 0,
-        reservations_diff_day: 0,
-        reservations_diff_week: 0,
-        reservations_diff_month: 0,
-    }
-
-    storeQuery
-        .then(res => {
-            ret.rating_total = res.rating;
-            return reviewQuery;
-        })
-        .then(res => {
-            const today = new Date();
-            let rating_day_count = 0;
-            let rating_week_count = 0;
-            let rating_month_count = 0;
-            for (let review of res) {
-                if (review.date.getFullYear === today.getFullYear && review.date.getMonth === today.get) { }
-            }
-            return reservationQuery;
-        })
-        .then(res => {
-            reservations = res;
-            for (let review of reviews) {
-
-            }
-        })
-}
-
-function getBarberStatistics(request, response) {
-
 }
 
 module.exports = {
@@ -380,6 +353,4 @@ module.exports = {
     getBarber,
     registerBarber,
     deleteBarber,
-    getStoreStatistics,
-    getBarberStatistics,
-}
+};

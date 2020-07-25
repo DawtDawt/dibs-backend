@@ -189,7 +189,7 @@ function registerReview(request, response) {
     let doc;
 
     storeQuery
-        .then(res => {
+        .then((res) => {
             if (res === null) {
                 return Promise.reject(
                     "/query/customer/registerReview: No stores found with given store_id"
@@ -198,7 +198,7 @@ function registerReview(request, response) {
             request.body.store_name = res.name;
             return barberQuery;
         })
-        .then(res => {
+        .then((res) => {
             if (res === null) {
                 return Promise.reject(
                     "/query/customer/registerReview: No barber found with given barber_id"
@@ -207,7 +207,7 @@ function registerReview(request, response) {
             request.body.barber_name = res.name;
             return userQuery;
         })
-        .then(res => {
+        .then((res) => {
             if (res === null) {
                 return Promise.reject(
                     "/query/customer/registerReview: No user found with given user_id"
@@ -221,7 +221,7 @@ function registerReview(request, response) {
         .then(() => {
             return schema.Review.find({ store_id }).exec();
         })
-        .then(res => {
+        .then((res) => {
             let count = 0;
             let ratings = 0;
             for (let review of res) {

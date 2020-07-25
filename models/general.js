@@ -1,35 +1,35 @@
 const constant = require("../constants");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
     id: {
         type: String,
         unique: true,
-        required: true
+        required: true,
     },
     password: {
         type: String,
-        required: true
+        required: true,
     },
     role: {
         type: String,
-        enum: [constant.CUSTOMER, constant.OWNER]
+        enum: [constant.CUSTOMER, constant.OWNER],
     },
     firstName: {
         type: String,
-        required: true
+        required: true,
     },
     lastName: {
         type: String,
-        required: true
+        required: true,
     },
     email: {
         type: String,
-        required: true
+        required: true,
     },
     phoneNumber: {
         type: String,
-        required: true
+        required: true,
     },
 });
 
