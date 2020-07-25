@@ -141,7 +141,7 @@ async function initDefaultShops() {
     });
     let hours = [];
     for (let j = 0; j < constant.DAYSINAWEEK; j++) {
-        hours[j] = { isOpen: true, from: "0700", to: "1900" };
+        hours[j] = {isOpen: true, from: "0700", to: "1900"};
     }
     // shops
     const store = new schema.Store({
@@ -209,8 +209,8 @@ async function initDefaultShops() {
             "Lawrence Gene David is an American comedian, writer, actor, director, and television producer. He and Jerry Seinfeld created the television series Seinfeld, of which David was the head writer and executive producer for the first seven seasons. David gained further recognition for the HBO series Curb Your Enthusiasm, which he created and stars in as a semi-fictionalized version of himself. David has written or co-written every episode of Curb Your Enthusiasm since its pilot episode in 1999.",
         picture: images.larrydavid,
         store_ids: [11],
-        services: [{ service: "Haircut", duration: 45 }],
-        schedule: [{ from: date, to: date }],
+        services: [{service: "Haircut", duration: 45}],
+        schedule: [{from: date, to: date}],
     });
     barber.save(function (error) {
         if (error) return console.log(error.message);
@@ -222,10 +222,10 @@ async function initDefaultShops() {
         picture: images.jerryseinfeld,
         store_ids: [11],
         services: [
-            { service: "Haircut", duration: 30 },
-            { service: "Shaving", duration: 30 },
+            {service: "Haircut", duration: 30},
+            {service: "Shaving", duration: 30},
         ],
-        schedule: [{ from: date, to: date }],
+        schedule: [{from: date, to: date}],
     });
     barber2.save(function (error) {
         if (error) return console.log(error.message);
@@ -237,10 +237,10 @@ async function initDefaultShops() {
         picture: images.jbsmoove,
         store_ids: [11],
         services: [
-            { service: "Nails", duration: 60 },
-            { service: "Eyebrows", duration: 30 },
+            {service: "Nails", duration: 60},
+            {service: "Eyebrows", duration: 30},
         ],
-        schedule: [{ from: date, to: date }],
+        schedule: [{from: date, to: date}],
     });
     barber3.save(function (error) {
         if (error) return console.log(error.message);
@@ -252,10 +252,10 @@ async function initDefaultShops() {
         picture: images.jasonalexander,
         store_ids: [12],
         services: [
-            { service: "Hair color", duration: 120 },
-            { service: "Haircut", duration: 30 },
+            {service: "Hair color", duration: 120},
+            {service: "Haircut", duration: 30},
         ],
-        schedule: [{ from: date, to: date }],
+        schedule: [{from: date, to: date}],
     });
     barber4.save(function (error) {
         if (error) return console.log(error.message);
@@ -267,10 +267,10 @@ async function initDefaultShops() {
         picture: images.michaelrichards,
         store_ids: [12],
         services: [
-            { service: "Shaving", duration: 15 },
-            { service: "Haircut", duration: 30 },
+            {service: "Shaving", duration: 15},
+            {service: "Haircut", duration: 30},
         ],
-        schedule: [{ from: date, to: date }],
+        schedule: [{from: date, to: date}],
     });
     barber5.save(function (error) {
         if (error) return console.log(error.message);
@@ -300,27 +300,26 @@ async function initDefaultShops() {
         "We’ve got five hundred shows to choose from. Why should we give two guys, who have no idea, and no experience, more money?",
         "Look, I got a few good years left. If I want a Chip Ahoy, I’m having it.",
     ];
-        for (let i = 0; i < 10; i++) {
-            let id = 11;
-            if (i >= 5) {
-                id = 12;
-            }
-            const entry = new schema.Review({
-                store_id: id,
-                barber_id: id,
-                user_id: id,
-                user_name: names[i],
-                barber_name: 'Larry David',
-                store_name: 'Larry\'s Excellent Barbershop',
-                date: new Date(),
-                rating: Math.ceil(Math.random() * Math.floor(4)),
-                review: reviews[i],
-                service: constant.SERVICES[0]
-            });
-            entry.save(function (error) {
-                if (error) return console.log(error.message);
-            });
+    for (let i = 0; i < 10; i++) {
+        let id = 11;
+        if (i >= 5) {
+            id = 12;
         }
+        const entry = new schema.Review({
+            store_id: id,
+            barber_id: id,
+            user_id: id,
+            user_name: names[i],
+            barber_name: 'Larry David',
+            store_name: 'Larry\'s Excellent Barbershop',
+            date: new Date(),
+            rating: Math.ceil(Math.random() * Math.floor(4)),
+            review: reviews[i],
+            service: constant.SERVICES[0]
+        });
+        entry.save(function (error) {
+            if (error) return console.log(error.message);
+        });
     }
     // init reservations
     // init the array of times
@@ -390,6 +389,7 @@ async function initDefaultShops() {
             if (error) return console.log(error.message);
         });
     }
+}
 
 async function init() {
     console.log("/boot/init: placeholder init");
