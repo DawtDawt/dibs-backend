@@ -50,7 +50,7 @@ const allowCrossDomain = function (req, res, next) {
     next();
 };
 app.use(allowCrossDomain);
-app.use(express.static(path.join(__dirname, '../dibs-frontend/build')));
+app.use(express.static(path.join(__dirname, "../dibs-frontend/build")));
 app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json());
@@ -73,7 +73,6 @@ try {
 }
 
 /* Endpoints */
-
 
 /* Owner */
 
@@ -119,9 +118,9 @@ app.get("/api/auth/signout/", auth.signOut);
 app.post("/api/auth/signup/", auth.signUp);
 
 // Anything that doesn't match the above, send back the index.html file
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/../dibs-frontend/build/index.html'))
-})
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/../dibs-frontend/build/index.html"));
+});
 
 /* Thread */
 
