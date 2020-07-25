@@ -91,6 +91,10 @@ app.post("/api/owner/barber", owner.registerBarber);
 
 app.delete("/api/owner/barber", owner.deleteBarber);
 
+app.get("/api/owner/store/statistics", owner.getStoreStatistics);
+
+app.get("/api/owner/barber/statistics", owner.getBarberStatistics);
+
 /* Customer */
 
 app.get("/api/customer/store/:store_id", customer.getStore);

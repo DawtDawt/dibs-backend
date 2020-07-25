@@ -320,11 +320,65 @@ function deleteBarber(request, response) {
     });
 }
 
+function getStoreStatistics(request, response) {
+  const storeQuery = schema.Store.findOne(request.query).exec();
+  const barberQuery = schema.Barber.find(request.query).exec();
+  const reviewQuery = schema.Review.find(request.query).exec();
+  const reservationQuery = schema.Reservation.find(request.query).exec();
+
+  let ret = {
+    rating_total: 0,
+    rating_day: 0,
+    rating_week: 0,
+    rating_month: 0,
+    rating_diff_day: 0,
+    rating_diff_week: 0,
+    rating_diff_month: 0,
+    services_count_total: [],
+    services_count_day: [],
+    services_count_week: [],
+    services_count_month: [],
+    reservations_total: 0,
+    reservations_day: 0,
+    reservations_week: 0,
+    reservations_month: 0,
+    reservations_diff_day: 0,
+    reservations_diff_week: 0,
+    reservations_diff_month: 0
+  }
+
+  storeQuery
+    .then(res => {
+      ret.rating_total = res.rating;
+      return barberQuery;
+    })
+    .then(res => {
+      
+      return reviewQuery;
+    })
+    .then(res => {
+      reviews = res;
+      return reservationQuery;
+    })
+    .then(res => {
+      reservations = res;
+      for (let review of reviews) {
+
+      }
+    })
+}
+
+function getBarberStatistics(request, response) {
+
+}
+
 module.exports = {
   getStore,
   registerStore,
   deleteStore,
   getBarber,
   registerBarber,
-  deleteBarber
+  deleteBarber,
+  getStoreStatistics,
+  getBarberStatistics,
 }
