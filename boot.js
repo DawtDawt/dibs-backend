@@ -16,7 +16,6 @@ async function deleteDb() {
     }
 }
 
-
 async function initUsers() {
     for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
         const roles = [constant.OWNER, constant.CUSTOMER];
