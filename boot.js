@@ -4,6 +4,19 @@ const schema = require("./schemas");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
+async function deleteDb() {
+    try {
+        schema.User.remove({});
+        schema.Store.remove({});
+        schema.Barber.remove({});
+        schema.Reservation.remove({});
+        schema.Review.remove({});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 async function initUsers() {
     for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
         const roles = [constant.OWNER, constant.CUSTOMER];
@@ -393,6 +406,7 @@ async function initDefaultShops() {
 
 async function init() {
     console.log("/boot/init: placeholder init");
+    await deleteDb();
     await initUsers();
     await initStores();
     await initBarbers();
