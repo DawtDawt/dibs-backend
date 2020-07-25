@@ -35,39 +35,44 @@ async function initUsers() {
 }
 
 async function initStores() {
-  let id;
-  let price;
-  let hours;
-  for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
-    id = String(i);
-    price = (i % 2) + 1;
-    hours = [];
-    for (let j = 0; j < constant.DAYSINAWEEK; j++) {
-      hours[j] = { isOpen: true, from: "0800", to: "1700" };
+    let id;
+    let price;
+    let hours;
+    for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
+        id = String(i);
+        price = (i % 2) + 1;
+        hours = [];
+        for (let j = 0; j < constant.DAYSINAWEEK; j++) {
+            hours[j] = { isOpen: true, from: "0800", to: "1700" };
+        }
+        const entry = new schema.Store({
+            owner_id: id,
+            name: "StoreName",
+            address: "1234 Store Road",
+            city: "Vancouver",
+            province: "BC",
+            description: "This is a description",
+            price: price,
+            lat: "49.2606",
+            lon: "-123.2460",
+            website: "www.website.com",
+            phone_number: "7781234567",
+            pictures: [
+                images.barberTitleBase64,
+                images.barberChairsBase64,
+                images.barberCutBase64,
+                images.barberScissorsBase64,
+            ],
+            rating: price,
+            services: "Haircut",
+            neighbourhood: "Kitslano",
+            hours: hours,
+            barber_ids: [id],
+        });
+        entry.save(function (error) {
+            if (error) return console.log(error.message);
+        });
     }
-      const entry = new schema.Store({
-          owner_id: id,
-          name: "StoreName",
-          address: "1234 Store Road",
-          city: "Vancouver",
-          province: "BC",
-          description: "This is a description",
-          price: price,
-          lat: "49.2606",
-          lon: "-123.2460",
-          website: "www.website.com",
-          phone_number: "7781234567",
-          pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
-          rating: price,
-          services: "Haircut",
-          neighbourhood: "Kitslano",
-          hours: hours,
-          barber_ids: [id]
-      });
-      entry.save(function (error) {
-          if (error) return console.log(error.message);
-      });
-  }
 }
 
 async function initBarbers() {
@@ -111,27 +116,27 @@ async function initReviews() {
 }
 
 async function initReservations() {
-  for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
-    const id = String(i);
-    const service = constant.SERVICES[i % constant.SERVICES.length];
-    const from = new Date();
-    const to = new Date();
-    to.setDate(to.getDate() + 1);
-    const entry = new schema.Reservation({
-      user_id: id,
-      user_name: "UserName",
-      barber_id: id,
-      barber_name: "BarberName",
-      store_id: id,
-      store_name: "StoreName",
-      service: service,
-      from: from,
-      to: to
-    });
-    entry.save(function (error) {
-      if (error) return console.log(error.message);
-    });
-  }
+    for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
+        const id = String(i);
+        const service = constant.SERVICES[i % constant.SERVICES.length];
+        const from = new Date();
+        const to = new Date();
+        to.setDate(to.getDate() + 1);
+        const entry = new schema.Reservation({
+            user_id: id,
+            user_name: "UserName",
+            barber_id: id,
+            barber_name: "BarberName",
+            store_id: id,
+            store_name: "StoreName",
+            service: service,
+            from: from,
+            to: to,
+        });
+        entry.save(function (error) {
+            if (error) return console.log(error.message);
+        });
+    }
 }
 
 function addMinutes(date, minutes) {
@@ -322,12 +327,12 @@ async function initDefaultShops() {
             barber_id: id,
             user_id: id,
             user_name: names[i],
-            barber_name: 'Larry David',
-            store_name: 'Larry\'s Excellent Barbershop',
+            barber_name: "Larry David",
+            store_name: "Larry's Excellent Barbershop",
             date: new Date(),
             rating: Math.ceil(Math.random() * Math.floor(4)),
             review: reviews[i],
-            service: constant.SERVICES[0]
+            service: constant.SERVICES[0],
         });
         entry.save(function (error) {
             if (error) return console.log(error.message);
