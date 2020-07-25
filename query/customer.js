@@ -90,8 +90,8 @@ function searchStores(request, response) {
 
     param.limit = Number(request.params.count);
 
-    const countQuery = schema.Store.find(body).exec();
-    const storeQuery = schema.Store.find(body, {}, param).exec();
+    const countQuery = schema.Store.find(body, { pictures: { $slice: 1 } }).exec();
+    const storeQuery = schema.Store.find(body, { pictures: { $slice: 1 } }, param).exec();
 
     countQuery
         .then((res) => {
