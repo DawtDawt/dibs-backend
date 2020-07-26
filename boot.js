@@ -78,7 +78,6 @@ async function initBarbers() {
     try {
         for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
             const id = String(i);
-            const date = new Date();
             let schedule = [];
             for (let j = 0; j < 7; j++) {
                 schedule.push({ isOpen: true, from: "0800", to: "1700" });
@@ -213,7 +212,6 @@ async function initDefaultShops() {
         });
         store2.save();
         // barbers
-        const date = new Date();
         let schedule = [];
         for (let j = 0; j < 7; j++) {
             schedule.push({ isOpen: true, from: "0800", to: "1700" });
