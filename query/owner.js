@@ -139,9 +139,7 @@ function deleteStore(request, response) {
         .then((res) => {
             if (res.length === 0) {
                 console.log("/query/owner/deleteStore: No stores found with given params");
-                return Promise.reject(
-                    "/query/owner/deleteStore: No stores found with given params"
-                );
+                return Promise.reject("/query/owner/deleteStore: No stores found with given params");
             }
             for (let store of res) {
                 ret.store_ids.push(store.store_id);
@@ -155,10 +153,7 @@ function deleteStore(request, response) {
             return schema.Reservation.deleteMany({ store_id: ret.store_ids }).exec();
         })
         .then(() => {
-            return schema.Barber.updateMany(
-                { store_ids: { $in: ret.store_ids } },
-                { $pullAll: { store_ids: ret.store_ids } }
-            ).exec();
+            return schema.Barber.updateMany({ store_ids: { $in: ret.store_ids } }, { $pullAll: { store_ids: ret.store_ids } }).exec();
         })
         .then(() => {
             return schema.Barber.find({ store_ids: [] }).exec();
@@ -283,10 +278,7 @@ function registerBarber(request, response) {
                 body.push({ store_id: store_id });
             }
 
-            const storeQuery = schema.Store.updateMany(
-                { $or: body },
-                { $push: { barber_ids: doc.barber_id } }
-            ).exec();
+            const storeQuery = schema.Store.updateMany({ $or: body }, { $push: { barber_ids: doc.barber_id } }).exec();
 
             return storeQuery;
         })
@@ -315,9 +307,7 @@ function deleteBarber(request, response) {
         .then((res) => {
             if (res.length === 0) {
                 console.log("/query/owner/deleteBarber: No barbers found with given params");
-                return Promise.reject(
-                    "/query/owner/deleteBarber: No barbers found with given params"
-                );
+                return Promise.reject("/query/owner/deleteBarber: No barbers found with given params");
             }
             for (let barber of res) {
                 ret.barber_ids.push(barber.barber_id);
@@ -331,10 +321,7 @@ function deleteBarber(request, response) {
             return schema.Reservation.deleteMany({ barber_id: ret.barber_ids }).exec();
         })
         .then(() => {
-            return schema.Store.updateMany(
-                { barber_ids: { $in: ret.barber_ids } },
-                { $pullAll: { barber_ids: ret.barber_ids } }
-            ).exec();
+            return schema.Store.updateMany({ barber_ids: { $in: ret.barber_ids } }, { $pullAll: { barber_ids: ret.barber_ids } }).exec();
         })
         .then(() => {
             return response.status(200).send(ret);

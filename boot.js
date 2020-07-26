@@ -45,12 +45,7 @@ async function initStores() {
             lon: "-123.2460",
             website: "www.website.com",
             phone_number: "7781234567",
-            pictures: [
-                images.barberTitleBase64,
-                images.barberChairsBase64,
-                images.barberCutBase64,
-                images.barberScissorsBase64,
-            ],
+            pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
             rating: price,
             services: "Haircut",
             neighbourhood: "Kitslano",
@@ -67,13 +62,17 @@ async function initBarbers() {
     for (let i = 0; i < constant.FAKE_DATA_ENTRIES; i++) {
         const id = String(i);
         const date = new Date();
+        let schedule = [];
+        for (let i = 0; i < 7; i++) {
+          schedule.push({ isOpen: true, from: "0800", to: "1700" });
+        }
         const entry = new schema.Barber({
             name: "BarberName",
             description: "This is a description",
             picture: images.barberPicBase64,
             store_ids: [id],
             services: [{ service: "Haircut", duration: 5 }],
-            schedule: [{ from: date, to: date }],
+            schedule
         });
         entry.save(function (error) {
             if (error) return console.log(error.message);
@@ -163,12 +162,7 @@ async function initDefaultShops() {
         website: "www.excellentbarbershop.com",
         neighbourhood: "Kitslano",
         phone_number: "7781234567",
-        pictures: [
-            images.larrylogo,
-            images.barberChairsBase64,
-            images.barberCutBase64,
-            images.barberScissorsBase64,
-        ],
+        pictures: [images.larrylogo, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
         rating: 3,
         services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
         hours: hours,
@@ -192,12 +186,7 @@ async function initDefaultShops() {
         website: "www.excellentbarbershop.com",
         neighbourhood: "Kitslano",
         phone_number: "7781234567",
-        pictures: [
-            images.jerrylogo,
-            images.barberChairsBase64,
-            images.barberCutBase64,
-            images.barberScissorsBase64,
-        ],
+        pictures: [images.jerrylogo, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
         rating: 3,
         services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
         hours: hours,
@@ -208,6 +197,10 @@ async function initDefaultShops() {
     });
     // barbers
     const date = new Date();
+    let schedule = [];
+    for (let i = 0; i < 7; i++) {
+      schedule.push({ isOpen: true, from: "0800", to: "1700" });
+    }
     const barber = new schema.Barber({
         name: "Larry David",
         description:
@@ -215,7 +208,7 @@ async function initDefaultShops() {
         picture: images.larrydavid,
         store_ids: [11],
         services: [{ service: "Haircut", duration: 45 }],
-        schedule: [{ from: date, to: date }],
+        schedule
     });
     barber.save(function (error) {
         if (error) return console.log(error.message);
@@ -230,7 +223,7 @@ async function initDefaultShops() {
             { service: "Haircut", duration: 30 },
             { service: "Shaving", duration: 30 },
         ],
-        schedule: [{ from: date, to: date }],
+        schedule
     });
     barber2.save(function (error) {
         if (error) return console.log(error.message);
@@ -245,7 +238,7 @@ async function initDefaultShops() {
             { service: "Nails", duration: 60 },
             { service: "Eyebrows", duration: 30 },
         ],
-        schedule: [{ from: date, to: date }],
+        schedule
     });
     barber3.save(function (error) {
         if (error) return console.log(error.message);
@@ -260,7 +253,7 @@ async function initDefaultShops() {
             { service: "Hair color", duration: 120 },
             { service: "Haircut", duration: 30 },
         ],
-        schedule: [{ from: date, to: date }],
+        schedule
     });
     barber4.save(function (error) {
         if (error) return console.log(error.message);
@@ -275,7 +268,7 @@ async function initDefaultShops() {
             { service: "Shaving", duration: 15 },
             { service: "Haircut", duration: 30 },
         ],
-        schedule: [{ from: date, to: date }],
+        schedule
     });
     barber5.save(function (error) {
         if (error) return console.log(error.message);

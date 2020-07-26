@@ -104,6 +104,8 @@ app.put("/api/customer/review", customer.updateReview);
 
 app.delete("/api/customer/review/:review_id", customer.deleteReview);
 
+app.get("/api/customer/availibility", customer.getAvailibility);
+
 app.get("/api/customer/reservation/:user_id", customer.getReservations);
 
 app.post("/api/customer/reservation", customer.registerReservation);
