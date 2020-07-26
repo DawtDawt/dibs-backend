@@ -110,6 +110,7 @@ const barberSchema = new mongoose.Schema({
     },
     description: String,
     picture: String,
+    instagram: String,
     store_ids: [Number],
     services: [
         {
