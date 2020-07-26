@@ -62,6 +62,21 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+/* Enforce HTTPS */
+if (process.env.NODE_ENV === "production") {
+    app.use(function (req, res, next) {
+        if (!req.secure) {
+            return res.redirect(["https://", req.get("Host"), req.url].join(""));
+        }
+        next();
+    });
+}
+
+/* Temporary endpoint to check NODE_ENV*/
+app.get("/api/node_env", (_, res) => {
+    res.json({ NODE_ENV: process.env.NODE_ENV ? process.env.NODE_ENV : "" });
+});
+
 /* Init Fake Data */
 
 try {
