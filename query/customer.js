@@ -259,7 +259,7 @@ function deleteReview(request, response) {
         });
 }
 
-function getAvailibility(request, response) {
+function getAvailability(request, response) {
     // DEBUG
     request.query.date = new Date("2020-07-24T18:00:00.000Z");
     // END
@@ -276,7 +276,7 @@ function getAvailibility(request, response) {
     barberQuery
         .then((res) => {
             if (res === null) {
-                return Promise.reject("/query/customer/getAvailibility: No barbers found with given barber_id and/or store_id");
+                return Promise.reject("/query/customer/getAvailability: No barbers found with given barber_id and/or store_id");
             }
 
             for (let barber of res) {
@@ -310,7 +310,7 @@ function getAvailibility(request, response) {
             }
 
             if (ret.length === 0) {
-                return Promise.reject("/query/customer/getAvailibility: Store barbers doesn't offer given service or isn't free during this day");
+                return Promise.reject("/query/customer/getAvailability: Store barbers doesn't offer given service or isn't free during this day");
             }
 
             delete request.query.service;
@@ -321,10 +321,10 @@ function getAvailibility(request, response) {
             let store_to = new Date(request.query.date);
 
             if (res === null) {
-                return Promise.reject("/query/customer/getAvailibility: No stores found with given store_id");
+                return Promise.reject("/query/customer/getAvailability: No stores found with given store_id");
             }
             if (!res.hours[day_of_week].isOpen) {
-                return Promise.reject("/query/customer/getAvailibility: Store is closed on given day");
+                return Promise.reject("/query/customer/getAvailability: Store is closed on given day");
             }
 
             store_from.setHours(res.hours[day_of_week].from.slice(0, 2));
@@ -442,7 +442,7 @@ function getAvailibility(request, response) {
             }
 
             if (ret.length === 0) {
-                return Promise.reject("/query/customer/getAvailibility: No times available for given parameters");
+                return Promise.reject("/query/customer/getAvailability: No times available for given parameters");
             }
 
             return response.status(200).send(ret);
@@ -550,7 +550,7 @@ module.exports = {
     registerReview,
     updateReview,
     deleteReview,
-    getAvailibility,
+    getAvailability,
     getReservations,
     registerReservation,
     deleteReservation,
