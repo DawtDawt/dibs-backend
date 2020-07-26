@@ -11,7 +11,7 @@ function makeReservations() {
     const month = today.getMonth();
     const day = today.getDate();
     const year = today.getFullYear();
-    const from = [
+    const fromArray = [
         new Date(year, month, day, 10, 0, 0, 0),
         new Date(year, month, day + 1, 8, 30, 0, 0),
         new Date(year, month, day + 2, 8, 0, 0, 0),
@@ -41,8 +41,9 @@ function makeReservations() {
         for (const j in barbers) {
             const barber_id = Number(j) + 1;
             const barber_name = barbers[j].name;
-            let temp_from = from.slice();
+            let temp_from = fromArray.slice();
             let count = 0;
+            let reserv_start_index = barber_id < fromArray.length - RESERVATIONS_PER_BARBER ? barber_id : barber_id - RESERVATIONS_PER_BARBER;
             if (barbers[j].store_ids.includes(store_id)) {
                 while (count < RESERVATIONS_PER_BARBER) {
                     const user_id = Math.floor(Math.random() * Math.floor(users.length));
@@ -51,7 +52,7 @@ function makeReservations() {
                     const service = barbers[j].services[k].service;
                     const duration = barbers[j].services[k].duration;
                     const l = Math.floor(Math.random() * Math.floor(temp_from.length));
-                    const from = new Date(temp_from[k]);
+                    const from = new Date(fromArray[reserv_start_index]);
                     const to = new Date(from);
                     to.setMinutes(to.getMinutes() + duration);
 
@@ -69,6 +70,7 @@ function makeReservations() {
 
                     temp_from.splice(l, 1);
                     count++;
+                    reserv_start_index++;
                 }
             }
         }

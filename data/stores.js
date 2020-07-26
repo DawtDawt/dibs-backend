@@ -28,7 +28,7 @@ const stores = [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
         ],
-        barber_ids: [],
+        barber_ids: [1,2,3],
         neighbourhood: "Gastown",
     },
     {
@@ -37,8 +37,8 @@ const stores = [
         address: "2332 Main Mall",
         city: "Vancouver",
         province: "BC",
-        lat: "49.262531",
-        lon: "-123.250268",
+        lat: "49.2827",
+        lon: "-123.1207",
         description:
             "Jerry’s is a gathering place not only to get a haircut, but also to engage in friendly banter, have a laugh, trade gossip and maybe make new friends. A relaxed and friendly environment comes with a great cut every visit, a vintage place for those who care about their hair.",
         price: 2,
@@ -57,7 +57,7 @@ const stores = [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
         ],
-        barber_ids: [],
+        barber_ids: [4,5],
     },
     // TJ
     {
@@ -86,7 +86,7 @@ const stores = [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
         ],
-        barber_ids: [],
+        barber_ids: [6,7,8],
     },
     {
         owner_id: 2,
@@ -114,8 +114,74 @@ const stores = [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
         ],
-        barber_ids: [],
+        barber_ids: [9,10,11],
     },
+    // jeremy
+    {
+        owner_id: 18,
+        name: "Dumbledore Cuts",
+        address: "#4 Privet Drive",
+        city: "Vancouver",
+        province: "BC",
+        description: "Named after the greatest wizard of all time, Dumbledore cuts is the place to get a fresh chop in the wizarding world. No Death Eaters welcome.",
+        price: 3,
+        lat: "49.2827",
+        lon: "-123.12070",
+        website: "www.excellentbarbershop.com",
+        neighbourhood: "Gastown",
+        phone_number: "7781234567",
+        pictures: [
+            images.dumbledorelogo,
+            images.barberChairsBase64,
+            images.barberCutBase64,
+            images.barberScissorsBase64,
+        ],
+        rating: 3,
+        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        hours: [
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+        ],
+        barber_ids: [12,13,14],
+    },
+    {
+        owner_id: 18,
+        name: "Death Eater Fades",
+        address: "12 Grimmauld Place",
+        city: "Vancouver",
+        province: "BC",
+        description:
+            "Get the dark mark on your head! Unforgivable curses are welcome in our barbershop. Meet the Dark Lord himself, and he'll give you a fade!",
+        price: 2,
+        lat: "49.2827",
+        lon: "-123.1207",
+        website: "www.excellentbarbershop.com",
+        neighbourhood: "Kitslano",
+        phone_number: "7781234567",
+        pictures: [
+            images.darkmarklogo,
+            images.barberChairsBase64,
+            images.barberCutBase64,
+            images.barberScissorsBase64,
+        ],
+        rating: 3,
+        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        hours: [
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+            { isOpen: true, from: "0700", to: "1900" },
+        ],
+        barber_ids: [15,16],
+    }
 ];
 
 module.exports = {

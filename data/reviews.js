@@ -18,6 +18,16 @@ function makeReviews() {
         "Serenity now. Insanity later.",
         "We’ve got five hundred shows to choose from. Why should we give two guys, who have no idea, and no experience, more money?",
         "Look, I got a few good years left. If I want a Chip Ahoy, I’m having it.",
+        "Didn't allow explosives. Not happy about it. Me mam's a witch!",
+        "Good haircut, watched quidditch on the tele",
+        "I killed Sirius Black!!!!",
+        "I solemnly swear that I am up to no good",
+        "We'll send you a Hogwarts toilet seat",
+        "My gram told me to get a haircut, she's a bit scary you know.",
+        "You catch it, before the other team's seeker. You catch this, the game's over. You catch this, Potter, and we win.",
+        "I beg your pardon? Our common room? I'm a Ravenclaw.",
+        "Werewolf friendly. Much better than the cuts the Marauders gave me in the Shrieking Shack",
+        "For the greater good"
     ];
     for (const i in stores) {
         const store_id = Number(i) + 1;
