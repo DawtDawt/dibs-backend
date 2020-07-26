@@ -7,7 +7,6 @@ require("dotenv").config();
 
 async function deleteDb() {
     try {
-        const connection = mongoose.connection;
         await mongoose.connection.on("connected", function () {
             mongoose.connection.db.dropDatabase();
         });
