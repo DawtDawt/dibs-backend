@@ -353,14 +353,10 @@ function getAvailibility(request, response) {
             return schema.Reservation.find(body).exec();
         })
         .then((res) => {
-          console.log(ret[0].barber_id);
-          console.log(ret[1].barber_id);
             for (let reservation of res) {
                 // Reclean reservation times
                 reservation.from.setSeconds("0");
                 reservation.to.setSeconds("0");
-                console.log(reservation.from + "  " + reservation.to);
-                console.log(reservation.barber_id);
                 for (let barber_obj of ret) {
                     if (reservation.barber_id === barber_obj.barber_id) {
                         console.log("enter on barber_id: " + barber_obj.barber_id);
@@ -391,25 +387,30 @@ function getAvailibility(request, response) {
                             }
                             // Encapsulate check (time_frame in reservation)
                             if (reservation.from <= free_time_frame.from && free_time_frame.to <= reservation.to) {
+                              console.log("Encapsulate check (time_frame in reservation)");
                                 barber_obj.available_time.splice(i, 1);
                                 continue;
                             }
                             // time_frame.to in reservation
                             if (reservation.from <= free_time_frame.to && free_time_frame.to <= reservation.to) {
+                              console.log("time_frame.to in reservation");
                                 free_time_frame.to = new Date(reservation.from);
                                 continue;
                             }
                             // time_frame.from in reservation
                             if (reservation.from <= free_time_frame.from && free_time_frame.from <= reservation.to) {
+                              console.log("time_frame.from in reservation");
                                 free_time_frame.from = new Date(reservation.to);
                                 continue;
                             }
                             // Otherwise no conflict
                         }
-                        break;
                     }
                 }
             }
+
+            console.log(ret[0].available_time);
+            console.log(ret[1].available_time);
 
             for (let i = ret.length - 1; i >= 0; i--) {
                 const barber_obj = ret[i];
@@ -417,9 +418,13 @@ function getAvailibility(request, response) {
                 for (let j = barber_obj.available_time.length - 1; j >= 0; j--) {
                     const free_time_frame = barber_obj.available_time[j];
                     let more_time_available = true;
+                    let accumulator = 0;
                     while (more_time_available) {
                         const time_from = new Date(free_time_frame.from);
+                        time_from.setMinutes(time_from.getMinutes() + accumulator);
                         const time_to = new Date(time_from);
+                        console.log(free_time_frame);
+                        console.log(time_from);
                         time_to.setMinutes(time_to.getMinutes() + barber_obj.duration);
                         if (time_to > free_time_frame.to) {
                             barber_obj.available_time.splice(j, 1);
@@ -428,6 +433,7 @@ function getAvailibility(request, response) {
                             barber_obj.available_time.push({ from: time_from, to: time_to });
                             barber_time_available = true;
                         }
+                        accumulator += 15;
                     }
                 }
                 if (!barber_time_available) {

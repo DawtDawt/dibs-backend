@@ -2,15 +2,16 @@ const images = require("./photosBase64");
 const constant = require("./constants");
 const schema = require("./schemas");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 async function deleteDb() {
     try {
-        schema.User.remove({});
-        schema.Store.remove({});
-        schema.Barber.remove({});
-        schema.Reservation.remove({});
-        schema.Review.remove({});
+        const connection = mongoose.connection;
+        await mongoose.connection.on('connected', function() {
+          mongoose.connection.db.dropDatabase();
+      });
+        console.log("/boot/init: database wiped");
     } catch (error) {
         console.log(error);
     }
@@ -60,12 +61,7 @@ async function initStores() {
                 lon: "-123.2460",
                 website: "www.website.com",
                 phone_number: "7781234567",
-                pictures: [
-                    images.barberTitleBase64,
-                    images.barberChairsBase64,
-                    images.barberCutBase64,
-                    images.barberScissorsBase64,
-                ],
+                pictures: [images.barberTitleBase64, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
                 rating: price,
                 services: "Haircut",
                 neighbourhood: "Kitslano",
@@ -86,7 +82,7 @@ async function initBarbers() {
             const date = new Date();
             let schedule = [];
             for (let j = 0; j < 7; j++) {
-              schedule.push({ isOpen: true, from: "0800", to: "1700" })
+                schedule.push({ isOpen: true, from: "0800", to: "1700" });
             }
             const entry = new schema.Barber({
                 name: "BarberName",
@@ -94,7 +90,7 @@ async function initBarbers() {
                 picture: images.barberPicBase64,
                 store_ids: [id],
                 services: [{ service: "Haircut", duration: 5 }],
-                schedule
+                schedule,
             });
             await entry.save();
         }
@@ -188,12 +184,7 @@ async function initDefaultShops() {
             website: "www.excellentbarbershop.com",
             neighbourhood: "Kitslano",
             phone_number: "7781234567",
-            pictures: [
-                images.larrylogo,
-                images.barberChairsBase64,
-                images.barberCutBase64,
-                images.barberScissorsBase64,
-            ],
+            pictures: [images.larrylogo, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
             rating: 3,
             services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
             hours: hours,
@@ -215,12 +206,7 @@ async function initDefaultShops() {
             website: "www.excellentbarbershop.com",
             neighbourhood: "Kitslano",
             phone_number: "7781234567",
-            pictures: [
-                images.jerrylogo,
-                images.barberChairsBase64,
-                images.barberCutBase64,
-                images.barberScissorsBase64,
-            ],
+            pictures: [images.jerrylogo, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
             rating: 3,
             services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
             hours: hours,
@@ -231,7 +217,7 @@ async function initDefaultShops() {
         const date = new Date();
         let schedule = [];
         for (let j = 0; j < 7; j++) {
-          schedule.push({ isOpen: true, from: "0800", to: "1700" })
+            schedule.push({ isOpen: true, from: "0800", to: "1700" });
         }
         const barber = new schema.Barber({
             name: "Larry David",
@@ -240,7 +226,7 @@ async function initDefaultShops() {
             picture: images.larrydavid,
             store_ids: [11],
             services: [{ service: "Haircut", duration: 45 }],
-            schedule
+            schedule,
         });
         barber.save(function (error) {
             if (error) return console.log(error.message);
@@ -255,7 +241,7 @@ async function initDefaultShops() {
                 { service: "Haircut", duration: 30 },
                 { service: "Shaving", duration: 30 },
             ],
-            schedule
+            schedule,
         });
         barber2.save();
         const barber3 = new schema.Barber({
@@ -268,7 +254,7 @@ async function initDefaultShops() {
                 { service: "Nails", duration: 60 },
                 { service: "Eyebrows", duration: 30 },
             ],
-            schedule
+            schedule,
         });
         barber3.save();
         const barber4 = new schema.Barber({
@@ -281,7 +267,7 @@ async function initDefaultShops() {
                 { service: "Hair color", duration: 120 },
                 { service: "Haircut", duration: 30 },
             ],
-            schedule
+            schedule,
         });
         barber4.save();
         const barber5 = new schema.Barber({
@@ -294,7 +280,7 @@ async function initDefaultShops() {
                 { service: "Shaving", duration: 15 },
                 { service: "Haircut", duration: 30 },
             ],
-            schedule
+            schedule,
         });
         barber5.save();
         // Reviews
@@ -413,7 +399,6 @@ async function initDefaultShops() {
 }
 
 async function init() {
-    console.log("/boot/init: placeholder init");
     await deleteDb();
     await initUsers();
     await initStores();
@@ -421,6 +406,7 @@ async function init() {
     await initReviews();
     await initReservations();
     await initDefaultShops();
+    console.log("/boot/init: database populated");
 }
 
 module.exports = {
