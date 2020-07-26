@@ -2,12 +2,17 @@ const constants = require("../constants");
 const { stores } = require("./stores");
 const { users } = require("./users");
 const { barbers } = require("./barbers");
+const { makeReservations } = require("./reservations");
 
 /* Local constant */
 const REVIEWS_PER_BARBER = 2;
 
+/* Local data*/
+let reviews = [];
+
 function makeReviews() {
     let ret = [];
+    const reservations = makeReservations();
     const sample_reviews = [
         "This shop doesn't celebrate FESTIVUS! SERENITY NOW!",
         "Got a haircut, yada yada yada...",
@@ -31,45 +36,23 @@ function makeReviews() {
         "For the greater good",
     ];
 
-    const user_array = [];
-    for (const i in users) {
-        const user = users[i];
-        if (user.role === constants.CUSTOMER) {
-            user_array.push({ user_name: user.first_name + " " + user.last_name, user_id: Number(i) + 1 });
-        }
+    if (reviews.length !== 0) {
+        return reviews;
     }
 
-    for (const i in stores) {
-        const store_id = Number(i) + 1;
-        const store_name = stores[i].name;
-
-        for (const j in barbers) {
-            const barber_id = Number(j) + 1;
-            const barber_name = barbers[j].name;
-
-            if (barbers[j].store_ids.includes(store_id)) {
-                for (let k = 0; k < REVIEWS_PER_BARBER; k++) {
-                    const review = sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))];
-                    const service = barbers[j].services[Math.floor(Math.random() * Math.floor(barbers[j].services.length))].service;
-                    const user_i = Math.floor(Math.random() * Math.floor(user_array.length));
-                    const user_id = user_array[user_i].user_id;
-                    const user_name = user_array[user_i].user_name;
-
-                    ret.push({
-                        store_id,
-                        store_name,
-                        barber_id,
-                        barber_name,
-                        user_id,
-                        user_name,
-                        date: new Date(),
-                        rating: Math.ceil(Math.random() * Math.floor(4)),
-                        service,
-                        review,
-                    });
-                }
-            }
-        }
+    for (let reservation of reservations) {
+        ret.push({
+            store_id: reservation.store_id,
+            store_name: reservation.store_name,
+            barber_id: reservation.barber_id,
+            barber_name: reservation.barber_name,
+            user_id: reservation.user_id,
+            user_name: reservation.user_name,
+            date: reservation.from,
+            rating: Math.ceil(Math.random() * Math.floor(5)),
+            service: reservation.service,
+            review: sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))],
+        });
     }
     return ret;
 }

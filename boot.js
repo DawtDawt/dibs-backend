@@ -48,6 +48,17 @@ async function initBarbers() {
     }
 }
 
+async function initReservations() {
+  try {
+      const reservations = makeReservations();
+      for (const reservation of reservations) {
+          await new schema.Reservation(reservation).save();
+      }
+  } catch (error) {
+      console.log(error);
+  }
+}
+
 async function initReviews() {
     try {
         const reviews = makeReviews();
@@ -59,24 +70,13 @@ async function initReviews() {
     }
 }
 
-async function initReservations() {
-    try {
-        const reservations = makeReservations();
-        for (const reservation of reservations) {
-            await new schema.Reservation(reservation).save();
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 async function init() {
     await deleteDb();
     await initUsers();
     await initStores();
     await initBarbers();
-    await initReviews();
     await initReservations();
+    await initReviews();
     console.log("/boot/init: database populated");
 }
 

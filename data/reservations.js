@@ -6,6 +6,9 @@ const { barbers } = require("./barbers");
 /* Local constants */
 const RESERVATIONS_PER_BARBER = 8;
 
+/* Local data */
+let reservations = [];
+
 function makeReservations() {
     let ret = [];
     const today = new Date();
@@ -34,6 +37,10 @@ function makeReservations() {
         new Date(year, month, day - 1, 16, 30, 0, 0),
         new Date(year, month, day - 2, 16, 0, 0, 0),
     ];
+
+    if (reservations.length !== 0) {
+        return reservations;
+    }
 
     if (from_array.length < RESERVATIONS_PER_BARBER) {
         console.log("/data/reservations: Reservations per barber cannot be less than total time slots possible");
@@ -88,6 +95,7 @@ function makeReservations() {
             }
         }
     }
+    reservations = ret;
     return ret;
 }
 
