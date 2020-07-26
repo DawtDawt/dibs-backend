@@ -80,11 +80,15 @@ app.get("/api/owner/store", owner.getStore);
 
 app.post("/api/owner/store", owner.registerStore);
 
+app.put("/api/owner/store", owner.updateStore);
+
 app.delete("/api/owner/store", owner.deleteStore);
 
 app.get("/api/owner/barber", owner.getBarber);
 
 app.post("/api/owner/barber", owner.registerBarber);
+
+app.put("/api/owner/store", owner.updateBarber);
 
 app.delete("/api/owner/barber", owner.deleteBarber);
 

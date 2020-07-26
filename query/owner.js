@@ -113,7 +113,6 @@ function registerStore(request, response) {
 
     geocode
         .then((res) => {
-            console.log(res);
             request.body.lat = res[0].latitude;
             request.body.lon = res[0].longitude;
             doc = new schema.Store(request.body);
@@ -121,6 +120,49 @@ function registerStore(request, response) {
         })
         .then(() => {
             return response.status(200).send({ store_id: doc.store_id });
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(500).send(error);
+        });
+}
+
+function updateStore(request, response) {
+    const store_id = request.body.store_id;
+    delete request.body.store_id;
+
+    const storeQuery = schema.Store.findOne({ store_id }).exec();
+
+    storeQuery
+        .then((res) => {
+            if (res.length === 0) {
+                return Promise.reject("/query/owner/updateStore: No stores found with given params");
+            }
+
+            let body = {};
+            if (request.body.hasOwnProperty("address")) {
+                body.address = request.body.address;
+            } else {
+                body.address = res.address;
+            }
+            if (request.body.hasOwnProperty("city")) {
+                body.city = request.body.city;
+            } else {
+                body.city = res.city;
+            }
+
+            return geocoder.geocode({
+                address: body.address,
+                city: body.city,
+            });
+        })
+        .then((res) => {
+            request.body.lat = res[0].latitude;
+            request.body.lon = res[0].longitude;
+            return schema.Store.findOneAndUpdate({ store_id }, request.body).exec();
+        })
+        .then(() => {
+            return response.status(200).send({ store_id });
         })
         .catch((error) => {
             console.log(error);
@@ -292,6 +334,28 @@ function registerBarber(request, response) {
         });
 }
 
+function updateBarber(request, response) {
+    const barber_id = request.body.barber_id;
+    delete request.body.barber_id;
+
+    const storeQuery = schema.Barber.findOne({ barber_id }).exec();
+
+    storeQuery
+        .then((res) => {
+            if (res.length === 0) {
+                return Promise.reject("/query/owner/updateBarber: No barbers found with given params");
+            }
+            return schema.Barber.findOneAndUpdate({ barber_id }, request.body).exec();
+        })
+        .then(() => {
+            return response.status(200).send({ barber_id });
+        })
+        .catch((error) => {
+            console.log(error);
+            return response.status(500).send(error);
+        });
+}
+
 function deleteBarber(request, response) {
     let ret = {
         barber_ids: [],
@@ -336,8 +400,10 @@ function deleteBarber(request, response) {
 module.exports = {
     getStore,
     registerStore,
+    updateStore,
     deleteStore,
     getBarber,
     registerBarber,
+    updateBarber,
     deleteBarber,
 };
