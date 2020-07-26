@@ -34,9 +34,9 @@ function makeReservations() {
         new Date(year, month, day - 2, 16, 0, 0, 0),
     ];
 
-    if (fromArray.length >= RESERVATIONS_PER_BARBER) {
-      console.log("/data/reservations: Reservations per barber cannot be less than total time slots possible");
-      throw "/data/reservations: Reservations per barber cannot be less than total time slots possible";
+    if (fromArray.length < RESERVATIONS_PER_BARBER) {
+        console.log("/data/reservations: Reservations per barber cannot be less than total time slots possible");
+        throw "/data/reservations: Reservations per barber cannot be less than total time slots possible";
     }
 
     for (const i in stores) {
