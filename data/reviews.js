@@ -1,3 +1,4 @@
+const constants = require("../constants");
 const { stores } = require("./stores");
 const { users } = require("./users");
 const { barbers } = require("./barbers");
@@ -27,8 +28,17 @@ function makeReviews() {
         "You catch it, before the other team's seeker. You catch this, the game's over. You catch this, Potter, and we win.",
         "I beg your pardon? Our common room? I'm a Ravenclaw.",
         "Werewolf friendly. Much better than the cuts the Marauders gave me in the Shrieking Shack",
-        "For the greater good"
+        "For the greater good",
     ];
+
+    const user_array = [];
+    for (const i in users) {
+        const user = users[i];
+        if (user.role === constants.CUSTOMER) {
+            user_array.push({ user_name: user.first_name + " " + user.last_name, user_id: Number(i) + 1 });
+        }
+    }
+
     for (const i in stores) {
         const store_id = Number(i) + 1;
         const store_name = stores[i].name;
@@ -41,9 +51,9 @@ function makeReviews() {
                 for (let k = 0; k < REVIEWS_PER_BARBER; k++) {
                     const review = sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))];
                     const service = barbers[j].services[Math.floor(Math.random() * Math.floor(barbers[j].services.length))].service;
-                    const user_i = Math.floor(Math.random() * Math.floor(users.length));
-                    const user_id = user_i + 1;
-                    const user_name = users[user_i].first_name + " " + users[user_i].last_name;
+                    const user_i = Math.floor(Math.random() * Math.floor(user_array.length));
+                    const user_id = user_array[user_i].user_id;
+                    const user_name = user_array[user_i].user_name;
 
                     ret.push({
                         store_id,

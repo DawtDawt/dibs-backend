@@ -1,3 +1,4 @@
+const constants = require("../constants");
 const { stores } = require("./stores");
 const { users } = require("./users");
 const { barbers } = require("./barbers");
@@ -11,7 +12,7 @@ function makeReservations() {
     const month = today.getMonth();
     const day = today.getDate();
     const year = today.getFullYear();
-    const fromArray = [
+    const from_array = [
         new Date(year, month, day, 10, 0, 0, 0),
         new Date(year, month, day + 1, 8, 30, 0, 0),
         new Date(year, month, day + 2, 8, 0, 0, 0),
@@ -34,9 +35,17 @@ function makeReservations() {
         new Date(year, month, day - 2, 16, 0, 0, 0),
     ];
 
-    if (fromArray.length < RESERVATIONS_PER_BARBER) {
+    if (from_array.length < RESERVATIONS_PER_BARBER) {
         console.log("/data/reservations: Reservations per barber cannot be less than total time slots possible");
         throw "/data/reservations: Reservations per barber cannot be less than total time slots possible";
+    }
+
+    const user_array = [];
+    for (const i in users) {
+        const user = users[i];
+        if (user.role === constants.CUSTOMER) {
+            user_array.push({ user_name: user.first_name + " " + user.last_name, user_id: Number(i) + 1 });
+        }
     }
 
     for (const i in stores) {
@@ -46,13 +55,13 @@ function makeReservations() {
         for (const j in barbers) {
             const barber_id = Number(j) + 1;
             const barber_name = barbers[j].name;
-            let temp_from = fromArray.slice();
+            let temp_from = from_array.slice();
             let count = 0;
             if (barbers[j].store_ids.includes(store_id)) {
                 while (count < RESERVATIONS_PER_BARBER) {
-                    const user_i = Math.floor(Math.random() * Math.floor(users.length));
-                    const user_id = user_i + 1;
-                    const user_name = users[user_i].first_name + " " + users[user_i].last_name;
+                    const user_i = Math.floor(Math.random() * Math.floor(user_array.length));
+                    const user_id = user_array[user_i].user_id;
+                    const user_name = user_array[user_i].user_name;
                     const k = Math.floor(Math.random() * Math.floor(barbers[j].services.length));
                     const service = barbers[j].services[k].service;
                     const duration = barbers[j].services[k].duration;
