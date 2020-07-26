@@ -63,7 +63,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 /* Enforce HTTPS */
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === "production") {
     app.use(function (req, res, next) {
         if (!req.secure) {
             return res.redirect(["https://", req.get("Host"), req.url].join(""));
