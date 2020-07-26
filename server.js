@@ -72,6 +72,11 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 
+/* Temporary endpoint to check NODE_ENV*/
+app.get("/api/node_env", (_, res) => {
+    res.json({ NODE_ENV: process.env.NODE_ENV ? process.env.NODE_ENV : "" });
+});
+
 /* Init Fake Data */
 
 try {
