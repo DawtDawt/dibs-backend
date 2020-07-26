@@ -4,12 +4,8 @@ const { barbers } = require("./data/barbers");
 const { makeReviews } = require("./data/reviews");
 const { makeReservations } = require("./data/reservations");
 
-const images = require("./data/photosBase64");
-const constant = require("./constants");
 const schema = require("./schemas");
-const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
-require("dotenv").config();
 
 async function deleteDb() {
     try {

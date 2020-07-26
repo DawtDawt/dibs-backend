@@ -1,4 +1,3 @@
-const constant = require("../constants");
 const { stores } = require("./stores");
 const { users } = require("./users");
 const { barbers } = require("./barbers");
