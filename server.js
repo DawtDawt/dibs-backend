@@ -10,7 +10,7 @@ const init = require("./boot");
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
-let populate = false;
+let populate = true;
 
 /* Init Mongoose */
 
@@ -118,6 +118,8 @@ app.post("/api/customer/review", customer.registerReview);
 app.put("/api/customer/review", customer.updateReview);
 
 app.delete("/api/customer/review/:review_id", customer.deleteReview);
+
+app.get("/api/customer/availability", customer.getAvailability);
 
 app.get("/api/customer/reservation/:user_id", customer.getReservations);
 

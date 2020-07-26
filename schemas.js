@@ -127,6 +127,7 @@ const barberSchema = new mongoose.Schema({
     ],
     schedule: [
         {
+            isOpen: Boolean,
             from: String,
             to: String,
         },
