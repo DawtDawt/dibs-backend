@@ -372,7 +372,6 @@ function getAvailability(request, response) {
                             }
                             // Encapsulate check (reservation in time_frame)
                             if (free_time_frame.from <= reservation.from && reservation.to <= free_time_frame.to) {
-                                console.log("Encapsulate check (reservation in time_frame)");
                                 if (free_time_frame.from === reservation.from) {
                                     free_time_frame.from = new Date(reservation.to);
                                 } else if (free_time_frame.to === reservation.to) {
@@ -385,19 +384,16 @@ function getAvailability(request, response) {
                             }
                             // Encapsulate check (time_frame in reservation)
                             if (reservation.from <= free_time_frame.from && free_time_frame.to <= reservation.to) {
-                                console.log("Encapsulate check (time_frame in reservation)");
                                 barber_obj.available_time.splice(i, 1);
                                 continue;
                             }
                             // time_frame.to in reservation
                             if (reservation.from <= free_time_frame.to && free_time_frame.to <= reservation.to) {
-                                console.log("time_frame.to in reservation");
                                 free_time_frame.to = new Date(reservation.from);
                                 continue;
                             }
                             // time_frame.from in reservation
                             if (reservation.from <= free_time_frame.from && free_time_frame.from <= reservation.to) {
-                                console.log("time_frame.from in reservation");
                                 free_time_frame.from = new Date(reservation.to);
                                 continue;
                             }
