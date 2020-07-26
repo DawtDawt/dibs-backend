@@ -8,9 +8,9 @@ require("dotenv").config();
 async function deleteDb() {
     try {
         const connection = mongoose.connection;
-        await mongoose.connection.on('connected', function() {
-          mongoose.connection.db.dropDatabase();
-      });
+        await mongoose.connection.on("connected", function () {
+            mongoose.connection.db.dropDatabase();
+        });
         console.log("/boot/init: database wiped");
     } catch (error) {
         console.log(error);
