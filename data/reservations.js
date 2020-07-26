@@ -50,8 +50,9 @@ function makeReservations() {
             let count = 0;
             if (barbers[j].store_ids.includes(store_id)) {
                 while (count < RESERVATIONS_PER_BARBER) {
-                    const user_id = Math.floor(Math.random() * Math.floor(users.length));
-                    const user_name = users[user_id].first_name + " " + users[user_id].last_name;
+                    const user_i = Math.floor(Math.random() * Math.floor(users.length));
+                    const user_id = user_i + 1;
+                    const user_name = users[user_i].first_name + " " + users[user_i].last_name;
                     const k = Math.floor(Math.random() * Math.floor(barbers[j].services.length));
                     const service = barbers[j].services[k].service;
                     const duration = barbers[j].services[k].duration;

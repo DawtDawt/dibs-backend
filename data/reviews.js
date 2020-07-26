@@ -41,8 +41,9 @@ function makeReviews() {
                 for (let k = 0; k < REVIEWS_PER_BARBER; k++) {
                     const review = sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))];
                     const service = barbers[j].services[Math.floor(Math.random() * Math.floor(barbers[j].services.length))].service;
-                    const user_id = Math.floor(Math.random() * Math.floor(users.length));
-                    const user_name = users[user_id].first_name + " " + users[user_id].last_name;
+                    const user_i = Math.floor(Math.random() * Math.floor(users.length));
+                    const user_id = user_i + 1;
+                    const user_name = users[user_i].first_name + " " + users[user_i].last_name;
 
                     ret.push({
                         store_id,
