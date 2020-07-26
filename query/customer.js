@@ -359,10 +359,8 @@ function getAvailability(request, response) {
                 reservation.to.setSeconds("0");
                 for (let barber_obj of ret) {
                     if (reservation.barber_id === barber_obj.barber_id) {
-                        console.log("enter on barber_id: " + barber_obj.barber_id);
                         for (let i = barber_obj.available_time.length - 1; i >= 0; i--) {
                             const free_time_frame = barber_obj.available_time[i];
-                            console.log(free_time_frame);
                             // Duplicate check and Equal conflict check
                             if (free_time_frame.from === free_time_frame.to) {
                                 barber_obj.available_time.splice(i, 1);
@@ -409,9 +407,6 @@ function getAvailability(request, response) {
                 }
             }
 
-            console.log(ret[0].available_time);
-            console.log(ret[1].available_time);
-
             for (let i = ret.length - 1; i >= 0; i--) {
                 const barber_obj = ret[i];
                 let barber_time_available = false;
@@ -423,8 +418,6 @@ function getAvailability(request, response) {
                         const time_from = new Date(free_time_frame.from);
                         time_from.setMinutes(time_from.getMinutes() + accumulator);
                         const time_to = new Date(time_from);
-                        console.log(free_time_frame);
-                        console.log(time_from);
                         time_to.setMinutes(time_to.getMinutes() + barber_obj.duration);
                         if (time_to > free_time_frame.to) {
                             barber_obj.available_time.splice(j, 1);
