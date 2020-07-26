@@ -128,10 +128,17 @@ function searchStores(request, response) {
 }
 
 function getNeighbourhoods(request, response) {
+    const $match = {};
+    if (request.query.city) {
+        $match.city = request.query.city;
+    }
+    if (request.query.province) {
+        $match.province = request.query.province;
+    }
     const limit = request.query.limit;
-    delete request.query.limit;
+
     const query = schema.Store.aggregate([
-        { $match: request.query },
+        { $match: $match },
         {
             $group: {
                 _id: "$neighbourhood",

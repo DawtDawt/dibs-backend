@@ -62,6 +62,21 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+/* Enforce HTTPS */
+if (process.env.NODE_ENV === "production") {
+    app.use(function (req, res, next) {
+        if (!req.secure) {
+            return res.redirect(["https://", req.get("Host"), req.url].join(""));
+        }
+        next();
+    });
+}
+
+/* Temporary endpoint to check NODE_ENV*/
+app.get("/api/node_env", (_, res) => {
+    res.json({ NODE_ENV: process.env.NODE_ENV ? process.env.NODE_ENV : "" });
+});
+
 /* Init Fake Data */
 
 try {
@@ -80,11 +95,15 @@ app.get("/api/owner/store", owner.getStore);
 
 app.post("/api/owner/store", owner.registerStore);
 
+app.put("/api/owner/store", owner.updateStore);
+
 app.delete("/api/owner/store", owner.deleteStore);
 
 app.get("/api/owner/barber", owner.getBarber);
 
 app.post("/api/owner/barber", owner.registerBarber);
+
+app.put("/api/owner/store", owner.updateBarber);
 
 app.delete("/api/owner/barber", owner.deleteBarber);
 
