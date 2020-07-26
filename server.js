@@ -41,7 +41,7 @@ global.mongoose = mongoose;
 const app = express();
 
 const allowCrossDomain = function (req, res, next) {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== "PRODUCTION") {
         res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     }
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -63,7 +63,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 /* Enforce HTTPS */
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "PRODUCTION") {
     app.use(function (req, res, next) {
         if (!req.secure) {
             return res.redirect(["https://", req.get("Host"), req.url].join(""));
