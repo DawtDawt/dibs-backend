@@ -7,6 +7,7 @@ const owner = require("./query/owner");
 const customer = require("./query/customer");
 const auth = require("./query/auth");
 const init = require("./boot");
+var sslRedirect = require('heroku-ssl-redirect');
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
@@ -50,6 +51,7 @@ const allowCrossDomain = function (req, res, next) {
     next();
 };
 app.use(allowCrossDomain);
+app.use(sslRedirect(['production']));
 app.use(express.static(path.join(__dirname, "../dibs-frontend/build")));
 app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(bodyParser.json({ limit: "50mb" }));
