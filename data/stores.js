@@ -120,7 +120,7 @@ const stores = [
     {
         owner_id: 18,
         name: "Dumbledore Cuts",
-        address: "#4 Privet Drive",
+        address: "12 Grimmauld Place",
         city: "Vancouver",
         province: "BC",
         description: "Named after the greatest wizard of all time, Dumbledore cuts is the place to get a fresh chop in the wizarding world. No Death Eaters welcome.",
@@ -152,7 +152,7 @@ const stores = [
     {
         owner_id: 18,
         name: "Death Eater Fades",
-        address: "12 Grimmauld Place",
+        address: "Malfoy Manor",
         city: "Vancouver",
         province: "BC",
         description:

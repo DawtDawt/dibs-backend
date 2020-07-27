@@ -404,7 +404,7 @@ const barbers = [
     },
     {
         name: "Cersei Lannister",
-        description:"Queen Cersei I Lannister was the twentieth ruler of the Seven Kingdoms and the widow of King Robert Baratheon. She was the daughter of Lord Tywin Lannister, twin sister of Jaime Lannister and elder sister of Tyrion Lannister. She was involved in an incestuous relationship with Jaime, who was secretly the father of her three bastard children, Joffrey, Myrcella and Tommen. After all her children died, Cersei assumed the throne under the name of Cersei of the House Lannister, the First of Her Name, Queen of the Andals and the First Men, Protector of the Seven Kingdoms, making her the first officially recognized queen regnant in the history of the Seven Kingdoms.",
+        description:"Queen Cersei I Lannister was the twentieth ruler of the Seven Kingdoms and the widow of King Robert Baratheon. She was the daughter of Lord Tywin Lannister, twin sister of Jaime Lannister and elder sister of Tyrion Lannister. She was involved in an incestuous relationship with Jaime, who was secretly the father of her three bastard children, Joffrey, Myrcella and Tommen. After all her children died, Cersei assumed the throne under the name of Cersei of the House Lannister, making her the first officially recognized queen regnant in the history of the Seven Kingdoms.",
         picture: images.cersei,
         instagram: "https://instagram.com/iamlenaheadey",
         store_ids: [8],
@@ -503,7 +503,7 @@ const barbers = [
         ],
     },
     {
-        name: "The Night King",
+        name: "Night King",
         description: "The Night King was a First Man who was captured by a tribe of the Children of the Forest. Leaf, who was among the group, pressed a dragonglass dagger into his chest, causing his eyes to turn blue and turning him into the first of the White Walkers. Thousands of years later, Leaf tells Bran Stark that her people created the White Walkers to defend themselves when Westeros was invaded by the First Men, who were cutting their sacred trees down and slaughtering the Children of the Forest.",
         picture: images.nightking,
         instagram: "https://instagram.com/vladimirfurdikofficial",
@@ -524,7 +524,7 @@ const barbers = [
     },
     {
         name: "Gregor Clegane",
-        description: "Ser Gregor Clegane was a knight of House Clegane, the older brother of Sandor Clegane, and a notoriously fearsome, extremely lethal and much-feared warrior, with a tendency toward extreme and excessive violence. Due to his incredibly massive size, he is called 'The Mountain That Rides' or more often simply 'The Mountain.' After being poisoned in a duel with Oberyn Martell, Gregor almost succumbed to the effects of manticore venom, but was kept alive through the experimentations of Qyburn. With his mind dulled and his body necrotically invincible, Gregor served as a faithful Queensguard to Cersei Lannister. Gregor was later killed by and alongside Sandor when they dueled during the Battle of King's Landing, but not before killing Qyburn.",
+        description: "Ser Gregor Clegane was a knight of House Clegane, the older brother of Sandor Clegane, and a notoriously fearsome, extremely lethal and much-feared warrior, with a tendency toward extreme and excessive violence. Due to his incredibly massive size, he is called 'The Mountain That Rides' or more often simply 'The Mountain.' After being poisoned in a duel with Oberyn Martell, Gregor almost succumbed to the effects of manticore venom, but was kept alive through the experimentations of Qyburn. With his mind dulled and his body necrotically invincible.",
         picture: images.gregor,
         instagram: "https://instagram.com/thorbjornsson",
         store_ids: [10],
