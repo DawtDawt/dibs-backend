@@ -7,11 +7,10 @@ const owner = require("./query/owner");
 const customer = require("./query/customer");
 const auth = require("./query/auth");
 const init = require("./boot");
-var sslRedirect = require('heroku-ssl-redirect');
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
-let populate = true;
+let populate = false;
 
 /* Init Mongoose */
 
@@ -47,7 +46,7 @@ const allowCrossDomain = function (req, res, next) {
     }
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", true);
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "https://dibs-vancouver.herokuapp.com");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
     next();
 };
@@ -65,11 +64,6 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(sslRedirect(['production']));
-/* Temporary endpoint to check NODE_ENV*/
-app.get("/api/node_env", (_, res) => {
-    res.json({ NODE_ENV: process.env.NODE_ENV ? process.env.NODE_ENV : "" });
-});
 
 /* Init Fake Data */
 
