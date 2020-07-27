@@ -5,7 +5,7 @@ const { barbers } = require("./barbers");
 const { makeReservations } = require("./reservations");
 
 /* Local constant */
-const REVIEWS_PER_BARBER = 2;
+const REVIEWS_PER_BARBER = 3;
 
 /* Local data*/
 let reviews = [];
@@ -34,6 +34,27 @@ function makeReviews() {
         "I beg your pardon? Our common room? I'm a Ravenclaw.",
         "Werewolf friendly. Much better than the cuts the Marauders gave me in the Shrieking Shack",
         "For the greater good",
+        "The man who passes the sentence should swing the sword",
+        "The things I do for love",
+        "It's the family name that lives on. It's all that lives on",
+        "When you play the game of thrones  you win or you die",
+        "I learned how to die a long time ago",
+        "When dead men and worse come hunting… you think it matters who sits on the iron throne",
+        "Turn us away and we will burn you first",
+        "Your joy will turn to ashes in your mouth and you'll know the debt is paid",
+        "I prayed to the gods. Take him away make him die",
+        "A dragon is not a slave",
+        "Burn them all. Burn them in their homes. Burn them in their beds",
+        "Nothing isn't better or worse than anything. Nothing is just nothing",
+        "Hate's as good a thing as any to keep a person going. Better than most",
+        "Money buys a man's silence for a time. A bolt in the heart buys it forever",
+        "It's not easy being drunk all the time. If it were easy  everyone would do it",
+        "There is a beast in every man and it stirs when you put a sword in his hand",
+        "All men must die but we are not men",
+        "Power resides where men believe it resides",
+        "A lion doesn’t concern himself with the opinions of a sheep",
+        "The night is dark and full of terrors",
+        "Winter is Coming",
     ];
 
     if (reviews.length !== 0) {

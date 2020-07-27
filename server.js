@@ -10,7 +10,7 @@ const init = require("./boot");
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
-let populate = true;
+let populate = false;
 
 /* Init Mongoose */
 
@@ -41,15 +41,17 @@ global.mongoose = mongoose;
 const app = express();
 
 const allowCrossDomain = function (req, res, next) {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() !== "production") {
         res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     }
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", true);
+    res.header("Access-Control-Allow-Origin", "https://dibs-vancouver.herokuapp.com");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
     next();
 };
 app.use(allowCrossDomain);
+
 app.use(express.static(path.join(__dirname, "../dibs-frontend/build")));
 app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -62,20 +64,6 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-/* Enforce HTTPS */
-if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === "production") {
-    app.use(function (req, res, next) {
-        if (!req.secure) {
-            return res.redirect(["https://", req.get("Host"), req.url].join(""));
-        }
-        next();
-    });
-}
-
-/* Temporary endpoint to check NODE_ENV*/
-app.get("/api/node_env", (_, res) => {
-    res.json({ NODE_ENV: process.env.NODE_ENV ? process.env.NODE_ENV : "" });
-});
 
 /* Init Fake Data */
 
