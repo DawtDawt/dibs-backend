@@ -8,8 +8,8 @@ const stores = [
         address: "2366 Main Mall #201",
         city: "Vancouver",
         province: "BC",
-        lat: "49.260999",
-        lon: "-123.248700",
+        lat: "49.2606",
+        lon: "-123.2460",
         description:
             "If you’re looking for somewhere to get your hair cut in central downtown Vancouver, head to Junior’s Barbershop. Their friendly and professional barbers specialize in everything from edgy to traditional styles. From the friendly and professional staff, to the signed posters from celebrity patrons (like Idris Elba) adorning the walls, this may be the perfect place to laugh, relax, and get a fresh fade.",
         price: 3,
@@ -66,8 +66,8 @@ const stores = [
         address: "5611 Grant McConachie Way #5477",
         city: "Richmond",
         province: "BC",
-        lat: "49.194477",
-        lon: "-123.180382",
+        lat: "49.2606",
+        lon: "-123.2460",
         description:
             "The Friend's apartment is not only the famous living place of the Friend's cast for the last 10 years, but also a place to socialize and catch up with your favorite actors.",
         price: 1,
@@ -94,8 +94,8 @@ const stores = [
         address: "5631 West Blvd",
         city: "Vancouver",
         province: "BC",
-        lat: "49.235534",
-        lon: "-123.155573",
+        lat: "49.2606",
+        lon: "-123.2460",
         description:
             "Central Perk Haircuts is not only the famous living place of the Friend's cast for the last 10 years, but also a place to socialize and catch up with your favorite actors.",
         price: 1,
@@ -120,13 +120,13 @@ const stores = [
     {
         owner_id: 18,
         name: "Dumbledore Cuts",
-        address: "#4 Privet Drive",
+        address: "12 Grimmauld Place",
         city: "Vancouver",
         province: "BC",
         description: "Named after the greatest wizard of all time, Dumbledore cuts is the place to get a fresh chop in the wizarding world. No Death Eaters welcome.",
         price: 3,
-        lat: "49.2827",
-        lon: "-123.12070",
+        lat: "49.2606",
+        lon: "-123.2460",
         website: "www.excellentbarbershop.com",
         neighbourhood: "Gastown",
         phone_number: "7781234567",
@@ -152,7 +152,7 @@ const stores = [
     {
         owner_id: 18,
         name: "Death Eater Fades",
-        address: "12 Grimmauld Place",
+        address: "Malfoy Manor",
         city: "Vancouver",
         province: "BC",
         description:

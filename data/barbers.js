@@ -327,7 +327,7 @@ const barbers = [
     },
     {
         name: "Jon Snow",
-        description:"Jon Snow, born Aegon Targaryen, is the son of Lyanna Stark and Rhaegar Targaryen, the late Prince of Dragonstone. From infancy, Jon is presented as the bastard son of Lord Eddard Stark, Lyanna's brother, and raised alongside his lawful children at Winterfell, the seat of House Stark. However, his true parentage is kept secret from everyone, including Jon himself, in order to protect him from those that sought the complete annihilation of House Targaryen after Robert's Rebellion and to maintain order in the realm. In order to escape his bastard status, Jon joins the Night's Watch and is eventually chosen as Lord Commander. ",
+        description:"Jon Snow, born Aegon Targaryen, is the son of Lyanna Stark and Rhaegar Targaryen, the late Prince of Dragonstone. From infancy, Jon is presented as the bastard son of Lord Eddard Stark, Lyanna's brother, and raised alongside his lawful children at Winterfell, the seat of House Stark. However, his true parentage is kept secret from everyone, including Jon himself, in order to protect him from those that sought the complete annihilation of House Targaryen after Robert's Rebellion and to maintain order in the realm.",
         picture: images.jonsnow,
         instagram: "https://instagram.com/kitharingtonn",
         store_ids: [7],
@@ -404,7 +404,7 @@ const barbers = [
     },
     {
         name: "Cersei Lannister",
-        description:"Queen Cersei I Lannister was the twentieth ruler of the Seven Kingdoms and the widow of King Robert Baratheon. She was the daughter of Lord Tywin Lannister, twin sister of Jaime Lannister and elder sister of Tyrion Lannister. She was involved in an incestuous relationship with Jaime, who was secretly the father of her three bastard children, Joffrey, Myrcella and Tommen. After all her children died, Cersei assumed the throne under the name of Cersei of the House Lannister, the First of Her Name, Queen of the Andals and the First Men, Protector of the Seven Kingdoms, making her the first officially recognized queen regnant in the history of the Seven Kingdoms.",
+        description:"Queen Cersei I Lannister was the twentieth ruler of the Seven Kingdoms and the widow of King Robert Baratheon. She was the daughter of Lord Tywin Lannister, twin sister of Jaime Lannister and elder sister of Tyrion Lannister. She was involved in an incestuous relationship with Jaime, who was secretly the father of her three bastard children, Joffrey, Myrcella and Tommen.",
         picture: images.cersei,
         instagram: "https://instagram.com/iamlenaheadey",
         store_ids: [8],
@@ -524,7 +524,7 @@ const barbers = [
     },
     {
         name: "Gregor Clegane",
-        description: "Ser Gregor Clegane was a knight of House Clegane, the older brother of Sandor Clegane, and a notoriously fearsome, extremely lethal and much-feared warrior, with a tendency toward extreme and excessive violence. Due to his incredibly massive size, he is called 'The Mountain That Rides' or more often simply 'The Mountain.' After being poisoned in a duel with Oberyn Martell, Gregor almost succumbed to the effects of manticore venom, but was kept alive through the experimentations of Qyburn. With his mind dulled and his body necrotically invincible, Gregor served as a faithful Queensguard to Cersei Lannister. Gregor was later killed by and alongside Sandor when they dueled during the Battle of King's Landing, but not before killing Qyburn.",
+        description: "Ser Gregor Clegane was a knight of House Clegane, the older brother of Sandor Clegane, and a notoriously fearsome, extremely lethal and much-feared warrior, with a tendency toward extreme and excessive violence. Due to his incredibly massive size, he is called 'The Mountain That Rides' or more often simply 'The Mountain.' After being poisoned in a duel with Oberyn Martell, Gregor almost succumbed to the effects of manticore venom, but was kept alive through the experimentations of Qyburn.",
         picture: images.gregor,
         instagram: "https://instagram.com/thorbjornsson",
         store_ids: [10],
