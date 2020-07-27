@@ -51,7 +51,7 @@ const allowCrossDomain = function (req, res, next) {
     next();
 };
 app.use(allowCrossDomain);
-app.use(sslRedirect(['production']));
+
 app.use(express.static(path.join(__dirname, "../dibs-frontend/build")));
 app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -65,15 +65,15 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 /* Enforce HTTPS */
-if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === "production") {
-    app.use(function (req, res, next) {
-        if (!req.secure) {
-            return res.redirect(["https://", req.get("Host"), req.url].join(""));
-        }
-        next();
-    });
-}
-
+// if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === "production") {
+//     app.use(function (req, res, next) {
+//         if (!req.secure) {
+//             return res.redirect(["https://", req.get("Host"), req.url].join(""));
+//         }
+//         next();
+//     });
+// }
+app.use(sslRedirect(['production']));
 /* Temporary endpoint to check NODE_ENV*/
 app.get("/api/node_env", (_, res) => {
     res.json({ NODE_ENV: process.env.NODE_ENV ? process.env.NODE_ENV : "" });
