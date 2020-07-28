@@ -156,6 +156,22 @@ const users = [
         email: "jonsnow@gmail.com",
         phone_number: "7781234567",
     },
+    {
+        password: bcrypt.hashSync("password20", 10),
+        role: constant.OWNER,
+        first_name: "Gregor",
+        last_name: "Kiczales",
+        email: "gregor@ubc.com",
+        phone_number: "7781234567",
+    },
+    {
+        password: bcrypt.hashSync("password21", 10),
+        role: constant.OWNER,
+        first_name: "Luke",
+        last_name: "Skywalker",
+        email: "theforce@gmail.com",
+        phone_number: "7781234567",
+    },
 ];
 
 module.exports = {
