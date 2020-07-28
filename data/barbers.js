@@ -3,9 +3,9 @@ const images = require("./photosBase64");
 const barbers = [
     // Jeremy
     {
-        name: "Larry David",
         description:
-            "Lawrence Gene David is an American comedian, writer, actor, director, and television producer. He and Jerry Seinfeld created the television series Seinfeld, of which David was the head writer and executive producer for the first seven seasons. David gained further recognition for the HBO series Curb Your Enthusiasm, which he created and stars in as a semi-fictionalized version of himself. David has written or co-written every episode of Curb Your Enthusiasm since its pilot episode in 1999.",
+            "Lawrence Gene David is an American comedian, writer, actor, director, and television producer. He and Jerry Seinfeld created the television series Seinfeld, of which David was the head writer and executive producer for the first seven seasons. David gained further recognition for the HBO series Curb Your Enthusiasm, which he created and stars in as a semi-fictionalized version of himself. David has written or co-written every episode of Curb Your Enthusiasm.",
+        name: "Larry David",
         picture: images.larrydavid,
         instagram: "https://instagram.com/curbyourlarrydavid",
         store_ids: [1],
@@ -230,7 +230,7 @@ const barbers = [
     // Jeremy (more)
     {
         name: "Ron Weasley",
-        description:"Ronald Billius Weasley began attending Hogwarts School of Witchcraft and Wizardry in 1991 and was Sorted into Gryffindor House. He soon became close friends with fellow student Harry Potter and later Hermione Granger. Together, they made the Golden trio, they faced many challenges during their adolescence, including keeping the Philosopher's Stone from Professor Quirinus Quirrell, rescuing Ginny from the Basilisk of the Chamber of Secrets, saving Harry's godfather Sirius Black from the Dementors of Azkaban, guiding Harry through the Triwizard Tournament, forming Dumbledore's Army and fighting in numerous battles of the Second Wizarding War.",
+        description:"Ronald Billius Weasley began attending Hogwarts School of Witchcraft and Wizardry in 1991 and was Sorted into Gryffindor House. He soon became close friends with fellow student Harry Potter and later Hermione Granger. Together, they made the Golden trio, they faced many challenges during their adolescence, including keeping the Philosopher's Stone from Professor Quirinus Quirrell, and rescuing Ginny from the Basilisk of the Chamber of Secrets.",
         picture: images.ronweasley,
         instagram: "https://instagram.com/ronweasley",
         store_ids: [5],
@@ -267,7 +267,7 @@ const barbers = [
     },
     {
         name: "Harry Potter",
-        description: "Harry James Potter was an English half-blood wizard, and one of the most famous wizards of modern times. Voldemort made his first vain attempt to circumvent the prophecy when Harry was a year and three months old. During this attempt, he murdered Harry's parents as they tried to protect him, but this unsuccessful attempt to kill Harry led to Voldemort's first downfall. This downfall marked the end of the First Wizarding War, and to Harry henceforth being known as the \"Boy Who Lived\", as he was the only known survivor of the Killing Curse.",
+        description: "Harry James Potter was an English half-blood wizard, and one of the most famous wizards of modern times. Voldemort made his first vain attempt to circumvent the prophecy when Harry was a year and three months old. During this attempt, he murdered Harry's parents as they tried to protect him, but this unsuccessful attempt to kill Harry led to Voldemort's first downfall. Harry was henceforth known as the \"Boy Who Lived\".",
         picture: images.harrypotter,
         instagram: "https://instagram.com/harrypotter",
         store_ids: [5],
@@ -327,7 +327,7 @@ const barbers = [
     },
     {
         name: "Jon Snow",
-        description:"Jon Snow, born Aegon Targaryen, is the son of Lyanna Stark and Rhaegar Targaryen, the late Prince of Dragonstone. From infancy, Jon is presented as the bastard son of Lord Eddard Stark, Lyanna's brother, and raised alongside his lawful children at Winterfell, the seat of House Stark. However, his true parentage is kept secret from everyone, including Jon himself, in order to protect him from those that sought the complete annihilation of House Targaryen after Robert's Rebellion and to maintain order in the realm.",
+        description:"Jon Snow, born Aegon Targaryen, is the son of Lyanna Stark and Rhaegar Targaryen, the late Prince of Dragonstone. From infancy, Jon is presented as the bastard son of Lord Eddard Stark, Lyanna's brother, and raised alongside his lawful children at Winterfell, the seat of House Stark. However, his true parentage is kept secret from everyone, including Jon himself, in order to protect him from those that sought the complete annihilation of House Targaryen.",
         picture: images.jonsnow,
         instagram: "https://instagram.com/kitharingtonn",
         store_ids: [7],
@@ -344,7 +344,7 @@ const barbers = [
     },
     {
         name: "Arya Stark",
-        description:"Princess Arya Stark is the third child and second daughter of Lord Eddard Stark and his wife, Lady Catelyn Stark. She is the sister of the incumbent Westerosi monarchs, Sansa, Queen in the North, and Brandon, King of the Andals and the First Men. After narrowly escaping the persecution of House Stark by House Lannister, Arya is trained as a Faceless Man at the House of Black and White in Braavos, using her abilities to avenge her family. Upon her return to Westeros, she exacts retribution for the Red Wedding by exterminating the Frey male line.",
+        description:"Princess Arya Stark is the third child and second daughter of Lord Eddard Stark and his wife, Lady Catelyn Stark. She is the sister of the incumbent Westerosi monarchs, Sansa, Queen in the North, and Brandon, King of the Andals and the First Men. After narrowly escaping the persecution of House Stark by House Lannister, Arya is trained as a Faceless Man at the House of Black and White in Braavos, using her abilities to avenge her family. ",
         picture: images.arya,
         instagram: "https://instagram.com/maisie_williams",
         store_ids: [7],
@@ -384,7 +384,7 @@ const barbers = [
     },
     {
         name: "Jaime Lannister",
-        description:"Ser Jaime Lannister was the elder son of Lord Tywin Lannister, younger twin brother of Queen Cersei Lannister, and older brother of Tyrion Lannister. He was involved in an incestuous relationship with Cersei, and unknown to most, he was the biological father of her three bastard children, Joffrey, Myrcella, and Tommen, as well as her unborn child. During Robert's Rebellion, Jaime killed Aerys Targaryen, earning the derogatory nickname 'Kingslayer'. He was pardoned by Robert and allowed to serve in his Kingsguard. Following King Robert's death, he was appointed as the Lord Commander of the Kingsguard to his son, Joffrey.",
+        description:"Ser Jaime Lannister was the elder son of Lord Tywin Lannister, younger twin brother of Queen Cersei Lannister, and older brother of Tyrion Lannister. During Robert's Rebellion, Jaime killed Aerys Targaryen, earning the derogatory nickname 'Kingslayer'.",
         picture: images.jaime,
         instagram: "https://instagram.com/nikolajwilliamcw",
         store_ids: [8],
@@ -404,7 +404,7 @@ const barbers = [
     },
     {
         name: "Cersei Lannister",
-        description:"Queen Cersei I Lannister was the twentieth ruler of the Seven Kingdoms and the widow of King Robert Baratheon. She was the daughter of Lord Tywin Lannister, twin sister of Jaime Lannister and elder sister of Tyrion Lannister. She was involved in an incestuous relationship with Jaime, who was secretly the father of her three bastard children, Joffrey, Myrcella and Tommen.",
+        description:"Queen Cersei I Lannister was the twentieth ruler of the Seven Kingdoms and the widow of King Robert Baratheon.",
         picture: images.cersei,
         instagram: "https://instagram.com/iamlenaheadey",
         store_ids: [8],
@@ -424,7 +424,7 @@ const barbers = [
     },
     {
         name: "Tyrion Lannister",
-        description:"Lord Tyrion Lannister is the youngest child of Lord Tywin Lannister and younger brother of Cersei and Jaime Lannister. A dwarf, he uses his wit and intellect to overcome the prejudice he faces. He is the current Lord of Casterly Rock and Hand of the King to Brandon Stark.",
+        description:"Lord Tyrion Lannister is the youngest child of Lord Tywin Lannister and younger brother of Cersei and Jaime Lannister.",
         picture: images.tyrion,
         instagram: "https://instagram.com/peterdinklage",
         store_ids: [8],
@@ -444,7 +444,7 @@ const barbers = [
     },
     {
         name: "Podrick Payne",
-        description:"Ser Podrick Payne, often called Pod, is a knight of House Payne and a member of King Bran the Broken's Kingsguard. He began as a squire during the War of the Five Kings, and was eventually assigned to Lord Tyrion Lannister. Following Tyrion's arrest for the murder of King Joffrey Baratheon, and up until Podrick's knighthood and appointment to the Kingsguard, he was in the service of Ser Brienne of Tarth, the first female knight in Westerosi history.",
+        description:"Ser Podrick Payne, often called Pod, is a knight of House Payne and a member of King Bran the Broken's Kingsguard.",
         picture: images.podrick,
         instagram: "https://instagram.com/danportman",
         store_ids: [9],
@@ -464,7 +464,7 @@ const barbers = [
     },
     {
         name: "Brienne of Tarth",
-        description:"Ser Brienne of Tarth is a knight of House Tarth and the only daughter of Lord Selwyn Tarth. Prior to the Battle of Winterfell, Brienne was knighted by Ser Jaime Lannister, making her the first woman of the Seven Kingdoms to become a knight. Following the ascension of Brandon I Stark as King of the Andals and the First Men, following the death of Daenerys Targaryen, Brienne is appointed the new Lord Commander of the Kingsguard.",
+        description:"Ser Brienne of Tarth is a knight of House Tarth and the only daughter of Lord Selwyn Tarth. Prior to the Battle of Winterfell, Brienne was knighted by Ser Jaime Lannister, making her the first woman of the Seven Kingdoms to become a knight.",
         picture: images.brienne,
         instagram: "https://instagram.com/gwendolineuniverse",
         store_ids: [9],
@@ -484,7 +484,7 @@ const barbers = [
     },
     {
         name: "Hodor",
-        description:"Hodor is only capable of saying one word, 'hodor', though he can apparently understand complex instructions other people give him. Hodor is a seemingly nonsense word, though in the process it became the name everyone calls him. It is derived from the phrase 'hold the door', the words that Hodor heard during the seizure that mentally disabled him as a result of the future Bran Stark accidentally warging into his young self during a vision.",
+        description:"Hodor is only capable of saying one word, 'hodor', though he can apparently understand complex instructions other people give him. Hodor is a seemingly nonsense word, though in the process it became the name everyone calls him.",
         picture: images.hodor,
         instagram: "https://instagram.com/kristiannairn",
         store_ids: [9],
@@ -504,7 +504,7 @@ const barbers = [
     },
     {
         name: "The Night King",
-        description: "The Night King was a First Man who was captured by a tribe of the Children of the Forest. Leaf, who was among the group, pressed a dragonglass dagger into his chest, causing his eyes to turn blue and turning him into the first of the White Walkers. Thousands of years later, Leaf tells Bran Stark that her people created the White Walkers to defend themselves when Westeros was invaded by the First Men, who were cutting their sacred trees down and slaughtering the Children of the Forest.",
+        description: "The Night King was a First Man who was captured by a tribe of the Children of the Forest. Leaf, who was among the group, pressed a dragonglass dagger into his chest, causing his eyes to turn blue and turning him into the first of the White Walkers.",
         picture: images.nightking,
         instagram: "https://instagram.com/vladimirfurdikofficial",
         store_ids: [10],
@@ -524,7 +524,7 @@ const barbers = [
     },
     {
         name: "Gregor Clegane",
-        description: "Ser Gregor Clegane was a knight of House Clegane, the older brother of Sandor Clegane, and a notoriously fearsome, extremely lethal and much-feared warrior, with a tendency toward extreme and excessive violence. Due to his incredibly massive size, he is called 'The Mountain That Rides' or more often simply 'The Mountain.' After being poisoned in a duel with Oberyn Martell, Gregor almost succumbed to the effects of manticore venom, but was kept alive through the experimentations of Qyburn.",
+        description: "Ser Gregor Clegane was a knight of House Clegane, the older brother of Sandor Clegane, and a notoriously fearsome, extremely lethal and much-feared warrior, with a tendency toward extreme and excessive violence. Due to his incredibly massive size, he is called 'The Mountain That Rides' or more often simply 'The Mountain.'",
         picture: images.gregor,
         instagram: "https://instagram.com/thorbjornsson",
         store_ids: [10],
