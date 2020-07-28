@@ -127,6 +127,7 @@ function registerStore(request, response) {
         });
 }
 
+// for future use
 function updateStore(request, response) {
     const store_id = request.body.store_id;
     delete request.body.store_id;
@@ -334,6 +335,7 @@ function registerBarber(request, response) {
         });
 }
 
+// for future use
 function updateBarber(request, response) {
     const barber_id = request.body.barber_id;
     delete request.body.barber_id;

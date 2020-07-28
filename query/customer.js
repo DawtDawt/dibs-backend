@@ -237,6 +237,7 @@ function registerReview(request, response) {
         });
 }
 
+// for future use
 function updateReview(request, response) {
     const review_id = request.body.review_id;
     delete request.body.review_id;

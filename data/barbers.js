@@ -544,7 +544,7 @@ const barbers = [
     },
     {
         name: "Gregor Kiczales",
-        description:"Gregor Kiczales is an American computer scientist. He is currently a full time professor of computer science at the University of British Columbia. He is best known for developing the concept of aspect-oriented programming,[2] and the AspectJ extension to the Java programming language, both of which he designed while working at Xerox PARC.[3] He is also one of the co-authors of the specification for the Common Lisp Object System, and is the author of the book The Art of the Metaobject Protocol, along with Jim Des Rivières and Daniel G. Bobrow.",
+        description:"Gregor Kiczales is an American computer scientist. He is currently a full time professor of computer science at the University of British Columbia. He is best known for developing the concept of aspect-oriented programming, and the AspectJ extension to the Java programming language, both of which he designed while working at Xerox PARC. He is also one of the co-authors of the specification for the Common Lisp Object System, and is the author of the book The Art of the Metaobject Protocol, along with Jim Des Rivières and Daniel G. Bobrow.",
         picture: images.gregork,
         instagram: "https://twitter.com/gregork",
         store_ids: [11],
