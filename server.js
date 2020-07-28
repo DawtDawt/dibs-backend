@@ -41,7 +41,7 @@ global.mongoose = mongoose;
 const app = express();
 
 const allowCrossDomain = function (req, res, next) {
-    if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() !== "production") {
+    if (!(process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === "production")) {
         res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     }
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -62,7 +62,6 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cookieParser());
-
 
 /* Init Fake Data */
 
