@@ -11,7 +11,7 @@ const barbers = [
         store_ids: [1],
         services: [{ service: "Haircut", duration: 45 }],
         schedule: [
-            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: false, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
@@ -38,7 +38,7 @@ const barbers = [
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
-            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: false, from: "0800", to: "1700" },
         ],
     },
     {

@@ -101,8 +101,7 @@ function getStore(request, response) {
 
 function registerStore(request, response) {
     const geocode = geocoder.geocode({
-        address: request.body.address,
-        city: request.body.city,
+        address: request.body.address + " " + request.body.city,
     });
     let doc;
 

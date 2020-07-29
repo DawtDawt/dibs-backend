@@ -480,7 +480,9 @@ function registerReservation(request, response) {
     const user_id = request.body.user_id;
     const store_id = request.body.store_id;
     const barber_id = request.body.barber_id;
-    request.body.to = new Date(from);
+    const service = request.body.service;
+    request.body.from = new Date(request.body.from);
+    request.body.to = new Date(request.body.from);
 
     const storeQuery = schema.Store.findOne({ store_id }).exec();
     const userQuery = schema.User.findOne({ user_id }).exec();
@@ -498,7 +500,7 @@ function registerReservation(request, response) {
             if (res === null) {
                 return Promise.reject("/query/customer/registerReservation: No user found with given user_id");
             }
-            request.body.user_name = res.name;
+            request.body.user_name = res.first_name + " " + res.last_name;
             return barberQuery;
         })
         .then((res) => {
@@ -508,14 +510,14 @@ function registerReservation(request, response) {
             request.body.barber_name = res.name;
             for (let i = 0; i < res.services.length; i++) {
                 if (res.services[i].service === service) {
-                    request.body.to.setMinutes(request.body.to.getMinute() + res.services[i].duration);
+                    request.body.to.setMinutes(request.body.to.getMinutes() + res.services[i].duration);
                 }
                 break;
             }
             const doc = new schema.Reservation(request.body);
             return doc.save();
         })
-        .then(() => {
+        .then((doc) => {
             return response.status(200).send({ reservation_id: doc.reservation_id, to: doc.to.toJSON() });
         })
         .catch((error) => {
