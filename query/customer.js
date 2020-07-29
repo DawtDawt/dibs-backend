@@ -11,9 +11,9 @@ function getStore(request, response) {
     const store_id = request.params.store_id;
 
     const storeQuery = schema.Store.findOne({ store_id }).exec();
-    const reviewQuery = schema.Review.findOne({ store_id }).exec();
-    const reservationQuery = schema.Reservation.findOne({ store_id }).exec();
-    const barberQuery = schema.Barber.findOne({ store_ids: { $in: store_id } }).exec();
+    const reviewQuery = schema.Review.find({ store_id }).exec();
+    const reservationQuery = schema.Reservation.find({ store_id }).exec();
+    const barberQuery = schema.Barber.find({ store_ids: { $in: store_id } }).exec();
 
     storeQuery
         .then((res) => {
