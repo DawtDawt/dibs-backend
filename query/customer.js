@@ -268,16 +268,13 @@ function deleteReview(request, response) {
 }
 
 function getAvailability(request, response) {
-    // DEBUG
-    request.query.date = new Date("2020-07-24T18:00:00.000Z");
-    // END
+    request.query.date = new Date(request.query.date);
     const day_of_week = request.query.date.getDay();
     let body = { store_ids: { $in: [request.query.store_id] } };
-    if (request.body.hasOwnProperty("barber_id")) {
-        body.barber_id = request.body.barber_id;
+    if (request.query.hasOwnProperty("barber_id")) {
+        body.barber_id = request.query.barber_id;
     }
     let ret = [];
-
     const barberQuery = schema.Barber.find(body).exec();
     const storeQuery = schema.Store.findOne({ store_id: request.query.store_id }).exec();
 
@@ -306,7 +303,6 @@ function getAvailability(request, response) {
                     barber_to.setHours(barber.schedule[day_of_week].to.slice(0, 2));
                     barber_to.setMinutes(barber.schedule[day_of_week].to.slice(2, 4));
                     barber_to.setSeconds("0");
-
                     ret.push({
                         barber_id: barber.barber_id,
                         barber_name: barber.name,

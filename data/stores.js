@@ -18,7 +18,7 @@ const stores = [
         phone_number: "7781234567",
         pictures: [images.larrylogo, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
         rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        services: ["Haircut", "Shaving", "Hair color", "Eyebrows", "Nails"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
@@ -41,13 +41,13 @@ const stores = [
         lon: "-123.120735",
         description:
             "Jerry’s is a gathering place not only to get a haircut, but also to engage in friendly banter, have a laugh, trade gossip and maybe make new friends. A relaxed and friendly environment comes with a great cut every visit, a vintage place for those who care about their hair.",
-        price: 2,
+        price: 1,
         website: "www.excellentbarbershop.com",
         neighbourhood: "UBC",
         phone_number: "7781234567",
         pictures: [images.jerrylogo, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
-        rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        rating: 5,
+        services: ["Haircut", "Shaving", "Hair color"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
@@ -103,7 +103,7 @@ const stores = [
         neighbourhood: "Kerrisdale",
         phone_number: "7781234567",
         pictures: [images.centralperklogo, images.barberChairsBase64, images.barberCutBase64, images.barberScissorsBase64],
-        rating: 3,
+        rating: 4,
         services: ["Haircut", "Hair color", "Eyebrows", "Nails", "Waxing"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
@@ -136,8 +136,8 @@ const stores = [
             images.barberCutBase64,
             images.barberScissorsBase64,
         ],
-        rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        rating: 5,
+        services: ["Haircut", "Shaving", "Hair color", "Waxing"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
@@ -170,7 +170,7 @@ const stores = [
             images.barberScissorsBase64,
         ],
         rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        services: ["Haircut", "Shaving", "Hair color"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
@@ -202,7 +202,7 @@ const stores = [
             images.barberScissorsBase64,
         ],
         rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        services: ["Haircut", "Shaving", "Nails", "Waxing"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
@@ -233,8 +233,8 @@ const stores = [
             images.barberCutBase64,
             images.barberScissorsBase64,
         ],
-        rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        rating: 4,
+        services: ["Haircut", "Shaving", "Hair color", "Eyebrows", "Waxing", "Nails"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
@@ -265,7 +265,7 @@ const stores = [
             images.barberCutBase64,
             images.barberScissorsBase64,
         ],
-        rating: 3,
+        rating: 1,
         services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
@@ -297,8 +297,8 @@ const stores = [
             images.barberCutBase64,
             images.barberScissorsBase64,
         ],
-        rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows"],
+        rating: 2,
+        services: ["Haircut", "Shaving"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },
@@ -361,8 +361,8 @@ const stores = [
             images.barberCutBase64,
             images.barberScissorsBase64,
         ],
-        rating: 3,
-        services: ["Haircut", "Shaving", "Hair color", "Eyebrows", "Nails"],
+        rating: 5,
+        services: ["Haircut", "Shaving", "Hair color", "Eyebrows", "Nails", "Waxing"],
         hours: [
             { isOpen: true, from: "0700", to: "1900" },
             { isOpen: true, from: "0700", to: "1900" },

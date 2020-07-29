@@ -9,7 +9,7 @@ const barbers = [
         picture: images.larrydavid,
         instagram: "https://instagram.com/curbyourlarrydavid",
         store_ids: [1],
-        services: [{ service: "Haircut", duration: 45 }],
+        services: [{ service: "Haircut", duration: 45 }, { service: "Hair color", duration: 45 }, ],
         schedule: [
             { isOpen: false, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
@@ -154,7 +154,7 @@ const barbers = [
         picture: images.rossgeller,
         instagram: "https://www.instagram.com/rossthedivorceforce9",
         store_ids: [3],
-        services: [{ service: "Shaving", duration: 75 }],
+        services: [{ service: "Shaving", duration: 60 }],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
@@ -253,7 +253,7 @@ const barbers = [
         store_ids: [5],
         services: [
             { service: "Haircut", duration: 30 },
-            { service: "Shaving", duration: 30 },
+            { service: "Waxing", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -272,8 +272,8 @@ const barbers = [
         instagram: "https://instagram.com/harrypotter",
         store_ids: [5],
         services: [
-            { service: "Nails", duration: 60 },
-            { service: "Eyebrows", duration: 30 },
+            { service: "Hair color", duration: 60 },
+            { service: "Shaving", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -370,7 +370,7 @@ const barbers = [
         store_ids: [7],
         services: [
             { service: "Nails", duration: 60 },
-            { service: "Eyebrows", duration: 30 },
+            { service: "Waxing", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -410,7 +410,7 @@ const barbers = [
         store_ids: [8],
         services: [
             { service: "Shaving", duration: 15 },
-            { service: "Haircut", duration: 30 },
+            { service: "Eyebrows", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -429,8 +429,8 @@ const barbers = [
         instagram: "https://instagram.com/peterdinklage",
         store_ids: [8],
         services: [
-            { service: "Hair color", duration: 120 },
-            { service: "Haircut", duration: 30 },
+            { service: "Nails", duration: 120 },
+            { service: "Waxing", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -490,7 +490,7 @@ const barbers = [
         store_ids: [9],
         services: [
             { service: "Shaving", duration: 15 },
-            { service: "Haircut", duration: 30 },
+            { service: "Eyebrows", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -529,7 +529,7 @@ const barbers = [
         instagram: "https://instagram.com/thorbjornsson",
         store_ids: [10],
         services: [
-            { service: "Shaving", duration: 15 },
+            { service: "Shaving", duration: 45 },
             { service: "Haircut", duration: 30 },
         ],
         schedule: [
@@ -589,8 +589,8 @@ const barbers = [
         instagram: "https://www.cs.ubc.ca/people/patrice-belleville",
         store_ids: [11],
         services: [
-            { service: "Nails", duration: 60 },
-            { service: "Haircut", duration: 30 },
+            { service: "Hair color", duration: 60 },
+            { service: "Eyebrows", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -629,8 +629,8 @@ const barbers = [
         instagram: "https://starwars.fandom.com/wiki/Obi-Wan_Kenobi",
         store_ids: [12],
         services: [
-            { service: "Nails", duration: 60 },
-            { service: "Haircut", duration: 30 },
+            { service: "Hair color", duration: 90 },
+            { service: "Shaving", duration: 120 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -649,8 +649,8 @@ const barbers = [
         instagram: "https://www.instagram.com/samuelljackson/",
         store_ids: [12],
         services: [
-            { service: "Nails", duration: 60 },
-            { service: "Shaving", duration: 120 },
+            { service: "Eyebrows", duration: 60 },
+            { service: "Waxing", duration: 120 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
