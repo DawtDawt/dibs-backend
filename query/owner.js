@@ -101,8 +101,7 @@ function getStore(request, response) {
 
 function registerStore(request, response) {
     const geocode = geocoder.geocode({
-        address: request.body.address,
-        city: request.body.city,
+        address: request.body.address + " " + request.body.city,
     });
     let doc;
 
@@ -127,6 +126,7 @@ function registerStore(request, response) {
         });
 }
 
+// for future use
 function updateStore(request, response) {
     const store_id = request.body.store_id;
     delete request.body.store_id;
@@ -334,6 +334,7 @@ function registerBarber(request, response) {
         });
 }
 
+// for future use
 function updateBarber(request, response) {
     const barber_id = request.body.barber_id;
     delete request.body.barber_id;

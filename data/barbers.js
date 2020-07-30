@@ -9,9 +9,9 @@ const barbers = [
         picture: images.larrydavid,
         instagram: "https://instagram.com/curbyourlarrydavid",
         store_ids: [1],
-        services: [{ service: "Haircut", duration: 45 }],
+        services: [{ service: "Haircut", duration: 45 }, { service: "Hair color", duration: 45 }, ],
         schedule: [
-            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: false, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
@@ -38,7 +38,7 @@ const barbers = [
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
-            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: false, from: "0800", to: "1700" },
         ],
     },
     {
@@ -154,7 +154,7 @@ const barbers = [
         picture: images.rossgeller,
         instagram: "https://www.instagram.com/rossthedivorceforce9",
         store_ids: [3],
-        services: [{ service: "Shaving", duration: 75 }],
+        services: [{ service: "Shaving", duration: 60 }],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
             { isOpen: true, from: "0800", to: "1700" },
@@ -253,7 +253,7 @@ const barbers = [
         store_ids: [5],
         services: [
             { service: "Haircut", duration: 30 },
-            { service: "Shaving", duration: 30 },
+            { service: "Waxing", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -272,8 +272,8 @@ const barbers = [
         instagram: "https://instagram.com/harrypotter",
         store_ids: [5],
         services: [
-            { service: "Nails", duration: 60 },
-            { service: "Eyebrows", duration: 30 },
+            { service: "Hair color", duration: 60 },
+            { service: "Shaving", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -370,7 +370,7 @@ const barbers = [
         store_ids: [7],
         services: [
             { service: "Nails", duration: 60 },
-            { service: "Eyebrows", duration: 30 },
+            { service: "Waxing", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -410,7 +410,7 @@ const barbers = [
         store_ids: [8],
         services: [
             { service: "Shaving", duration: 15 },
-            { service: "Haircut", duration: 30 },
+            { service: "Eyebrows", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -429,8 +429,8 @@ const barbers = [
         instagram: "https://instagram.com/peterdinklage",
         store_ids: [8],
         services: [
-            { service: "Hair color", duration: 120 },
-            { service: "Haircut", duration: 30 },
+            { service: "Nails", duration: 120 },
+            { service: "Waxing", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -490,7 +490,7 @@ const barbers = [
         store_ids: [9],
         services: [
             { service: "Shaving", duration: 15 },
-            { service: "Haircut", duration: 30 },
+            { service: "Eyebrows", duration: 30 },
         ],
         schedule: [
             { isOpen: true, from: "0800", to: "1700" },
@@ -529,7 +529,7 @@ const barbers = [
         instagram: "https://instagram.com/thorbjornsson",
         store_ids: [10],
         services: [
-            { service: "Shaving", duration: 15 },
+            { service: "Shaving", duration: 45 },
             { service: "Haircut", duration: 30 },
         ],
         schedule: [
@@ -542,6 +542,127 @@ const barbers = [
             { isOpen: true, from: "0800", to: "1700" },
         ],
     },
+    {
+        name: "Gregor Kiczales",
+        description:"Gregor Kiczales is an American computer scientist. He is currently a full time professor of computer science at the University of British Columbia. He is best known for developing the concept of aspect-oriented programming, and the AspectJ extension to the Java programming language, both of which he designed while working at Xerox PARC. He is also one of the co-authors of the specification for the Common Lisp Object System, and is the author of the book The Art of the Metaobject Protocol, along with Jim Des Rivières and Daniel G. Bobrow.",
+        picture: images.gregork,
+        instagram: "https://twitter.com/gregork",
+        store_ids: [11],
+        services: [
+            { service: "Nails", duration: 60 },
+            { service: "Haircut", duration: 30 },
+        ],
+        schedule: [
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+        ],
+    },
+    {
+        name: "Steve Wolfman",
+        description:"In fact, for five years, I volunteered each weekend at the Seattle Animal Control Animal Shelter. Kathleen Kelly and I together run the 'Sundays in the Park Program'. Have you ever been at Greenlake in Seattle Sunday morning and seen a gaggle of dogs in blue 'I'm available for adoption' banners? That's us. I also assisted with the dog and dog handler training, sometimes walked the dogs at the shelter on Saturdays, and helped out with occasional special events (notably our fabulous summer Adopt-a-thons at Greenlake). You should visit your local shelter, and get yourself a dog, cat, rabbit, or other beastie.",
+        picture: images.wolfman,
+        instagram: "https://www.cs.ubc.ca/~wolf/",
+        store_ids: [11],
+        services: [
+            { service: "Nails", duration: 60 },
+            { service: "Shaving", duration: 30 },
+        ],
+        schedule: [
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+        ],
+    },
+    {
+        name: "Patrice Belleville",
+        description:"As an instructor, part of my responsibilities include curriculum development. I am thus interested in improving the manner in which we communicate knowledge to our students, as well as in selecting the information we provide, and in organizing it to better prepare the student for work in industry or further education.",
+        picture: images.patrice,
+        instagram: "https://www.cs.ubc.ca/people/patrice-belleville",
+        store_ids: [11],
+        services: [
+            { service: "Hair color", duration: 60 },
+            { service: "Eyebrows", duration: 30 },
+        ],
+        schedule: [
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+        ],
+    },
+    {
+        name: "Yoda",
+        description:"Yoda, a Force-sensitive male being belonging to a mysterious species, was a legendary Jedi Master who witnessed the rise and fall of the Galactic Republic, followed by the rise of the Galactic Empire. Small in stature but revered for his wisdom and power, Yoda trained generations of Jedi.",
+        picture: images.yoda,
+        instagram: "https://starwars.fandom.com/wiki/Yoda",
+        store_ids: [12],
+        services: [
+            { service: "Nails", duration: 60 },
+            { service: "Haircut", duration: 30 },
+        ],
+        schedule: [
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+        ],
+    },
+    {
+        name: "Ben Kenobi",
+        description:"Obi-Wan Kenobi was a Force-sensitive human male, legendary Jedi Master, and member of the Jedi High Council during the Fall of the Republic. During the Age of the Empire, he went by the alias of Ben Kenobi in order to hide from the regime that drove the Jedi to near extinction in the aftermath of the Clone Wars.",
+        picture: images.obiwan,
+        instagram: "https://starwars.fandom.com/wiki/Obi-Wan_Kenobi",
+        store_ids: [12],
+        services: [
+            { service: "Hair color", duration: 90 },
+            { service: "Shaving", duration: 120 },
+        ],
+        schedule: [
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+        ],
+    },
+    {
+        name: "Mace Windu",
+        description:"Mace Windu, a Force-sensitive human male, was a revered Jedi Master and member of the Jedi High Council during the last years of the Galactic Republic. During his time in the Jedi Order, he once served as elected leader of the Jedi and, during the Clone Wars, as a Jedi General in the Grand Army of the Republic. He was the greatest champion of the Jedi Order and promoted its ancient traditions.",
+        picture: images.macewindu,
+        instagram: "https://www.instagram.com/samuelljackson/",
+        store_ids: [12],
+        services: [
+            { service: "Eyebrows", duration: 60 },
+            { service: "Waxing", duration: 120 },
+        ],
+        schedule: [
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+            { isOpen: true, from: "0800", to: "1700" },
+        ],
+    },
+
 ];
 
 module.exports = {

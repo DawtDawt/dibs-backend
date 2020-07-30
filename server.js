@@ -10,7 +10,7 @@ const init = require("./boot");
 require("dotenv").config();
 
 /* Set to true if fake data is needed */
-let populate = false;
+let populate = true;
 
 /* Init Mongoose */
 

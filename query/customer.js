@@ -11,9 +11,9 @@ function getStore(request, response) {
     const store_id = request.params.store_id;
 
     const storeQuery = schema.Store.findOne({ store_id }).exec();
-    const reviewQuery = schema.Review.findOne({ store_id }).exec();
-    const reservationQuery = schema.Reservation.findOne({ store_id }).exec();
-    const barberQuery = schema.Barber.findOne({ store_ids: { $in: store_id } }).exec();
+    const reviewQuery = schema.Review.find({ store_id }).exec();
+    const reservationQuery = schema.Reservation.find({ store_id }).exec();
+    const barberQuery = schema.Barber.find({ store_ids: { $in: store_id } }).exec();
 
     storeQuery
         .then((res) => {
@@ -237,6 +237,7 @@ function registerReview(request, response) {
         });
 }
 
+// for future use
 function updateReview(request, response) {
     const review_id = request.body.review_id;
     delete request.body.review_id;
@@ -267,16 +268,13 @@ function deleteReview(request, response) {
 }
 
 function getAvailability(request, response) {
-    // DEBUG
-    request.query.date = new Date("2020-07-24T18:00:00.000Z");
-    // END
+    request.query.date = new Date(request.query.date);
     const day_of_week = request.query.date.getDay();
     let body = { store_ids: { $in: [request.query.store_id] } };
-    if (request.body.hasOwnProperty("barber_id")) {
-        body.barber_id = request.body.barber_id;
+    if (request.query.hasOwnProperty("barber_id")) {
+        body.barber_id = request.query.barber_id;
     }
     let ret = [];
-
     const barberQuery = schema.Barber.find(body).exec();
     const storeQuery = schema.Store.findOne({ store_id: request.query.store_id }).exec();
 
@@ -305,7 +303,6 @@ function getAvailability(request, response) {
                     barber_to.setHours(barber.schedule[day_of_week].to.slice(0, 2));
                     barber_to.setMinutes(barber.schedule[day_of_week].to.slice(2, 4));
                     barber_to.setSeconds("0");
-
                     ret.push({
                         barber_id: barber.barber_id,
                         barber_name: barber.name,
@@ -479,7 +476,9 @@ function registerReservation(request, response) {
     const user_id = request.body.user_id;
     const store_id = request.body.store_id;
     const barber_id = request.body.barber_id;
-    request.body.to = new Date(from);
+    const service = request.body.service;
+    request.body.from = new Date(request.body.from);
+    request.body.to = new Date(request.body.from);
 
     const storeQuery = schema.Store.findOne({ store_id }).exec();
     const userQuery = schema.User.findOne({ user_id }).exec();
@@ -497,7 +496,7 @@ function registerReservation(request, response) {
             if (res === null) {
                 return Promise.reject("/query/customer/registerReservation: No user found with given user_id");
             }
-            request.body.user_name = res.name;
+            request.body.user_name = res.first_name + " " + res.last_name;
             return barberQuery;
         })
         .then((res) => {
@@ -507,14 +506,14 @@ function registerReservation(request, response) {
             request.body.barber_name = res.name;
             for (let i = 0; i < res.services.length; i++) {
                 if (res.services[i].service === service) {
-                    request.body.to.setMinutes(request.body.to.getMinute() + res.services[i].duration);
+                    request.body.to.setMinutes(request.body.to.getMinutes() + res.services[i].duration);
                 }
                 break;
             }
             const doc = new schema.Reservation(request.body);
             return doc.save();
         })
-        .then(() => {
+        .then((doc) => {
             return response.status(200).send({ reservation_id: doc.reservation_id, to: doc.to.toJSON() });
         })
         .catch((error) => {
