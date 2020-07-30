@@ -482,6 +482,7 @@ async function registerReservation(request, response) {
             }
             break;
         }
+        request.body.reviewed = false;
         const doc = new schema.Reservation(request.body);
 
         await doc.save();
