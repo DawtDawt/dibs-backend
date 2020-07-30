@@ -301,7 +301,8 @@ function deleteReview(request, response) {
 
 function getAvailability(request, response) {
     request.query.date = new Date(request.query.date);
-    const day_of_week = request.query.date.getDay();
+    const day_of_week = getDayOfWeek(request.query.date.getDay());
+    console.log(day_of_week);
     let body = { store_ids: { $in: [request.query.store_id] } };
     if (request.query.hasOwnProperty("barber_id")) {
         body.barber_id = request.query.barber_id;
@@ -567,6 +568,13 @@ function deleteReservation(request, response) {
             console.log(error);
             return response.status(500).send(error);
         });
+}
+
+function getDayOfWeek(index) {
+    let mondayStart = index - 1;
+    // this is really sunday
+    if (mondayStart === -1) mondayStart = 6;
+    return mondayStart;
 }
 
 module.exports = {
