@@ -1,7 +1,13 @@
 const schema = require("../schemas");
 
 async function getStore(request, response) {
-    let ret = {};
+    let ret = {
+        store_id: 0,
+        store: {},
+        reviews: [],
+        reservations: [],
+        barbers: [],
+    };
 
     try {
         const store_result = await schema.Store.findOne({ store_id: request.params.store_id }).exec();
@@ -28,13 +34,20 @@ async function getStore(request, response) {
 }
 
 async function searchStores(request, response) {
-    let ret = {};
+    let ret = {
+        count: 0,
+        stores: [],
+    };
     const store_body = {};
     let day_of_week, time_desired, min_time_desired, max_time_desired;
     let param = { limit: Number(request.params.count) };
-    if (request.query.hasOwnProperty("store")) {
-        store_body.name = "/" + request.query.store + "/";
+    if (request.query.hasOwnProperty("string")) {
+        store_body.name = {
+            "$regex": String(request.query.string),
+            "$options": "i",
+        };
     }
+    console.log(store_body.name);
     if (request.query.hasOwnProperty("city")) {
         store_body.city = request.query.city;
     }
@@ -79,6 +92,8 @@ async function searchStores(request, response) {
 
         const store_results = await schema.Store.find(store_body, { pictures: { $slice: 1 } }, param).exec();
         for (const store of store_results) {
+            console.log(store.store_id);
+            console.log(store.name);
             ret.stores.push({
                 store_id: store.store_id,
                 rating: store.rating,
@@ -454,7 +469,10 @@ async function getReservations(request, response) {
 }
 
 async function registerReservation(request, response) {
-    let ret = {};
+    let ret = {
+        reservation_id: 0,
+        to: new Date(),
+    };
     request.body.from = new Date(request.body.from);
     request.body.to = new Date(request.body.from);
 
