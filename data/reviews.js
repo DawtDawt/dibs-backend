@@ -9,7 +9,7 @@ let reviews = [];
 
 async function makeReviews() {
     let ret = [];
-    const reservations = makeReservations();
+    const reservations = await makeReservations();
     const sample_reviews = [
         "This shop doesn't celebrate FESTIVUS! SERENITY NOW!",
         "Got a haircut, yada yada yada...",
