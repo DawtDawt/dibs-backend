@@ -43,10 +43,13 @@ function getStore(request, response) {
 }
 
 function searchStores(request, response) {
-    let param = {};
+    let param = {
+        limit: Number(request.params.count),
+    };
     let body = {
         $and: [],
     };
+    let ret = [];
     let resCount = 0;
     if (request.query.hasOwnProperty("store")) {
         body.name = "/" + request.query.store + "/";
@@ -69,24 +72,21 @@ function searchStores(request, response) {
         }
         body.$and = body.$and.concat({ $or: priceArr });
     }
+    if (request.query.hasOwnProperty("startIndex")) {
+        param.skip = Number(request.query.startIndex);
+    }
+
     if (request.query.hasOwnProperty("neighbourhoods")) {
         const neighbourhoodArr = [];
         const neighbourhoods = request.query.neighbourhoods.split(",");
         for (let i = 0; i < neighbourhoods.length; i++) {
             neighbourhoodArr.push({ neighbourhood: neighbourhoods[i] });
         }
-
         body.$and = body.$and.concat({ $or: neighbourhoodArr });
     }
-    if (request.query.hasOwnProperty("startIndex")) {
-        param.skip = Number(request.query.startIndex);
-    }
-
     if (body.$and.length === 0) {
         delete body.$and;
     }
-
-    param.limit = Number(request.params.count);
 
     const countQuery = schema.Store.find(body, { pictures: { $slice: 1 } }).exec();
     const storeQuery = schema.Store.find(body, { pictures: { $slice: 1 } }, param).exec();
@@ -100,22 +100,54 @@ function searchStores(request, response) {
             return storeQuery;
         })
         .then((res) => {
-            const ret = [];
-            for (let i = 0; i < res.length; i++) {
+            let promises = [];
+            let date_body = {};
+
+            if (request.query.hasOwnProperty("date")) {
+                for (const store of res) {
+                    let store_from = new Date(request.query.date);
+                    let store_to = new Date(request.query.date);
+
+                    store_from.setHours(store.hours[day_of_week].from.slice(0, 2));
+                    store_from.setMinutes(store.hours[day_of_week].from.slice(2, 4));
+                    store_from.setSeconds("0");
+                    store_to.setHours(store.hours[day_of_week].to.slice(0, 2));
+                    store_to.setMinutes(store.hours[day_of_week].to.slice(2, 4));
+                    store_to.setSeconds("0");
+                }
+            }
+
+            for (const store of res) {
                 ret.push({
-                    store_id: res[i].store_id,
-                    rating: res[i].rating,
-                    price: res[i].price,
-                    services: res[i].services,
-                    address: res[i].address,
-                    name: res[i].name,
-                    city: res[i].city,
-                    province: res[i].province,
-                    neighbourhood: res[i].neighbourhood,
-                    picture: res[i].pictures[0],
+                    store_id: store.store_id,
+                    rating: store.rating,
+                    price: store.price,
+                    services: store.services,
+                    address: store.address,
+                    name: store.name,
+                    city: store.city,
+                    province: store.province,
+                    neighbourhood: store.neighbourhood,
+                    picture: store.pictures[0],
+                    available_time: [],
                 });
             }
 
+            for (const ret_obj of ret) {
+                promises.push(schema.Reservation.find({ store_id: ret_obj.store_id }).exec());
+            }
+            return Promise.all(promises);
+        })
+        .then((res) => {
+            let promises = [];
+
+            for (const reservations of res) {
+                if (reservations.length === 0) {
+                    break;
+                }
+            }
+        })
+        .then(() => {
             return response.status(200).send({
                 count: resCount,
                 stores: ret,
