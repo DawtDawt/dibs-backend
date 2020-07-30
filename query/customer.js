@@ -197,7 +197,7 @@ async function registerReview(request, response) {
 
         const user_result = await schema.User.findOne({ user_id: request.body.user_id }).exec();
         if (user_result === null) {
-            return Promise.reject("/query/customer/registerReview: No user found with given user_id");
+            throw "/query/customer/registerReview: No user found with given user_id";
         }
         request.body.user_name = user_result.first_name + " " + user_result.last_name;
         request.body.date = new Date();
@@ -213,6 +213,7 @@ async function registerReview(request, response) {
         const overall_rating = sum_of_ratings / review_results.length;
 
         await schema.Store.findOneAndUpdate({ store_id: request.body.store_id }, { overall_rating }).exec();
+        await schema.Reservation.findOneAndUpdate({ reservation_id: request.body.reservation_id }, { reviewed: true }).exec();
 
         return response.status(200).send(ret);
     } catch (error) {

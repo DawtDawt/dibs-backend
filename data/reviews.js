@@ -1,8 +1,5 @@
-const constants = require("../constants");
-const { stores } = require("./stores");
-const { users } = require("./users");
-const { barbers } = require("./barbers");
 const { makeReservations } = require("./reservations");
+const schemas = require("../schemas");
 
 /* Local constant */
 const REVIEWS_PER_BARBER = 3;
@@ -10,7 +7,7 @@ const REVIEWS_PER_BARBER = 3;
 /* Local data*/
 let reviews = [];
 
-function makeReviews() {
+async function makeReviews() {
     let ret = [];
     const reservations = makeReservations();
     const sample_reviews = [
@@ -57,25 +54,32 @@ function makeReviews() {
         "Winter is Coming",
     ];
 
-    if (reviews.length !== 0) {
-        return reviews;
-    }
+    try {
+        if (reviews.length !== 0) {
+            return reviews;
+        }
 
-    for (let reservation of reservations) {
-        ret.push({
-            store_id: reservation.store_id,
-            store_name: reservation.store_name,
-            barber_id: reservation.barber_id,
-            barber_name: reservation.barber_name,
-            user_id: reservation.user_id,
-            user_name: reservation.user_name,
-            date: reservation.from,
-            rating: Math.ceil(Math.random() * Math.floor(5)),
-            service: reservation.service,
-            review: sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))],
-        });
+        for (let reservation of reservations) {
+            ret.push({
+                store_id: reservation.store_id,
+                store_name: reservation.store_name,
+                barber_id: reservation.barber_id,
+                barber_name: reservation.barber_name,
+                user_id: reservation.user_id,
+                user_name: reservation.user_name,
+                date: reservation.from,
+                rating: Math.ceil(Math.random() * Math.floor(5)),
+                service: reservation.service,
+                review: sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))],
+                reservation_id: reservation.reservation_id,
+            });
+        }
+        reviews = ret;
+
+        return ret;
+    } catch (error) {
+        console.log("/data/reviews: no errors should've been thrown");
     }
-    return ret;
 }
 
 module.exports = {
