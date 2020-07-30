@@ -60,19 +60,21 @@ async function makeReviews() {
         }
 
         for (let reservation of reservations) {
-            ret.push({
-                store_id: reservation.store_id,
-                store_name: reservation.store_name,
-                barber_id: reservation.barber_id,
-                barber_name: reservation.barber_name,
-                user_id: reservation.user_id,
-                user_name: reservation.user_name,
-                date: reservation.from,
-                rating: Math.ceil(Math.random() * Math.floor(5)),
-                service: reservation.service,
-                review: sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))],
-                reservation_id: reservation.reservation_id,
-            });
+            if (Math.ceil(Math.random() * Math.floor(4)) % 3 === 0) {
+                ret.push({
+                    store_id: reservation.store_id,
+                    store_name: reservation.store_name,
+                    barber_id: reservation.barber_id,
+                    barber_name: reservation.barber_name,
+                    user_id: reservation.user_id,
+                    user_name: reservation.user_name,
+                    date: reservation.from,
+                    rating: Math.ceil(Math.random() * Math.floor(5)),
+                    service: reservation.service,
+                    review: sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))],
+                    reservation_id: reservation.reservation_id,
+                });
+            }
         }
         reviews = ret;
 
