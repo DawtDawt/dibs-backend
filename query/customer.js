@@ -347,7 +347,7 @@ async function getAvailabilityHelper(store_id, date, service, barber_id) {
         store_to.setHours(store_result.hours[day_of_week].to.slice(0, 2));
         store_to.setMinutes(store_result.hours[day_of_week].to.slice(2, 4));
         store_to.setSeconds("0");
-        const reservation_body = {
+        reservation_body = {
             "$and": [
                 reservation_body,
                 {
