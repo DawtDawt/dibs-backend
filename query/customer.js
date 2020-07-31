@@ -72,6 +72,9 @@ async function searchStores(request, response) {
     if (request.query.hasOwnProperty("date")) {
         day_of_week = getDayOfWeek(new Date(request.query.date).getDay());
     }
+    if (!request.query.hasOwnProperty("time_frame")) {
+        request.query.time_frame = 0;
+    }
     if (request.query.hasOwnProperty("time")) {
         time_desired = new Date(request.query.date);
         time_desired.setHours(new Date(request.query.time).getHours());
@@ -81,9 +84,6 @@ async function searchStores(request, response) {
         max_time_desired = new Date(time_desired);
         min_time_desired.setMinutes(time_desired.getMinutes() - request.query.time_frame);
         max_time_desired.setMinutes(time_desired.getMinutes() + request.query.time_frame);
-    }
-    if (!request.query.hasOwnProperty("time_frame")) {
-        request.query.time_frame = 0;
     }
 
     try {
