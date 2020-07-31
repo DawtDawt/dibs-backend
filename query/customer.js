@@ -90,11 +90,9 @@ async function searchStores(request, response) {
         if (count_results.length === 0) {
             throw "/query/customer/searchStore: No stores found with given params";
         }
-        ret.count = count_results.length;
 
         const store_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }, param).exec();
         for (const store of store_results) {
-            console.log(store.name);
             ret.stores.push({
                 store_id: store.store_id,
                 rating: store.rating,
@@ -110,6 +108,7 @@ async function searchStores(request, response) {
             });
         }
         if (!request.query.hasOwnProperty("date")) {
+            ret.count = ret.stores.length;
             return response.status(200).send(ret);
         }
         for (let i = store_results.length - 1; i >= 0; i--) {
