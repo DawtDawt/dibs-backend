@@ -69,6 +69,26 @@ async function initReviews() {
             await new schema.Review(review).save();
             await schema.Reservation.findOneAndUpdate({ reservation_id: review.reservation_id }, { reviewed: true }).exec();
         }
+        await updateStoreRatings();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateStoreRatings() {
+    try {
+        const store_results = await schema.Store.find().exec();
+        for (const store of store_results) {
+            const aggregate_reviews = await schema.Review.aggregate([
+                { "$match": { store_id: store.store_id } },
+                { "$group": { _id: null, average: { "$avg": "$rating" } } },
+            ]).exec();
+            if (aggregate_reviews.length === 0) {
+                await schema.Store.findOneAndUpdate({ store_id: store.store_id }, { rating: 5 });
+            } else {
+                await schema.Store.findOneAndUpdate({ store_id: store.store_id }, { rating: Math.ceil(aggregate_reviews[0].average) });
+            }
+        }
     } catch (error) {
         console.log(error);
     }
