@@ -1,7 +1,13 @@
 const schema = require("../schemas");
 
 async function getStore(request, response) {
-    let ret = {};
+    let ret = {
+        store_id: 0,
+        store: {},
+        reviews: [],
+        reservations: [],
+        barbers: [],
+    };
 
     try {
         const store_result = await schema.Store.findOne({ store_id: request.params.store_id }).exec();
@@ -17,7 +23,7 @@ async function getStore(request, response) {
         const reservation_results = await schema.Reservation.find({ store_id: request.params.store_id }).exec();
         ret.reservations = reservation_results;
 
-        const barber_results = await schema.Barber.find({ store_ids: { $in: [request.params.store_id] } }).exec();
+        const barber_results = await schema.Barber.find({ store_ids: { "$in": [request.params.store_id] } }).exec();
         ret.barbers = barber_results;
 
         return response.status(200).send(ret);
@@ -28,13 +34,20 @@ async function getStore(request, response) {
 }
 
 async function searchStores(request, response) {
-    let ret = {};
+    let ret = {
+        count: 0,
+        stores: [],
+    };
     const store_body = {};
     let day_of_week, time_desired, min_time_desired, max_time_desired;
     let param = { limit: Number(request.params.count) };
-    if (request.query.hasOwnProperty("store")) {
-        store_body.name = "/" + request.query.store + "/";
+    if (request.query.hasOwnProperty("string")) {
+        store_body.name = {
+            "$regex": String(request.query.string),
+            "$options": "i",
+        };
     }
+    console.log(store_body.name);
     if (request.query.hasOwnProperty("city")) {
         store_body.city = request.query.city;
     }
@@ -54,7 +67,7 @@ async function searchStores(request, response) {
     }
     if (request.query.hasOwnProperty("neighbourhoods")) {
         const neighbourhoods = request.query.neighbourhoods.split(",");
-        store_body.neighbourhood = { $in: neighbourhoods };
+        store_body.neighbourhood = { "$in": neighbourhoods };
     }
     if (request.query.hasOwnProperty("date")) {
         day_of_week = getDayOfWeek(request.query.date.getDay());
@@ -71,14 +84,16 @@ async function searchStores(request, response) {
     }
 
     try {
-        const count_results = await schema.Store.find(store_body, { pictures: { $slice: 1 } }).exec();
+        const count_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }).exec();
         if (count_results === []) {
             throw "/query/customer/searchStore: No stores found with given params";
         }
         ret.count = count_results.length;
 
-        const store_results = await schema.Store.find(store_body, { pictures: { $slice: 1 } }, param).exec();
+        const store_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }, param).exec();
         for (const store of store_results) {
+            console.log(store.store_id);
+            console.log(store.name);
             ret.stores.push({
                 store_id: store.store_id,
                 rating: store.rating,
@@ -141,13 +156,13 @@ async function getNeighbourhoods(request, response) {
 
     try {
         const aggregate_results = await schema.Store.aggregate([
-            { $match: request.query },
+            { "$match": request.query },
             {
-                $group: {
+                "$group": {
                     _id: "$neighbourhood",
                 },
             },
-            { $limit: Number(limit) },
+            { "$limit": Number(limit) },
         ]).exec();
         const neighbourhoods = aggregate_results
             .map((elem) => {
@@ -270,7 +285,7 @@ async function getAvailability(request, response) {
 async function getAvailabilityHelper(store_id, date, service, barber_id) {
     let ret = [];
     const day_of_week = getDayOfWeek(date.getDay());
-    const barber_body = { store_ids: { $in: [store_id] } };
+    const barber_body = { store_ids: { "$in": [store_id] } };
     const reservation_body = { store_id };
     if (barber_id !== null) {
         barber_body.barber_id = barber_id;
@@ -330,15 +345,15 @@ async function getAvailabilityHelper(store_id, date, service, barber_id) {
         store_to.setMinutes(store_result.hours[day_of_week].to.slice(2, 4));
         store_to.setSeconds("0");
         const reservation_body = {
-            $and: [
+            "$and": [
                 reservation_body,
                 {
-                    $or: [
+                    "$or": [
                         {
-                            $and: [{ from: { $gte: store_from } }, { from: { $lte: store_to } }],
+                            "$and": [{ from: { "$gte": store_from } }, { from: { "$lte": store_to } }],
                         },
-                        { $and: [{ to: { $gte: store_from } }, { to: { $lte: store_to } }] },
-                        { $and: [{ from: { $lte: store_from } }, { to: { $gte: store_to } }] },
+                        { "$and": [{ to: { "$gte": store_from } }, { to: { "$lte": store_to } }] },
+                        { "$and": [{ from: { "$lte": store_from } }, { to: { "$gte": store_to } }] },
                     ],
                 },
             ],
@@ -454,7 +469,10 @@ async function getReservations(request, response) {
 }
 
 async function registerReservation(request, response) {
-    let ret = {};
+    let ret = {
+        reservation_id: 0,
+        to: new Date(),
+    };
     request.body.from = new Date(request.body.from);
     request.body.to = new Date(request.body.from);
 
