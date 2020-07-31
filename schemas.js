@@ -180,6 +180,10 @@ const reviewSchema = new mongoose.Schema({
         required: true,
     },
     review: String,
+    reservation_id: {
+        type: Number,
+        required: true,
+    },
 });
 
 const reservationSchema = new mongoose.Schema({
@@ -222,6 +226,10 @@ const reservationSchema = new mongoose.Schema({
     },
     from: {
         type: Date,
+        required: true,
+    },
+    reviewed: {
+        type: Boolean,
         required: true,
     },
 });

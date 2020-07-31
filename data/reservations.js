@@ -9,7 +9,7 @@ const RESERVATIONS_PER_BARBER = 8;
 /* Local data */
 let reservations = [];
 
-function makeReservations() {
+async function makeReservations() {
     let ret = [];
     const today = new Date();
     const month = today.getMonth();
@@ -38,67 +38,79 @@ function makeReservations() {
         new Date(year, month, day - 2, 16, 0, 0, 0),
     ];
 
-    if (reservations.length !== 0) {
-        return reservations;
-    }
-
-    if (from_array.length < RESERVATIONS_PER_BARBER) {
-        console.log("/data/reservations: Reservations per barber cannot be less than total time slots possible");
-        throw "/data/reservations: Reservations per barber cannot be less than total time slots possible";
-    }
-
-    const user_array = [];
-    for (const i in users) {
-        const user = users[i];
-        if (user.role === constants.CUSTOMER) {
-            user_array.push({ user_name: user.first_name + " " + user.last_name, user_id: Number(i) + 1 });
+    try {
+        if (reservations.length !== 0) {
+            return reservations;
         }
-    }
 
-    for (const i in stores) {
-        const store_id = Number(i) + 1;
-        const store_name = stores[i].name;
+        if (from_array.length < RESERVATIONS_PER_BARBER) {
+            console.log("/data/reservations: Reservations per barber cannot be less than total time slots possible");
+            throw "/data/reservations: Reservations per barber cannot be less than total time slots possible";
+        }
 
-        for (const j in barbers) {
-            const barber_id = Number(j) + 1;
-            const barber_name = barbers[j].name;
-            let temp_from = from_array.slice();
-            let count = 0;
-            if (barbers[j].store_ids.includes(store_id)) {
-                while (count < RESERVATIONS_PER_BARBER) {
-                    const user_i = Math.floor(Math.random() * Math.floor(user_array.length));
-                    const user_id = user_array[user_i].user_id;
-                    const user_name = user_array[user_i].user_name;
-                    const k = Math.floor(Math.random() * Math.floor(barbers[j].services.length));
-                    const service = barbers[j].services[k].service;
-                    const duration = barbers[j].services[k].duration;
-                    const l = Math.floor(Math.random() * Math.floor(temp_from.length));
-                    const from = new Date(temp_from[l]);
-                    const to = new Date(from);
-                    to.setMinutes(to.getMinutes() + duration);
+        const user_array = [];
+        for (const i in users) {
+            const user = users[i];
+            if (user.role === constants.CUSTOMER) {
+                user_array.push({ user_name: user.first_name + " " + user.last_name, user_id: Number(i) + 1 });
+            }
+        }
 
-                    ret.push({
-                        user_id,
-                        user_name,
-                        barber_id,
-                        barber_name,
-                        store_id,
-                        store_name,
-                        service,
-                        from,
-                        to,
-                    });
+        for (const i in stores) {
+            const store_id = Number(i) + 1;
+            const store_name = stores[i].name;
 
-                    temp_from.splice(l, 1);
-                    count++;
+            for (const j in barbers) {
+                const barber_id = Number(j) + 1;
+                const barber_name = barbers[j].name;
+                let temp_from = from_array.slice();
+                let count = 0;
+                if (barbers[j].store_ids.includes(store_id)) {
+                    while (count < RESERVATIONS_PER_BARBER) {
+                        const user_i = Math.floor(Math.random() * Math.floor(user_array.length));
+                        const user_id = user_array[user_i].user_id;
+                        const user_name = user_array[user_i].user_name;
+                        const k = Math.floor(Math.random() * Math.floor(barbers[j].services.length));
+                        const service = barbers[j].services[k].service;
+                        const duration = barbers[j].services[k].duration;
+                        const l = Math.floor(Math.random() * Math.floor(temp_from.length));
+                        const from = new Date(temp_from[l]);
+                        const to = new Date(from);
+                        to.setMinutes(to.getMinutes() + duration);
+
+                        ret.push({
+                            user_id,
+                            user_name,
+                            barber_id,
+                            barber_name,
+                            store_id,
+                            store_name,
+                            service,
+                            from,
+                            to,
+                            reviewed: false,
+                        });
+
+                        temp_from.splice(l, 1);
+                        count++;
+                    }
                 }
             }
         }
+        reservations = ret;
+
+        return ret;
+    } catch (error) {
+        console.log("/data/reservations: no errors should've been thrown");
     }
-    reservations = ret;
-    return ret;
+}
+
+async function setReservations(data) {
+    reservations = data;
+    return;
 }
 
 module.exports = {
     makeReservations,
+    setReservations,
 };

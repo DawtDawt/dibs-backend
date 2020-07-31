@@ -2,7 +2,7 @@ const { users } = require("./data/users");
 const { stores } = require("./data/stores");
 const { barbers } = require("./data/barbers");
 const { makeReviews } = require("./data/reviews");
-const { makeReservations } = require("./data/reservations");
+const { makeReservations, setReservations } = require("./data/reservations");
 
 const schema = require("./schemas");
 const mongoose = require("mongoose");
@@ -49,21 +49,25 @@ async function initBarbers() {
 }
 
 async function initReservations() {
-  try {
-      const reservations = makeReservations();
-      for (const reservation of reservations) {
-          await new schema.Reservation(reservation).save();
-      }
-  } catch (error) {
-      console.log(error);
-  }
+    try {
+        const reservations_with_id = [];
+        const reservations = await makeReservations();
+        for (const reservation of reservations) {
+            const doc = await new schema.Reservation(reservation).save();
+            reservations_with_id.push(doc);
+        }
+        await setReservations(reservations_with_id);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 async function initReviews() {
     try {
-        const reviews = makeReviews();
+        const reviews = await makeReviews();
         for (const review of reviews) {
             await new schema.Review(review).save();
+            await schema.Reservation.findOneAndUpdate({ reservation_id: review.reservation_id }, { reviewed: true }).exec();
         }
     } catch (error) {
         console.log(error);
