@@ -70,7 +70,7 @@ async function searchStores(request, response) {
         store_body.neighbourhood = { "$in": neighbourhoods };
     }
     if (request.query.hasOwnProperty("date")) {
-        day_of_week = getDayOfWeek(request.query.date.getDay());
+        day_of_week = getDayOfWeek(new Date(request.query.date).getDay());
     }
     if (request.query.hasOwnProperty("time")) {
         time_desired = new Date(request.query.date);
@@ -286,7 +286,7 @@ async function getAvailabilityHelper(store_id, date, service, barber_id) {
     let ret = [];
     const day_of_week = getDayOfWeek(date.getDay());
     const barber_body = { store_ids: { "$in": [store_id] } };
-    const reservation_body = { store_id };
+    let reservation_body = { store_id };
     if (barber_id !== null) {
         barber_body.barber_id = barber_id;
         reservation_body.barber_id = barber_id;
