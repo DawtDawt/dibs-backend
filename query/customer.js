@@ -526,7 +526,7 @@ async function deleteReservation(request, response) {
     let ret = { reservation_id: request.params.reservation_id };
 
     try {
-        await schema.Reservation.deleteOne({ reservation_id }).exec();
+        await schema.Reservation.deleteOne({ ret }).exec();
 
         return response.status(200).send(ret);
     } catch (error) {
