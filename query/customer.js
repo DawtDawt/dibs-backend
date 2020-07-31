@@ -82,6 +82,9 @@ async function searchStores(request, response) {
         min_time_desired.setMinutes(time_desired.getMinutes() - request.query.time_frame);
         max_time_desired.setMinutes(time_desired.getMinutes() + request.query.time_frame);
     }
+    if (!request.query.hasOwnProperty("time_frame")) {
+        request.query.time_frame = 0;
+    }
 
     try {
         const count_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }).exec();
