@@ -69,7 +69,7 @@ async function makeReviews() {
                     user_id: reservation.user_id,
                     user_name: reservation.user_name,
                     date: reservation.from,
-                    rating: Math.ceil(Math.random() * Math.floor(5)),
+                    rating: Math.ceil(Math.random() * Math.floor(3)) + 2,
                     service: reservation.service,
                     review: sample_reviews[Math.floor(Math.random() * Math.floor(sample_reviews.length))],
                     reservation_id: reservation.reservation_id,

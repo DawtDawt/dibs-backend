@@ -47,7 +47,6 @@ async function searchStores(request, response) {
             "$options": "i",
         };
     }
-    console.log(store_body.name);
     if (request.query.hasOwnProperty("city")) {
         store_body.city = request.query.city;
     }
@@ -88,14 +87,13 @@ async function searchStores(request, response) {
 
     try {
         const count_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }).exec();
-        if (count_results === []) {
+        if (count_results.length === 0) {
             throw "/query/customer/searchStore: No stores found with given params";
         }
         ret.count = count_results.length;
 
         const store_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }, param).exec();
         for (const store of store_results) {
-            console.log(store.store_id);
             console.log(store.name);
             ret.stores.push({
                 store_id: store.store_id,
@@ -120,16 +118,22 @@ async function searchStores(request, response) {
             }
         }
         if (request.query.hasOwnProperty("date") && !request.query.hasOwnProperty("time")) {
+            ret.count = ret.stores.length;
             return response.status(200).send(ret);
         }
         for (const store of ret.stores) {
             const barber_results = await getAvailabilityHelper(store.store_id, new Date(request.query.date), store.services[0], null);
-            if (barber_results === []) {
+            if (barber_results.length === 0) {
                 break;
             }
             for (const barber of barber_results) {
                 for (const time_slot of barber.available_time) {
-                    if (min_time_desired <= time_slot.from && time_slot.from <= max_time_desired) {
+                    if (
+                        (time_slot.from <= min_time_desired && max_time_desired <= time_slot.to) ||
+                        (min_time_desired <= time_slot.from && time_slot.to <= max_time_desired) ||
+                        (time_slot.from <= min_time_desired && min_time_desired <= time_slot.to) ||
+                        (time_slot.from <= max_time_desired && max_time_desired <= time_slot.to)
+                    ) {
                         store.available_time.push({
                             barber_id: barber.barber_id,
                             barber_name: barber.barber_name,
@@ -145,6 +149,7 @@ async function searchStores(request, response) {
                 ret.stores.splice(i, 1);
             }
         }
+        ret.count = ret.stores.length;
 
         return response.status(200).send(ret);
     } catch (error) {
@@ -185,7 +190,7 @@ async function getReviews(request, response) {
 
     try {
         const review_results = await schema.Review.find({ user_id: request.params.user_id }).exec();
-        if (review_results === []) {
+        if (review_results.length === 0) {
             throw "/query/customer/getReviews: No reviews found with given user_id";
         }
         ret.reviews = review_results;
@@ -228,7 +233,7 @@ async function registerReview(request, response) {
         const sum_of_ratings = review_results.reduce((review1, review2) => {
             return review1.rating + review2.rating;
         });
-        const overall_rating = sum_of_ratings / review_results.length;
+        const overall_rating = Math.ceil(sum_of_ratings / review_results.length);
 
         await schema.Store.findOneAndUpdate({ store_id: request.body.store_id }, { overall_rating }).exec();
         await schema.Reservation.findOneAndUpdate({ reservation_id: request.body.reservation_id }, { reviewed: true }).exec();
@@ -297,7 +302,7 @@ async function getAvailabilityHelper(store_id, date, service, barber_id) {
 
     try {
         const barber_results = await schema.Barber.find(barber_body).exec();
-        if (barber_results === []) {
+        if (barber_results.length === 0) {
             throw "/query/customer/getAvailability: No barbers found with given barber_id and/or store_id";
         }
         for (const barber of barber_results) {
@@ -441,6 +446,7 @@ async function getAvailabilityHelper(store_id, date, service, barber_id) {
 
         return ret;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -459,7 +465,7 @@ async function getReservations(request, response) {
 
     try {
         const reservation_results = await schema.Reservation.find(reservation_body).exec();
-        if (reservation_results === []) {
+        if (reservation_results.length === 0) {
             throw "/query/customer/getReservations: No stores found with given store_id";
         }
         ret.reservations = reservation_results;
