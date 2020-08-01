@@ -127,12 +127,7 @@ async function searchStores(request, response) {
             }
             for (const barber of barber_results) {
                 for (const time_slot of barber.available_time) {
-                    if (
-                        (time_slot.from <= min_time_desired && max_time_desired <= time_slot.to) ||
-                        (min_time_desired <= time_slot.from && time_slot.to <= max_time_desired) ||
-                        (time_slot.from <= min_time_desired && min_time_desired <= time_slot.to) ||
-                        (time_slot.from <= max_time_desired && max_time_desired <= time_slot.to)
-                    ) {
+                    if (min_time_desired <= time_slot.from && time_slot.from <= max_time_desired) {
                         store.available_time.push({
                             barber_id: barber.barber_id,
                             barber_name: barber.barber_name,
