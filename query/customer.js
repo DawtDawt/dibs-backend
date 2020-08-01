@@ -81,8 +81,8 @@ async function searchStores(request, response) {
         time_desired.setSeconds("0");
         min_time_desired = new Date(time_desired);
         max_time_desired = new Date(time_desired);
-        min_time_desired.setMinutes(time_desired.getMinutes() - request.query.time_frame);
-        max_time_desired.setMinutes(time_desired.getMinutes() + request.query.time_frame);
+        min_time_desired.setMinutes(time_desired.getMinutes() - Number(request.query.time_frame));
+        max_time_desired.setMinutes(time_desired.getMinutes() + Number(request.query.time_frame));
     }
 
     try {
