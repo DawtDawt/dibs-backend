@@ -86,8 +86,8 @@ async function searchStores(request, response) {
     }
 
     try {
-        const count_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }).exec();
-        if (count_results.length === 0) {
+        const count_results = await schema.Store.countDocuments(store_body).exec();
+        if (count_results === 0) {
             throw "/query/customer/searchStore: No stores found with given params";
         }
 
@@ -108,7 +108,7 @@ async function searchStores(request, response) {
             });
         }
         if (!request.query.hasOwnProperty("date")) {
-            ret.count = ret.stores.length;
+            ret.count = count_results;
             return response.status(200).send(ret);
         }
         for (let i = store_results.length - 1; i >= 0; i--) {
@@ -117,7 +117,7 @@ async function searchStores(request, response) {
             }
         }
         if (request.query.hasOwnProperty("date") && !request.query.hasOwnProperty("time")) {
-            ret.count = ret.stores.length;
+            ret.count = count_results;
             return response.status(200).send(ret);
         }
 
@@ -150,8 +150,8 @@ async function searchStores(request, response) {
                 ret.stores.splice(i, 1);
             }
         }
-        ret.count = ret.stores.length;
 
+        ret.count = count_results;
         return response.status(200).send(ret);
     } catch (error) {
         console.log(error);
