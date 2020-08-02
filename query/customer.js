@@ -120,24 +120,31 @@ async function searchStores(request, response) {
             ret.count = ret.stores.length;
             return response.status(200).send(ret);
         }
+
+        const promises = [];
         for (const store of ret.stores) {
-            const barber_results = await getAvailabilityHelper(store.store_id, new Date(request.query.date), store.services[0], null);
-            if (barber_results.length === 0) {
-                break;
-            }
-            for (const barber of barber_results) {
-                for (const time_slot of barber.available_time) {
-                    if (min_time_desired <= time_slot.from && time_slot.from <= max_time_desired) {
-                        store.available_time.push({
-                            barber_id: barber.barber_id,
-                            barber_name: barber.barber_name,
-                            from: time_slot.from,
-                            to: time_slot.to,
-                        });
+            const query = getAvailabilityHelper(store.store_id, new Date(request.query.date), store.services[0], null) //
+                .then((barber_results) => {
+                    if (barber_results.length === 0) {
+                        return;
                     }
-                }
-            }
+                    for (const barber of barber_results) {
+                        for (const time_slot of barber.available_time) {
+                            if (min_time_desired <= time_slot.from && time_slot.from <= max_time_desired) {
+                                store.available_time.push({
+                                    barber_id: barber.barber_id,
+                                    barber_name: barber.barber_name,
+                                    from: time_slot.from,
+                                    to: time_slot.to,
+                                });
+                            }
+                        }
+                    }
+                });
+            promises.push(query);
         }
+        await Promise.all(promises);
+
         for (let i = ret.stores.length - 1; i >= 0; i--) {
             if (ret.stores[i].available_time.length === 0) {
                 ret.stores.splice(i, 1);
