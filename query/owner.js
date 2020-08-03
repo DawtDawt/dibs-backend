@@ -13,7 +13,6 @@ function getStore(request, response) {
     let ret = [];
 
     const storeQuery = schema.Store.find(request.query).exec();
-
     storeQuery
         .then((res) => {
             let promises = [];
