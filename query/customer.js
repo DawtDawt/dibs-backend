@@ -16,7 +16,6 @@ async function getStore(request, response) {
             throw "/query/customer/getStore: No stores found with given store_id";
         }
         if(noPictures){
-            console.log('here');
             store_result.pictures = null;
         }
         ret.store_id = store_result.store_id;
@@ -471,9 +470,6 @@ async function getReservations(request, response) {
 
     try {
         const reservation_results = await schema.Reservation.find(reservation_body).exec();
-        if (reservation_results.length === 0) {
-            throw "/query/customer/getReservations: No stores found with given store_id";
-        }
         ret.reservations = reservation_results;
 
         return response.status(200).send(ret);
