@@ -1,6 +1,7 @@
 const schema = require("../schemas");
 
 async function getStore(request, response) {
+    const noPictures = request.query.noPictures;
     let ret = {
         store_id: 0,
         store: {},
@@ -13,6 +14,10 @@ async function getStore(request, response) {
         const store_result = await schema.Store.findOne({ store_id: request.params.store_id }).exec();
         if (store_result === null) {
             throw "/query/customer/getStore: No stores found with given store_id";
+        }
+        if(noPictures){
+            console.log('here');
+            store_result.pictures = null;
         }
         ret.store_id = store_result.store_id;
         ret.store = store_result;
@@ -81,13 +86,13 @@ async function searchStores(request, response) {
         time_desired.setSeconds("0");
         min_time_desired = new Date(time_desired);
         max_time_desired = new Date(time_desired);
-        min_time_desired.setMinutes(time_desired.getMinutes() - request.query.time_frame);
-        max_time_desired.setMinutes(time_desired.getMinutes() + request.query.time_frame);
+        min_time_desired.setMinutes(time_desired.getMinutes() - Number(request.query.time_frame));
+        max_time_desired.setMinutes(time_desired.getMinutes() + Number(request.query.time_frame));
     }
 
     try {
-        const count_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }).exec();
-        if (count_results.length === 0) {
+        const count_results = await schema.Store.countDocuments(store_body).exec();
+        if (count_results === 0) {
             throw "/query/customer/searchStore: No stores found with given params";
         }
 
@@ -108,7 +113,7 @@ async function searchStores(request, response) {
             });
         }
         if (!request.query.hasOwnProperty("date")) {
-            ret.count = ret.stores.length;
+            ret.count = count_results;
             return response.status(200).send(ret);
         }
         for (let i = store_results.length - 1; i >= 0; i--) {
@@ -117,39 +122,41 @@ async function searchStores(request, response) {
             }
         }
         if (request.query.hasOwnProperty("date") && !request.query.hasOwnProperty("time")) {
-            ret.count = ret.stores.length;
+            ret.count = count_results;
             return response.status(200).send(ret);
         }
+
+        const promises = [];
         for (const store of ret.stores) {
-            const barber_results = await getAvailabilityHelper(store.store_id, new Date(request.query.date), store.services[0], null);
-            if (barber_results.length === 0) {
-                break;
-            }
-            for (const barber of barber_results) {
-                for (const time_slot of barber.available_time) {
-                    if (
-                        (time_slot.from <= min_time_desired && max_time_desired <= time_slot.to) ||
-                        (min_time_desired <= time_slot.from && time_slot.to <= max_time_desired) ||
-                        (time_slot.from <= min_time_desired && min_time_desired <= time_slot.to) ||
-                        (time_slot.from <= max_time_desired && max_time_desired <= time_slot.to)
-                    ) {
-                        store.available_time.push({
-                            barber_id: barber.barber_id,
-                            barber_name: barber.barber_name,
-                            from: time_slot.from,
-                            to: time_slot.to,
-                        });
+            const query = getAvailabilityHelper(store.store_id, new Date(request.query.date), store.services[0], null) //
+                .then((barber_results) => {
+                    if (barber_results.length === 0) {
+                        return;
                     }
-                }
-            }
+                    for (const barber of barber_results) {
+                        for (const time_slot of barber.available_time) {
+                            if (min_time_desired <= time_slot.from && time_slot.from <= max_time_desired) {
+                                store.available_time.push({
+                                    barber_id: barber.barber_id,
+                                    barber_name: barber.barber_name,
+                                    from: time_slot.from,
+                                    to: time_slot.to,
+                                });
+                            }
+                        }
+                    }
+                });
+            promises.push(query);
         }
+        await Promise.all(promises);
+
         for (let i = ret.stores.length - 1; i >= 0; i--) {
             if (ret.stores[i].available_time.length === 0) {
                 ret.stores.splice(i, 1);
             }
         }
-        ret.count = ret.stores.length;
 
+        ret.count = count_results;
         return response.status(200).send(ret);
     } catch (error) {
         console.log(error);
@@ -526,7 +533,7 @@ async function deleteReservation(request, response) {
     let ret = { reservation_id: request.params.reservation_id };
 
     try {
-        await schema.Reservation.deleteOne({ reservation_id }).exec();
+        await schema.Reservation.deleteOne(ret).exec();
 
         return response.status(200).send(ret);
     } catch (error) {
