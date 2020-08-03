@@ -1,6 +1,7 @@
 const schema = require("../schemas");
 
 async function getStore(request, response) {
+    const noPictures = request.query.noPictures;
     let ret = {
         store_id: 0,
         store: {},
@@ -13,6 +14,10 @@ async function getStore(request, response) {
         const store_result = await schema.Store.findOne({ store_id: request.params.store_id }).exec();
         if (store_result === null) {
             throw "/query/customer/getStore: No stores found with given store_id";
+        }
+        if(noPictures){
+            console.log('here');
+            store_result.pictures = null;
         }
         ret.store_id = store_result.store_id;
         ret.store = store_result;
