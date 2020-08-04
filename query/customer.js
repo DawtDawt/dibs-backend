@@ -165,23 +165,22 @@ async function searchStores(request, response) {
 }
 
 async function getNeighbourhoods(request, response) {
-    const { city, province, limit } = request.query;
-    console.log(limit);
+    const limit = request.query.limit;
     try {
         const aggregate_results = await schema.Store.aggregate([
-            { "$match": { city, province } },
             {
                 "$group": {
                     _id: "$neighbourhood",
                 },
             },
+            { "$limit": Number(limit) },
         ]).exec();
         const neighbourhoods = aggregate_results
             .map((elem) => {
                 return elem._id;
             })
-            .sort()
-            .slice(0, Number(limit));
+            .sort();
+
         return response.status(200).send(neighbourhoods);
     } catch (error) {
         console.log(error);
