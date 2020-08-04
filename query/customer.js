@@ -16,7 +16,6 @@ async function getStore(request, response) {
             throw "/query/customer/getStore: No stores found with given store_id";
         }
         if (noPictures) {
-            console.log("here");
             store_result.pictures = null;
         }
         ret.store_id = store_result.store_id;
@@ -505,10 +504,11 @@ async function registerReservation(request, response) {
         }
         request.body.barber_name = barber_result.name;
         for (const service of barber_result.services) {
-            if (service === request.body.service) {
+            if (service.service === request.body.service) {
                 request.body.to.setMinutes(request.body.to.getMinutes() + service.duration);
+                break;
             }
-            break;
+
         }
         request.body.reviewed = false;
         const doc = new schema.Reservation(request.body);
