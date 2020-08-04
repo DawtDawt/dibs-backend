@@ -165,7 +165,6 @@ async function searchStores(request, response) {
 
 async function getNeighbourhoods(request, response) {
     const { city, province, limit } = request.query;
-    console.log(limit);
     try {
         const aggregate_results = await schema.Store.aggregate([
             { "$match": { city, province } },
