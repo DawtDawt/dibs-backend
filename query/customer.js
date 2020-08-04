@@ -15,8 +15,8 @@ async function getStore(request, response) {
         if (store_result === null) {
             throw "/query/customer/getStore: No stores found with given store_id";
         }
-        if(noPictures){
-            console.log('here');
+        if (noPictures) {
+            console.log("here");
             store_result.pictures = null;
         }
         ret.store_id = store_result.store_id;
@@ -165,25 +165,23 @@ async function searchStores(request, response) {
 }
 
 async function getNeighbourhoods(request, response) {
-    const limit = request.query.limit;
-    delete request.query.limit;
-
+    const { city, province, limit } = request.query;
+    console.log(limit);
     try {
         const aggregate_results = await schema.Store.aggregate([
-            { "$match": request.query },
+            { "$match": { city, province } },
             {
                 "$group": {
                     _id: "$neighbourhood",
                 },
             },
-            { "$limit": Number(limit) },
         ]).exec();
         const neighbourhoods = aggregate_results
             .map((elem) => {
                 return elem._id;
             })
-            .sort();
-
+            .sort()
+            .slice(0, Number(limit));
         return response.status(200).send(neighbourhoods);
     } catch (error) {
         console.log(error);
