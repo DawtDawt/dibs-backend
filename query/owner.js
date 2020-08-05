@@ -199,7 +199,7 @@ async function getBarber(request, response) {
     }
 
     try {
-        const barber_results = schema.Barber.find(request.query).exec();
+        const barber_results = await schema.Barber.find(request.query).exec();
 
         promises = [];
         if (barber_results.length === 0) {
@@ -328,7 +328,7 @@ async function deleteBarber(request, response) {
     }
 
     try {
-        const barber_results = schema.Barber.find(request.query).exec();
+        const barber_results = await schema.Barber.find(request.query).exec();
 
         if (barber_results.length === 0) {
             console.log("/query/owner/deleteBarber: No barbers found with given params");
