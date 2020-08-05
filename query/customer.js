@@ -44,7 +44,7 @@ async function searchStores(request, response) {
     };
     const store_body = {};
     let day_of_week, time_desired, min_time_desired, max_time_desired;
-    let param = { limit: Number(request.params.count) };
+    let param = { limit: Number(request.params.count), skip: 0 };
     if (request.query.hasOwnProperty("string")) {
         store_body.name = {
             "$regex": String(request.query.string),
@@ -90,12 +90,7 @@ async function searchStores(request, response) {
     }
 
     try {
-        const count_results = await schema.Store.countDocuments(store_body).exec();
-        if (count_results === 0) {
-            throw "/query/customer/searchStore: No stores found with given params";
-        }
-
-        const store_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }, param).exec();
+        const store_results = await schema.Store.find(store_body, { pictures: { "$slice": 1 } }).exec();
         for (const store of store_results) {
             ret.stores.push({
                 store_id: store.store_id,
@@ -111,8 +106,12 @@ async function searchStores(request, response) {
                 available_time: [],
             });
         }
+        if (ret.stores.length === 0) {
+            throw "/query/customer/searchStores: no stores found with given params";
+        }
         if (!request.query.hasOwnProperty("date")) {
-            ret.count = count_results;
+            ret.count = ret.stores.length;
+            ret.stores = ret.stores.slice(param.skip, param.skip + param.limit);
             return response.status(200).send(ret);
         }
         for (let i = store_results.length - 1; i >= 0; i--) {
@@ -121,7 +120,8 @@ async function searchStores(request, response) {
             }
         }
         if (request.query.hasOwnProperty("date") && !request.query.hasOwnProperty("time")) {
-            ret.count = count_results;
+            ret.count = ret.stores.length;
+            ret.stores = ret.stores.slice(param.skip, param.skip + param.limit);
             return response.status(200).send(ret);
         }
 
@@ -155,7 +155,8 @@ async function searchStores(request, response) {
             }
         }
 
-        ret.count = count_results;
+        ret.count = ret.stores.length;
+        ret.stores = ret.stores.slice(param.skip, param.skip + param.limit);
         return response.status(200).send(ret);
     } catch (error) {
         console.log(error);
@@ -508,7 +509,6 @@ async function registerReservation(request, response) {
                 request.body.to.setMinutes(request.body.to.getMinutes() + service.duration);
                 break;
             }
-
         }
         request.body.reviewed = false;
         const doc = new schema.Reservation(request.body);
