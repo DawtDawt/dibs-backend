@@ -9,354 +9,315 @@ const options = {
 };
 const geocoder = nodeGeocoder(options);
 
-function getStore(request, response) {
+async function getStore(request, response) {
     let ret = [];
+    let promises = [];
 
-    const storeQuery = schema.Store.find(request.query).exec();
-    storeQuery
-        .then((res) => {
-            let promises = [];
+    try {
+        const store_results = await schema.Store.find(request.query).exec();
 
-            if (res.length === 0) {
-                console.log("/query/owner/getStore: No stores found with given params");
-                return Promise.reject("/query/owner/getStore: No stores found with given params");
-            }
-            for (let store of res) {
-                ret.push({
-                    store_id: store.store_id,
-                    store: store,
-                    reviews: [],
-                    reservations: [],
-                    barbers: [],
-                });
-                promises.push(schema.Review.find({ store_id: store.store_id }).exec());
-            }
-            return Promise.all(promises);
-        })
-        .then((res) => {
-            let promises = [];
+        promises = [];
+        if (store_results.length === 0) {
+            console.log("/query/owner/getStore: No stores found with given params");
+            return Promise.reject("/query/owner/getStore: No stores found with given params");
+        }
+        for (let store of store_results) {
+            ret.push({
+                store_id: store.store_id,
+                store: store,
+                reviews: [],
+                reservations: [],
+                barbers: [],
+            });
+            promises.push(schema.Review.find({ store_id: store.store_id }).exec());
+        }
+        const review_results = await Promise.all(promises);
 
-            for (let reviews of res) {
-                if (reviews.length === 0) {
-                    break;
-                }
-                for (let entry of ret) {
-                    if (entry.store_id === reviews[0].store_id) {
-                        entry.reviews = reviews;
-                        break;
-                    }
-                }
+        promises = [];
+        for (let reviews of review_results) {
+            if (reviews.length === 0) {
+                break;
             }
             for (let entry of ret) {
-                promises.push(schema.Reservation.find({ store_id: entry.store_id }).exec());
-            }
-            return Promise.all(promises);
-        })
-        .then((res) => {
-            let promises = [];
-
-            for (let reservations of res) {
-                if (reservations.length === 0) {
+                if (entry.store_id === reviews[0].store_id) {
+                    entry.reviews = reviews;
                     break;
                 }
-                for (let entry of ret) {
-                    if (entry.store_id === reservations[0].store_id) {
-                        entry.reservations = reservations;
-                        break;
-                    }
-                }
+            }
+        }
+        for (let entry of ret) {
+            promises.push(schema.Reservation.find({ store_id: entry.store_id }).exec());
+        }
+        const reservation_results = await Promise.all(promises);
+
+        promises = [];
+        for (let reservations of reservation_results) {
+            if (reservations.length === 0) {
+                break;
             }
             for (let entry of ret) {
-                promises.push(schema.Barber.find({ store_ids: { $in: [entry.store_id] } }));
-            }
-            return Promise.all(promises);
-        })
-        .then((res) => {
-            for (let barbers of res) {
-                if (barbers.length === 0) {
+                if (entry.store_id === reservations[0].store_id) {
+                    entry.reservations = reservations;
                     break;
                 }
-                for (let entry of ret) {
-                    let check = true;
-                    for (let barber of barbers) {
-                        if (!barber.store_ids.includes(entry.store_id)) {
-                            check = false;
-                            break;
-                        }
-                    }
-                    if (check) {
-                        entry.barbers = barbers;
+            }
+        }
+        for (let entry of ret) {
+            promises.push(schema.Barber.find({ store_ids: { $in: [entry.store_id] } }));
+        }
+        const barber_results = await Promise.all(promises);
+
+        for (let barbers of barber_results) {
+            if (barbers.length === 0) {
+                break;
+            }
+            for (let entry of ret) {
+                let check = true;
+                for (let barber of barbers) {
+                    if (!barber.store_ids.includes(entry.store_id)) {
+                        check = false;
                         break;
                     }
                 }
+                if (check) {
+                    entry.barbers = barbers;
+                    break;
+                }
             }
-            return response.status(200).send(ret);
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(404).send(error);
-        });
+        }
+
+        return response.status(200).send(ret);
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
-function registerStore(request, response) {
-    const geocode = geocoder.geocode({
-        address: request.body.address + " " + request.body.city,
-    });
+async function registerStore(request, response) {
     let doc;
-
     request.body.lat = 0;
     request.body.lon = 0;
     request.body.rating = 0;
     request.body.barber_ids = [];
 
-    geocode
-        .then((res) => {
-            request.body.lat = res[0].latitude;
-            request.body.lon = res[0].longitude;
-            doc = new schema.Store(request.body);
-            return doc.save();
-        })
-        .then(() => {
-            return response.status(200).send({ store_id: doc.store_id });
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(500).send(error);
+    try {
+        const geocode_result = await geocoder.geocode({
+            address: request.body.address + " " + request.body.city,
         });
+
+        request.body.lat = geocode_result[0].latitude;
+        request.body.lon = geocode_result[0].longitude;
+        doc = new schema.Store(request.body);
+        await doc.save();
+
+        return response.status(200).send({ store_id: doc.store_id });
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
 // for future use
-function updateStore(request, response) {
+async function updateStore(request, response) {
     const store_id = request.body.store_id;
     delete request.body.store_id;
 
-    const storeQuery = schema.Store.findOne({ store_id }).exec();
+    try {
+        const store_result = await schema.Store.findOne({ store_id }).exec();
 
-    storeQuery
-        .then((res) => {
-            if (res.length === 0) {
-                return Promise.reject("/query/owner/updateStore: No stores found with given params");
-            }
-
-            let body = {};
-            if (request.body.hasOwnProperty("address")) {
-                body.address = request.body.address;
-            } else {
-                body.address = res.address;
-            }
-            if (request.body.hasOwnProperty("city")) {
-                body.city = request.body.city;
-            } else {
-                body.city = res.city;
-            }
-
-            return geocoder.geocode({
-                address: body.address,
-                city: body.city,
-            });
-        })
-        .then((res) => {
-            request.body.lat = res[0].latitude;
-            request.body.lon = res[0].longitude;
-            return schema.Store.findOneAndUpdate({ store_id }, request.body).exec();
-        })
-        .then(() => {
-            return response.status(200).send({ store_id });
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(500).send(error);
+        if (store_result.length === 0) {
+            return Promise.reject("/query/owner/updateStore: No stores found with given params");
+        }
+        let body = {};
+        if (request.body.hasOwnProperty("address")) {
+            body.address = request.body.address;
+        } else {
+            body.address = store_result.address;
+        }
+        if (request.body.hasOwnProperty("city")) {
+            body.city = request.body.city;
+        } else {
+            body.city = store_result.city;
+        }
+        const geocode_result = await geocoder.geocode({
+            address: body.address,
+            city: body.city,
         });
+
+        request.body.lat = geocode_result[0].latitude;
+        request.body.lon = geocode_result[0].longitude;
+        await schema.Store.findOneAndUpdate({ store_id }, request.body).exec();
+
+        return response.status(200).send({ store_id });
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
-function deleteStore(request, response) {
+async function deleteStore(request, response) {
     let ret = {
         store_ids: [],
         barber_ids: [],
     };
 
-    const storeQuery = schema.Store.find(request.query).exec();
+    try {
+        const store_results = await schema.Store.find(request.query).exec();
 
-    storeQuery
-        .then((res) => {
-            if (res.length === 0) {
-                console.log("/query/owner/deleteStore: No stores found with given params");
-                return Promise.reject("/query/owner/deleteStore: No stores found with given params");
-            }
-            for (let store of res) {
-                ret.store_ids.push(store.store_id);
-            }
-            return schema.Store.deleteMany({ store_id: ret.store_ids }).exec();
-        })
-        .then(() => {
-            return schema.Review.deleteMany({ store_id: ret.store_ids }).exec();
-        })
-        .then(() => {
-            return schema.Reservation.deleteMany({ store_id: ret.store_ids }).exec();
-        })
-        .then(() => {
-            return schema.Barber.updateMany({ store_ids: { $in: ret.store_ids } }, { $pullAll: { store_ids: ret.store_ids } }).exec();
-        })
-        .then(() => {
-            return schema.Barber.find({ store_ids: [] }).exec();
-        })
-        .then((res) => {
-            for (let barber of res) {
-                ret.barber_ids.push(barber.barber_id);
-            }
-            return schema.Barber.deleteMany({ store_ids: [] }).exec();
-        })
-        .then(() => {
-            return response.status(200).send(ret);
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(500).send(error);
-        });
+        if (store_results.length === 0) {
+            console.log("/query/owner/deleteStore: No stores found with given params");
+            return Promise.reject("/query/owner/deleteStore: No stores found with given params");
+        }
+        for (let store of store_results) {
+            ret.store_ids.push(store.store_id);
+        }
+        await schema.Store.deleteMany({ store_id: ret.store_ids }).exec();
+        await schema.Review.deleteMany({ store_id: ret.store_ids }).exec();
+        await schema.Reservation.deleteMany({ store_id: ret.store_ids }).exec();
+        await schema.Barber.updateMany({ store_ids: { $in: ret.store_ids } }, { $pullAll: { store_ids: ret.store_ids } }).exec();
+        const barber_results = await schema.Barber.find({ store_ids: [] }).exec();
+
+        for (let barber of barber_results) {
+            ret.barber_ids.push(barber.barber_id);
+        }
+        await schema.Barber.deleteMany({ store_ids: [] }).exec();
+
+        return response.status(200).send(ret);
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
-function getBarber(request, response) {
+async function getBarber(request, response) {
     let ret = [];
+    let promises = [];
 
     if (request.query.hasOwnProperty("store_id")) {
         request.query.store_ids = { $in: [request.query.store_id] };
         delete request.query.store_id;
     }
 
-    const barberQuery = schema.Barber.find(request.query).exec();
+    try {
+        const barber_results = schema.Barber.find(request.query).exec();
 
-    barberQuery
-        .then((res) => {
-            let promises = [];
+        promises = [];
+        if (barber_results.length === 0) {
+            return Promise.reject("/query/owner/getBarber: No barbers found with given params");
+        }
+        for (let barber of barber_results) {
+            ret.push({
+                barber_id: barber.barber_id,
+                barber: barber,
+                reviews: [],
+                reservations: [],
+                stores: [],
+            });
+            promises.push(schema.Review.find({ barber_id: barber.barber_id }).exec());
+        }
+        const review_results = await Promise.all(promises);
 
-            if (res.length === 0) {
-                return Promise.reject("/query/owner/getBarber: No barbers found with given params");
-            }
-            for (let barber of res) {
-                ret.push({
-                    barber_id: barber.barber_id,
-                    barber: barber,
-                    reviews: [],
-                    reservations: [],
-                    stores: [],
-                });
-                promises.push(schema.Review.find({ barber_id: barber.barber_id }).exec());
-            }
-            return Promise.all(promises);
-        })
-        .then((res) => {
-            let promises = [];
-
-            for (let reviews of res) {
-                if (reviews.length === 0) {
-                    break;
-                }
-                for (let entry of ret) {
-                    if (entry.barber_id === reviews[0].barber_id) {
-                        entry.reviews = reviews;
-                        break;
-                    }
-                }
+        promises = [];
+        for (let reviews of review_results) {
+            if (reviews.length === 0) {
+                break;
             }
             for (let entry of ret) {
-                promises.push(schema.Reservation.find({ barber_id: entry.barber_id }).exec());
-            }
-
-            return Promise.all(promises);
-        })
-        .then((res) => {
-            let promises = [];
-
-            for (let reservations of res) {
-                if (reservations.length === 0) {
+                if (entry.barber_id === reviews[0].barber_id) {
+                    entry.reviews = reviews;
                     break;
                 }
-                for (let entry of ret) {
-                    if (entry.barber_id === reservations[0].barber_id) {
-                        entry.reservations = reservations;
-                        break;
-                    }
-                }
+            }
+        }
+        for (let entry of ret) {
+            promises.push(schema.Reservation.find({ barber_id: entry.barber_id }).exec());
+        }
+        const reservation_results = await Promise.all(promises);
+
+        promises = [];
+        for (let reservations of reservation_results) {
+            if (reservations.length === 0) {
+                break;
             }
             for (let entry of ret) {
-                promises.push(schema.Store.find({ barber_ids: { $in: [entry.barber_id] } }));
-            }
-            return Promise.all(promises);
-        })
-        .then((res) => {
-            for (let stores of res) {
-                if (stores.length === 0) {
+                if (entry.barber_id === reservations[0].barber_id) {
+                    entry.reservations = reservations;
                     break;
                 }
-                for (let entry of ret) {
-                    let check = true;
-                    for (let store of stores) {
-                        if (!store.barber_ids.includes(entry.barber_id)) {
-                            check = false;
-                            break;
-                        }
-                    }
-                    if (check) {
-                        entry.stores = stores;
+            }
+        }
+        for (let entry of ret) {
+            promises.push(schema.Store.find({ barber_ids: { $in: [entry.barber_id] } }));
+        }
+        const store_results = await Promise.all(promises);
+
+        for (let stores of store_results) {
+            if (stores.length === 0) {
+                break;
+            }
+            for (let entry of ret) {
+                let check = true;
+                for (let store of stores) {
+                    if (!store.barber_ids.includes(entry.barber_id)) {
+                        check = false;
                         break;
                     }
                 }
+                if (check) {
+                    entry.stores = stores;
+                    break;
+                }
             }
-            return response.status(200).send(ret);
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(404).send(error);
-        });
+        }
+
+        return response.status(200).send(ret);
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
-function registerBarber(request, response) {
-    const doc = new schema.Barber(request.body);
-    doc.save()
-        .then(() => {
-            let body = [];
+async function registerBarber(request, response) {
+    let body = [];
 
-            for (let store_id of doc.store_ids) {
-                body.push({ store_id: store_id });
-            }
+    try {
+        const doc = new schema.Barber(request.body);
+        await doc.save();
 
-            const storeQuery = schema.Store.updateMany({ $or: body }, { $push: { barber_ids: doc.barber_id } }).exec();
+        for (let store_id of doc.store_ids) {
+            body.push({ store_id: store_id });
+        }
 
-            return storeQuery;
-        })
-        .then(() => {
-            return response.status(200).send({ barber_id: doc.barber_id });
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(500).send(error);
-        });
+        await schema.Store.updateMany({ $or: body }, { $push: { barber_ids: doc.barber_id } }).exec();
+
+        return response.status(200).send({ barber_id: doc.barber_id });
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
 // for future use
-function updateBarber(request, response) {
+async function updateBarber(request, response) {
     const barber_id = request.body.barber_id;
     delete request.body.barber_id;
 
-    const storeQuery = schema.Barber.findOne({ barber_id }).exec();
+    try {
+        const store_result = await schema.Barber.findOne({ barber_id }).exec();
 
-    storeQuery
-        .then((res) => {
-            if (res.length === 0) {
-                return Promise.reject("/query/owner/updateBarber: No barbers found with given params");
-            }
-            return schema.Barber.findOneAndUpdate({ barber_id }, request.body).exec();
-        })
-        .then(() => {
-            return response.status(200).send({ barber_id });
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(500).send(error);
-        });
+        if (store_result.length === 0) {
+            return Promise.reject("/query/owner/updateBarber: No barbers found with given params");
+        }
+        await schema.Barber.findOneAndUpdate({ barber_id }, request.body).exec();
+
+        return response.status(200).send({ barber_id });
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
-function deleteBarber(request, response) {
+async function deleteBarber(request, response) {
     let ret = {
         barber_ids: [],
     };
@@ -366,35 +327,26 @@ function deleteBarber(request, response) {
         delete request.query.store_id;
     }
 
-    const barberQuery = schema.Barber.find(request.query).exec();
+    try {
+        const barber_results = schema.Barber.find(request.query).exec();
 
-    barberQuery
-        .then((res) => {
-            if (res.length === 0) {
-                console.log("/query/owner/deleteBarber: No barbers found with given params");
-                return Promise.reject("/query/owner/deleteBarber: No barbers found with given params");
-            }
-            for (let barber of res) {
-                ret.barber_ids.push(barber.barber_id);
-            }
-            return schema.Barber.deleteMany({ barber_id: ret.barber_ids }).exec();
-        })
-        .then(() => {
-            return schema.Review.deleteMany({ barber_id: ret.barber_ids }).exec();
-        })
-        .then(() => {
-            return schema.Reservation.deleteMany({ barber_id: ret.barber_ids }).exec();
-        })
-        .then(() => {
-            return schema.Store.updateMany({ barber_ids: { $in: ret.barber_ids } }, { $pullAll: { barber_ids: ret.barber_ids } }).exec();
-        })
-        .then(() => {
-            return response.status(200).send(ret);
-        })
-        .catch((error) => {
-            console.log(error);
-            return response.status(500).send(error);
-        });
+        if (barber_results.length === 0) {
+            console.log("/query/owner/deleteBarber: No barbers found with given params");
+            return Promise.reject("/query/owner/deleteBarber: No barbers found with given params");
+        }
+        for (let barber of barber_results) {
+            ret.barber_ids.push(barber.barber_id);
+        }
+        await schema.Barber.deleteMany({ barber_id: ret.barber_ids }).exec();
+        await schema.Review.deleteMany({ barber_id: ret.barber_ids }).exec();
+        await schema.Reservation.deleteMany({ barber_id: ret.barber_ids }).exec();
+        await schema.Store.updateMany({ barber_ids: { $in: ret.barber_ids } }, { $pullAll: { barber_ids: ret.barber_ids } }).exec();
+
+        return response.status(200).send(ret);
+    } catch (error) {
+        console.log(error);
+        return response.status(500).send(error);
+    }
 }
 
 module.exports = {

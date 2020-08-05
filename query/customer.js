@@ -15,8 +15,7 @@ async function getStore(request, response) {
         if (store_result === null) {
             throw "/query/customer/getStore: No stores found with given store_id";
         }
-        if(noPictures){
-            console.log('here');
+        if (noPictures) {
             store_result.pictures = null;
         }
         ret.store_id = store_result.store_id;
@@ -166,11 +165,9 @@ async function searchStores(request, response) {
 
 async function getNeighbourhoods(request, response) {
     const limit = request.query.limit;
-    delete request.query.limit;
 
     try {
         const aggregate_results = await schema.Store.aggregate([
-            { "$match": request.query },
             {
                 "$group": {
                     _id: "$neighbourhood",
@@ -471,9 +468,6 @@ async function getReservations(request, response) {
 
     try {
         const reservation_results = await schema.Reservation.find(reservation_body).exec();
-        if (reservation_results.length === 0) {
-            throw "/query/customer/getReservations: No stores found with given store_id";
-        }
         ret.reservations = reservation_results;
 
         return response.status(200).send(ret);
@@ -510,10 +504,11 @@ async function registerReservation(request, response) {
         }
         request.body.barber_name = barber_result.name;
         for (const service of barber_result.services) {
-            if (service === request.body.service) {
+            if (service.service === request.body.service) {
                 request.body.to.setMinutes(request.body.to.getMinutes() + service.duration);
+                break;
             }
-            break;
+
         }
         request.body.reviewed = false;
         const doc = new schema.Reservation(request.body);
