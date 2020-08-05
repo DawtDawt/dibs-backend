@@ -19,7 +19,7 @@ async function getStore(request, response) {
         promises = [];
         if (store_results.length === 0) {
             console.log("/query/owner/getStore: No stores found with given params");
-            return Promise.reject("/query/owner/getStore: No stores found with given params");
+            throw "/query/owner/getStore: No stores found with given params";
         }
         for (let store of store_results) {
             ret.push({
@@ -126,7 +126,7 @@ async function updateStore(request, response) {
         const store_result = await schema.Store.findOne({ store_id }).exec();
 
         if (store_result.length === 0) {
-            return Promise.reject("/query/owner/updateStore: No stores found with given params");
+            throw "/query/owner/updateStore: No stores found with given params";
         }
         let body = {};
         if (request.body.hasOwnProperty("address")) {
@@ -166,7 +166,7 @@ async function deleteStore(request, response) {
 
         if (store_results.length === 0) {
             console.log("/query/owner/deleteStore: No stores found with given params");
-            return Promise.reject("/query/owner/deleteStore: No stores found with given params");
+            throw "/query/owner/deleteStore: No stores found with given params";
         }
         for (let store of store_results) {
             ret.store_ids.push(store.store_id);
@@ -203,7 +203,7 @@ async function getBarber(request, response) {
 
         promises = [];
         if (barber_results.length === 0) {
-            return Promise.reject("/query/owner/getBarber: No barbers found with given params");
+            throw "/query/owner/getBarber: No barbers found with given params";
         }
         for (let barber of barber_results) {
             ret.push({
@@ -306,7 +306,7 @@ async function updateBarber(request, response) {
         const store_result = await schema.Barber.findOne({ barber_id }).exec();
 
         if (store_result.length === 0) {
-            return Promise.reject("/query/owner/updateBarber: No barbers found with given params");
+            throw "/query/owner/updateBarber: No barbers found with given params";
         }
         await schema.Barber.findOneAndUpdate({ barber_id }, request.body).exec();
 
@@ -332,7 +332,7 @@ async function deleteBarber(request, response) {
 
         if (barber_results.length === 0) {
             console.log("/query/owner/deleteBarber: No barbers found with given params");
-            return Promise.reject("/query/owner/deleteBarber: No barbers found with given params");
+            throw "/query/owner/deleteBarber: No barbers found with given params";
         }
         for (let barber of barber_results) {
             ret.barber_ids.push(barber.barber_id);
