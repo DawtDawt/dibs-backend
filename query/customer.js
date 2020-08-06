@@ -316,16 +316,14 @@ async function getAvailabilityHelper(store_id, date, services, barber_id) {
         }
         for (const barber of barber_results) {
             let service_duration = 0;
-            let found = false;
             for (const entry of barber.services) {
                 for (const service of services) {
                     if (entry.service === service) {
-                        service_duration = entry.duration;
-                        found = true;
-                        break;
+                        if (service_duration === 0 || service_duration > entry.duration) {
+                            service_duration = entry.duration;
+                        }
                     }
                 }
-                if (found) break;
             }
             if (service_duration && barber.schedule[day_of_week].isOpen) {
                 const barber_from = new Date(date);
