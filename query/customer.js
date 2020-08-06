@@ -127,7 +127,7 @@ async function searchStores(request, response) {
 
         const promises = [];
         for (const store of ret.stores) {
-            const temp_services = store.services;
+            let temp_services = store.services;
             if (request.query.hasOwnProperty("services")) {
                 temp_services = request.query.services;
             }
