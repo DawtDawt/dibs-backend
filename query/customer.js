@@ -107,7 +107,7 @@ async function searchStores(request, response) {
             });
         }
         if (ret.stores.length === 0) {
-            throw "/query/customer/searchStores: no stores found with given params";
+            throw "/query/customer/searchStores: No stores found with given params";
         }
         if (!request.query.hasOwnProperty("date")) {
             ret.count = ret.stores.length;
@@ -127,7 +127,11 @@ async function searchStores(request, response) {
 
         const promises = [];
         for (const store of ret.stores) {
-            const query = getAvailabilityHelper(store.store_id, new Date(request.query.date), store.services[0], null) //
+            let temp_services = store.services;
+            if (request.query.hasOwnProperty("services")) {
+                temp_services = request.query.services;
+            }
+            const query = getAvailabilityHelper(store.store_id, new Date(request.query.date), store.services, null) //
                 .then((barber_results) => {
                     if (barber_results.length === 0) {
                         return;
@@ -283,9 +287,10 @@ async function getAvailability(request, response) {
     if (request.query.hasOwnProperty("barber_id")) {
         barber_id = request.query.barber_id;
     }
+    let services = [request.query.service];
 
     try {
-        ret = await getAvailabilityHelper(request.query.store_id, new Date(request.query.date), request.query.service, barber_id);
+        ret = await getAvailabilityHelper(request.query.store_id, new Date(request.query.date), services, barber_id);
 
         return response.status(200).send(ret);
     } catch (error) {
@@ -294,7 +299,7 @@ async function getAvailability(request, response) {
     }
 }
 
-async function getAvailabilityHelper(store_id, date, service, barber_id) {
+async function getAvailabilityHelper(store_id, date, services, barber_id) {
     let ret = [];
     const day_of_week = getDayOfWeek(date.getDay());
     const barber_body = { store_ids: { "$in": [store_id] } };
@@ -311,11 +316,16 @@ async function getAvailabilityHelper(store_id, date, service, barber_id) {
         }
         for (const barber of barber_results) {
             let service_duration = 0;
+            let found = false;
             for (const entry of barber.services) {
-                if (entry.service === service) {
-                    service_duration = entry.duration;
-                    break;
+                for (const service of services) {
+                    if (entry.service === service) {
+                        service_duration = entry.duration;
+                        found = true;
+                        break;
+                    }
                 }
+                if (found) break;
             }
             if (service_duration && barber.schedule[day_of_week].isOpen) {
                 const barber_from = new Date(date);
